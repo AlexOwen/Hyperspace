@@ -329,8 +329,8 @@ var GameApp = React.createClass({
 		return {
             ship: false,
             _gameId: null,
-            // _gameState: 'create',
-            _gameState: 'started',
+            _gameState: 'create',
+            // _gameState: 'started',
 			_players: [],
 			// _playerStates: [],
             // role: 'bridge'
