@@ -111,6 +111,48 @@ var ShipLobby = React.createClass({
 	}
 });
 
+var ShipLive = React.createClass({
+	displayName: 'ShipLive',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ className: 'playerList' },
+			React.createElement(
+				'h1',
+				null,
+				'playing live'
+			),
+			React.createElement(
+				'h3',
+				null,
+				' GameID ',
+				this.props.gameId,
+				' '
+			),
+			React.createElement(
+				'h3',
+				null,
+				' Players '
+			),
+			React.createElement(
+				'ul',
+				null,
+				this.props.players.map(function (player, i) {
+					return React.createElement(
+						'li',
+						{ key: i },
+						'Player ',
+						player.number,
+						', Ready: ',
+						player.ready.toString()
+					);
+				})
+			)
+		);
+	}
+});
+
 var PlayerLobby = React.createClass({
 	displayName: 'PlayerLobby',
 
@@ -164,17 +206,17 @@ var PlayerContainer = React.createClass({
 
 		switch (this.props.role) {
 			case 'weapons':
-				panel = React.createElement(PlayerWeapons, null);
+				rolePanel = React.createElement(PlayerWeapons, null);
 				break;
 			case 'shields':
-				panel = React.createElement(PlayerShields, null);
+				rolePanel = React.createElement(PlayerShields, null);
 				break;
 			case 'engine':
-				panel = React.createElement(PlayerEngine, null);
+				rolePanel = React.createElement(PlayerEngine, null);
 				break;
 			default:
 			case 'bridge':
-				panel = React.createElement(PlayerBridge, null);
+				rolePanel = React.createElement(PlayerBridge, null);
 				break;
 
 		}
@@ -182,140 +224,38 @@ var PlayerContainer = React.createClass({
 		return React.createElement(
 			'div',
 			null,
-			React.createElement(PlayerMenu, null),
+			React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'p',
+					null,
+					this.props.gameId
+				)
+			),
 			rolePanel
 		);
 	}
 });
 
-var Message = React.createClass({
-	displayName: 'Message',
+var PlayerBridge = React.createClass({
+	displayName: 'PlayerBridge',
 
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ className: 'message' },
-			React.createElement(
-				'strong',
-				null,
-				this.props.user,
-				' :'
-			),
-			React.createElement(
-				'span',
-				null,
-				this.props.text
-			)
-		);
-	}
-});
-
-var MessageList = React.createClass({
-	displayName: 'MessageList',
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'messages' },
-			React.createElement(
-				'h2',
-				null,
-				' Conversation: '
-			),
-			this.props.messages.map(function (message, i) {
-				return React.createElement(Message, {
-					key: i,
-					user: message.user,
-					text: message.text
-				});
-			})
-		);
-	}
-});
-
-var MessageForm = React.createClass({
-	displayName: 'MessageForm',
-
-	getInitialState: function getInitialState() {
-		return { text: '' };
-	},
-
-	handleSubmit: function handleSubmit(e) {
-		e.preventDefault();
-		var message = {
-			user: this.props.user,
-			text: this.state.text
-		};
-		this.props.onMessageSubmit(message);
-		this.setState({ text: '' });
-	},
-
-	changeHandler: function changeHandler(e) {
-		this.setState({ text: e.target.value });
-	},
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'message_form' },
+			null,
 			React.createElement(
 				'h3',
 				null,
-				'Write New Message'
-			),
-			React.createElement(
-				'form',
-				{ onSubmit: this.handleSubmit },
-				React.createElement('input', {
-					onChange: this.changeHandler,
-					value: this.state.text
-				})
+				'The Bridge'
 			)
 		);
 	}
 });
 
-var ChangeNameForm = React.createClass({
-	displayName: 'ChangeNameForm',
-
-	getInitialState: function getInitialState() {
-		return { newName: '' };
-	},
-
-	onKey: function onKey(e) {
-		this.setState({ newName: e.target.value });
-	},
-
-	handleSubmit: function handleSubmit(e) {
-		e.preventDefault();
-		var newName = this.state.newName;
-		this.props.onChangeName(newName);
-		this.setState({ newName: '' });
-	},
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'change_name_form' },
-			React.createElement(
-				'h3',
-				null,
-				' Change Name '
-			),
-			React.createElement(
-				'form',
-				{ onSubmit: this.handleSubmit },
-				React.createElement('input', {
-					onChange: this.onKey,
-					value: this.state.newName
-				})
-			)
-		);
-	}
-});
-
-var ChatApp = React.createClass({
-	displayName: 'ChatApp',
+var GameApp = React.createClass({
+	displayName: 'GameApp',
 
 	getInitialState: function getInitialState() {
 		return {
@@ -446,7 +386,10 @@ var ChatApp = React.createClass({
 		if (this.state.ship) {
 			switch (this.state._gameState) {
 				case 'started':
-					panel = React.createElement(ShipLive, null);
+					panel = React.createElement(ShipLive, {
+						players: this.state._players,
+						gameId: this.state._gameId
+					});
 					break;
 				case 'lobby':
 					panel = React.createElement(ShipLobby, {
@@ -459,6 +402,7 @@ var ChatApp = React.createClass({
 			switch (this.state._gameState) {
 				case 'started':
 					panel = React.createElement(PlayerContainer, {
+						gameId: this.state._gameId,
 						role: this.state.role
 					});
 					break;
@@ -479,7 +423,7 @@ var ChatApp = React.createClass({
 	}
 });
 
-React.render(React.createElement(ChatApp, null), document.getElementById('app'));
+React.render(React.createElement(GameApp, null), document.getElementById('app'));
 
 },{"react":157}],2:[function(require,module,exports){
 // shim for using process in browser

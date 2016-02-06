@@ -85,6 +85,29 @@ var ShipLobby = React.createClass({
 	}
 });
 
+var ShipLive = React.createClass({
+	render() {
+		return (
+			<div className='playerList'>
+				<h1>playing live</h1>
+				<h3> GameID {this.props.gameId} </h3>
+				<h3> Players </h3>
+				<ul>
+					{
+						this.props.players.map((player, i) => {
+							return (
+								<li key={i}>
+									Player {player.number}, Ready: {player.ready.toString()}
+								</li>
+							);
+						})
+					}
+				</ul>				
+			</div>
+		);
+	}
+});
+
 var PlayerLobby = React.createClass({
 	handlePlayerReady(e) {
 		e.preventDefault();
@@ -127,129 +150,43 @@ var PlayerContainer = React.createClass({
 
     	switch(this.props.role) {
             case 'weapons':
-                panel = <PlayerWeapons />;
+                rolePanel = <PlayerWeapons />;
                 break;
             case 'shields':
-                panel = <PlayerShields />;
+                rolePanel = <PlayerShields />;
                 break;
             case 'engine':
-                panel = <PlayerEngine />;
+                rolePanel = <PlayerEngine />;
                 break;
-           default:	
+            default:	
             case 'bridge':
-                panel = <PlayerBridge />;
+                rolePanel = <PlayerBridge />;
                 break;
 
         }
 
         return (
             <div>
-            	<PlayerMenu />
+            	<div>
+            		<p>{this.props.gameId}</p>
+            	</div>
             	{rolePanel}
             </div>
         );
     }
 });
 
-var Message = React.createClass({
+var PlayerBridge = React.createClass({
 	render() {
-		return (
-			<div className="message">
-				<strong>{this.props.user} :</strong> 
-				<span>{this.props.text}</span>		
-			</div>
-		);
-	}
+        return (
+            <div>
+                <h3>The Bridge</h3>            
+            </div>
+        );
+    }
 });
 
-var MessageList = React.createClass({
-	render() {
-		return (
-			<div className='messages'>
-				<h2> Conversation: </h2>
-				{
-					this.props.messages.map((message, i) => {
-						return (
-							<Message
-								key={i}
-								user={message.user}
-								text={message.text} 
-							/>
-						);
-					})
-				} 
-			</div>
-		);
-	}
-});
-
-var MessageForm = React.createClass({
-
-	getInitialState() {
-		return {text: ''};
-	},
-
-	handleSubmit(e) {
-		e.preventDefault();
-		var message = {
-			user : this.props.user,
-			text : this.state.text
-		}
-		this.props.onMessageSubmit(message);	
-		this.setState({ text: '' });
-	},
-
-	changeHandler(e) {
-		this.setState({ text : e.target.value });
-	},
-
-	render() {
-		return(
-			<div className='message_form'>
-				<h3>Write New Message</h3>
-				<form onSubmit={this.handleSubmit}>
-					<input
-						onChange={this.changeHandler}
-						value={this.state.text}
-					/>
-				</form>
-			</div>
-		);
-	}
-});
-
-var ChangeNameForm = React.createClass({
-	getInitialState() {
-		return {newName: ''};
-	},
-
-	onKey(e) {
-		this.setState({ newName : e.target.value });
-	},
-
-	handleSubmit(e) {
-		e.preventDefault();
-		var newName = this.state.newName;
-		this.props.onChangeName(newName);	
-		this.setState({ newName: '' });
-	},
-
-	render() {
-		return(
-			<div className='change_name_form'>
-				<h3> Change Name </h3>
-				<form onSubmit={this.handleSubmit}>
-					<input
-						onChange={this.onKey}
-						value={this.state.newName} 
-					/>
-				</form>	
-			</div>
-		);
-	}
-});
-
-var ChatApp = React.createClass({
+var GameApp = React.createClass({
 
 	getInitialState() {
 		return {
@@ -381,14 +318,18 @@ var ChatApp = React.createClass({
         if (this.state.ship) {
             switch(this.state._gameState) {
                 case 'started':
-                    panel = <ShipLive />
+                    panel = 
+	                    <ShipLive 
+	                    	players = {this.state._players}
+	                        gameId = {this.state._gameId}
+	                    />
                     break;
                 case 'lobby':
                     panel = 
-                    <ShipLobby
-                        players = {this.state._players}
-                        gameId = {this.state._gameId}
-                    />;
+	                    <ShipLobby
+	                        players = {this.state._players}
+	                        gameId = {this.state._gameId}
+	                    />;
                     break;
             }
         } else {
@@ -396,6 +337,7 @@ var ChatApp = React.createClass({
                 case 'started':
                     panel = 
                     	<PlayerContainer
+                    		gameId = {this.state._gameId}
                     		role = {this.state.role}
                     	/>
                     break;
@@ -418,4 +360,4 @@ var ChatApp = React.createClass({
 	}
 });
 
-React.render(<ChatApp/>, document.getElementById('app'));
+React.render(<GameApp/>, document.getElementById('app'));
