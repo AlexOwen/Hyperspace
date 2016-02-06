@@ -95,30 +95,31 @@ exports.init = () => {
             }
 
             bus_out.emit('game:ready_players', playerStates);
+
+            
         } else {
             console.log('Error: player doesn\'t exist');
         }
     });
 
     //in game actions
-    //movement
-    bus_in.on('ship:move:up', () => {
-        if (ship.position.v + 1 <= screen.height) {
-            ship.position.v = ship.position.v + 1;
-            bus_out.emit('ship:position:v', ship.position.v);
-        }
-        console.log('ship position: ' + ship.position.v);
-    });
 
-    bus_in.on('ship:move:down', () => {
-        if (ship.position.v - 1 >= 0) {
+    //bridge
+    bus_in.on('ship:move:up', () => {
+        if (ship.position.v >= 1) {
             ship.position.v = ship.position.v - 1;
             bus_out.emit('ship:position:v', ship.position.v);
         }
         console.log('ship position: ' + ship.position.v);
     });
 
-    //bridge
+    bus_in.on('ship:move:down', () => {
+        if (ship.position.v <= screen.height - 2) {
+            ship.position.v = ship.position.v + 1;
+            bus_out.emit('ship:position:v', ship.position.v);
+        }
+        console.log('ship position: ' + ship.position.v);
+    });
 
     //engineering
 

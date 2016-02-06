@@ -12,11 +12,20 @@
                 $('#gameid').html(a);
             });
 
+            var lastShipPosition = {
+                x: 0,
+                y: 0
+            };
+            
             socket.on('ship:position:v', function(pos) {
                 $('.cell').html('');
                 $('#cell_0_' + pos).html('SHIP!');
             });
 
+            socket.on('enemy:position', function(x,y) {
+                $('.cell').html('');
+                $('#cell_' + x + '_' + y).html('ENEMY!');
+            });
 
             socket.emit('game:create');
 
