@@ -33,29 +33,33 @@ var Home = React.createClass({
 	render() {
 		return (
 			<div className='home'>
-				<h3> Hyperspace </h3>
+				<h1>Hyperspace</h1>
 				<form 
 					onSubmit={this.handleGameCreate}
-					className="form-signin"
+					className="form-create"
 					>
 					<input 
 						type="submit"
 						value="Create game"
-						className="btn btn-lg btn-default"
+						className="btn btn-lg btn-primary"
 						/>
 				</form>	
 				<form 
 					onSubmit={this.handleGameJoin}
-					className="form-signin"
+					className="form-join"
 					>
 					<input
 						onChange={this.changeJoinHandler}
 						value={this.state.gameId}
+						placeholder="12345"
+						className="join-text"
+						maxLength="5"
+						type="number"
 					/>
 					<input 
 						type="submit"
 						value="Join game"
-						className="btn btn-lg btn-default"
+						className="btn btn-lg btn-success join-button"
 					/>
 				</form>
 			</div>
@@ -109,7 +113,7 @@ var ShipLive = React.createClass({
 });
 
 var PlayerLobby = React.createClass({
-	handlePlayerReady(e) {
+	handleLeft(e) {
 		e.preventDefault();
 		
 		this.props.onPlayerReady();
@@ -120,7 +124,7 @@ var PlayerLobby = React.createClass({
             <div className='playerList'>
                 <h3> Players </h3>
                 <form 
-					onSubmit={this.handlePlayerReady}
+					onSubmit={this.handleLeft}
 					>
 					<input 
 						type="submit"

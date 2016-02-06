@@ -38,36 +38,40 @@ var Home = React.createClass({
 			'div',
 			{ className: 'home' },
 			React.createElement(
-				'h3',
+				'h1',
 				null,
-				' Hyperspace '
+				'Hyperspace'
 			),
 			React.createElement(
 				'form',
 				{
 					onSubmit: this.handleGameCreate,
-					className: 'form-signin'
+					className: 'form-create'
 				},
 				React.createElement('input', {
 					type: 'submit',
 					value: 'Create game',
-					className: 'btn btn-lg btn-default'
+					className: 'btn btn-lg btn-primary'
 				})
 			),
 			React.createElement(
 				'form',
 				{
 					onSubmit: this.handleGameJoin,
-					className: 'form-signin'
+					className: 'form-join'
 				},
 				React.createElement('input', {
 					onChange: this.changeJoinHandler,
-					value: this.state.gameId
+					value: this.state.gameId,
+					placeholder: '12345',
+					className: 'join-text',
+					maxLength: '5',
+					type: 'number'
 				}),
 				React.createElement('input', {
 					type: 'submit',
 					value: 'Join game',
-					className: 'btn btn-lg btn-default'
+					className: 'btn btn-lg btn-success join-button'
 				})
 			)
 		);
@@ -156,7 +160,7 @@ var ShipLive = React.createClass({
 var PlayerLobby = React.createClass({
 	displayName: 'PlayerLobby',
 
-	handlePlayerReady: function handlePlayerReady(e) {
+	handleLeft: function handleLeft(e) {
 		e.preventDefault();
 
 		this.props.onPlayerReady();
@@ -174,7 +178,7 @@ var PlayerLobby = React.createClass({
 			React.createElement(
 				'form',
 				{
-					onSubmit: this.handlePlayerReady
+					onSubmit: this.handleLeft
 				},
 				React.createElement('input', {
 					type: 'submit',
