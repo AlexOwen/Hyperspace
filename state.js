@@ -20,8 +20,8 @@ exports.init = () => {
     //entities
     let ship = {
         position: {
-            x: 3,
-            y: 1
+            x: 0,
+            y: 3
         },
         life: 10
     };
@@ -32,8 +32,8 @@ exports.init = () => {
         let enemy = {
             id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
             position: {
-                x: Math.floor(Math.random() * screen.height), //random position on screen
-                y: screen.width + 1     //just off the screen
+                y: Math.floor(Math.random() * screen.height), //random position on screen
+                x: screen.width + 1     //just off the screen
             },
             damage: 1,
             speed: 1
@@ -41,11 +41,11 @@ exports.init = () => {
         enemies[enemy.id] = enemy;
 
         setInterval(() => {
-            if (enemy.position - 1 >= -1) {
-                enemy.position--;
+            if (enemy.position.x - 1 >= -1) {
+                enemy.position.x--;
                 if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
                     //emit damage
-                    bus_out.emit('ship:damage', enemy.damage);
+                    bus_in.emit('ship:damage', enemy.damage);
                 }
             } else {
                 //destroy
@@ -61,6 +61,7 @@ exports.init = () => {
         setTimeout(createEnemy(), Math.random() * 10000); //create enemy randomly every 1-10 seconds
 
         bus_out.emit('ship:position:y', ship.position.y);
+        bus_out.emit('game:started');
     });
 
     bus_in.on('player:join', (playerID) => {
@@ -94,8 +95,6 @@ exports.init = () => {
             }
 
             bus_out.emit('game:ready_players', playerStates);
-
-
         } else {
             console.log('Error: player doesn\'t exist');
         }

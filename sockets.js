@@ -38,6 +38,10 @@ exports.init = (server) => {
 
         });
 
+        socket.on('game:ready', () => {
+            games[socket.room].in.emit('game:start');
+        });
+
         /*
         state.out.on('game:end', (roomID) => {
 
@@ -58,6 +62,9 @@ exports.init = (server) => {
             games[socket.room].in.emit('ship:move:down');
         });
 
+        socket.on('disconnect', () => {
+            games[socket.room].in.emit('player:leave');
+        });
 
 
         let attachHandlers = (state) => {
