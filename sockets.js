@@ -20,7 +20,7 @@ exports.init = (server) => {
             console.log('game:create ' + roomID);
         });
 
-        socket.on('game:join', (name, roomID) => {
+        socket.on('game:join', (roomID) => {
             let playerID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
             socket.join('roomID');
             socket.room = roomID;
