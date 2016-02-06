@@ -20,8 +20,8 @@ exports.init = () => {
     //entities
     let ship = {
         position: {
-            x: 0,
-            y: 3
+            x: 3,
+            y: 1
         },
         life: 10
     };
@@ -32,8 +32,8 @@ exports.init = () => {
         let enemy = {
             id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
             position: {
-                y: Math.floor(Math.random() * screen.height), //random position on screen
-                x: screen.width + 1     //just off the screen
+                x: Math.floor(Math.random() * screen.height), //random position on screen
+                y: screen.width + 1     //just off the screen
             },
             damage: 1,
             speed: 1
@@ -41,9 +41,8 @@ exports.init = () => {
         enemies[enemy.id] = enemy;
 
         setInterval(() => {
-            if (enemy.position.x - 1 >= -1) {
-                enemy.position.x--;
-                bus_out.emit('enemy:position', enemy.position);
+            if (enemy.position - 1 >= -1) {
+                enemy.position--;
                 if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
                     //emit damage
                     bus_in.emit('ship:damage', enemy.damage);
@@ -61,8 +60,7 @@ exports.init = () => {
         level = 1;
         setTimeout(createEnemy(), Math.random() * 10000); //create enemy randomly every 1-10 seconds
 
-        bus_out.emit('ship:position', ship.position);
-        bus_out.emit('game:started');
+        bus_out.emit('ship:position:y', ship.position.y);
     });
 
     bus_in.on('player:join', (playerID) => {
@@ -101,9 +99,7 @@ exports.init = () => {
 
             bus_out.emit('game:ready_players', playerStates);
 
-            if (gameReady) {
-                bus_in.emit('game:start');
-            }
+
         } else {
             console.log('Error: player doesn\'t exist');
         }
@@ -115,7 +111,7 @@ exports.init = () => {
     bus_in.on('ship:move:up', () => {
         if (ship.position.y >= 1) {
             ship.position.y = ship.position.y - 1;
-            bus_out.emit('ship:position', ship.position);
+            bus_out.emit('ship:position:y', ship.position.y);
         }
         console.log('ship position: ' + ship.position.y);
     });
@@ -123,7 +119,7 @@ exports.init = () => {
     bus_in.on('ship:move:down', () => {
         if (ship.position.y <= screen.height - 2) {
             ship.position.y = ship.position.y + 1;
-            bus_out.emit('ship:position', ship.position);
+            bus_out.emit('ship:position:y', ship.position.y);
         }
         console.log('ship position: ' + ship.position.y);
     });
