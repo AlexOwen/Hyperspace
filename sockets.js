@@ -30,7 +30,7 @@ exports.init = (server) => {
             try {
                 attachHandlers(games[roomID]);
                 games[socket.room].in.emit('player:join', playerID);
-                
+
                 socket.emit('game:joined', roomID);
                 console.log('game:join ' + roomID);
             } catch(e) {
