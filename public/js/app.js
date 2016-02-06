@@ -40,21 +40,35 @@ var Home = React.createClass({
 			React.createElement(
 				'h3',
 				null,
-				' Login '
-			),
-			React.createElement(
-				'div',
-				{ onClick: this.handleGameCreate },
-				'Create game'
+				' Hyperspace '
 			),
 			React.createElement(
 				'form',
-				{ onSubmit: this.handleGameJoin },
+				{
+					onSubmit: this.handleGameCreate,
+					className: 'form-signin'
+				},
+				React.createElement('input', {
+					type: 'submit',
+					value: 'Create game',
+					className: 'btn btn-lg btn-default'
+				})
+			),
+			React.createElement(
+				'form',
+				{
+					onSubmit: this.handleGameJoin,
+					className: 'form-signin'
+				},
 				React.createElement('input', {
 					onChange: this.changeJoinHandler,
 					value: this.state.gameId
 				}),
-				React.createElement('input', { type: 'submit', value: 'Join' })
+				React.createElement('input', {
+					type: 'submit',
+					value: 'Join game',
+					className: 'btn btn-lg btn-default'
+				})
 			)
 		);
 	}
@@ -300,7 +314,7 @@ var ChatApp = React.createClass({
 	componentDidMount: function componentDidMount() {
 		// socket.on('init', this._initialize);
 		// socket.on('send:message', this._messageRecieve);
-		socket.on('player:join', this._playerJoined);
+		socket.on('player:joined', this._playerJoined);
 		// socket.on('user:left', this._userLeft);
 		// socket.on('change:name', this._userChangedName);
 
@@ -377,7 +391,6 @@ var ChatApp = React.createClass({
 
 	handleGameJoin: function handleGameJoin(gameId) {
 		socket.emit('game:join', gameId);
-		this.setState({ _gameId: gameId });
 	},
 
 	_gameCreated: function _gameCreated(gameId) {
@@ -385,9 +398,9 @@ var ChatApp = React.createClass({
 		this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
 	},
 
-	_gameJoined: function _gameJoined() {
+	_gameJoined: function _gameJoined(gameId) {
 		//player location
-		this.setState({ ship: false, _gameState: 'lobby' });
+		this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
 	},
 
 	render: function render() {
@@ -425,7 +438,7 @@ var ChatApp = React.createClass({
 
 		return React.createElement(
 			'div',
-			null,
+			{ className: 'site-wrapper' },
 			panel
 		);
 	}

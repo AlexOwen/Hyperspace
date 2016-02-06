@@ -1,0 +1,52 @@
+<html>
+<head>
+    <script src="/socket.io.js"></script>
+    <script src="/jquery.min.js"></script>
+    <script>
+        var width = 7, height = 5;
+
+        $(function() {
+            var socket = io();
+
+            socket.on('game:created', function(a) {
+                $('#gameid').html(a);
+            });
+
+            socket.on('ship:position:v', function(pos) {
+                $('.cell').html('');
+                $('#cell_0_' + pos).html('SHIP!');
+            });
+
+
+            socket.emit('game:create');
+
+            $('#up').on('click', function() {
+                socket.emit('ship:move:up');
+            });
+            $('#down').on('click', function() {
+                socket.emit('ship:move:down');
+            });
+
+            for (var y = 0; y < height; y++) {
+                for (var x = 0; x < width; x++) {
+                    $('#grid').append('<div class="cell" id="cell_' + x + '_' + y + '" style="width:' + 100/width + '%;height:' + 100/height + '%;float:left;box-sizing:border-box;border:1px solid black;"/>');
+                }
+            }
+        });
+
+    </script>
+
+
+</head>
+<body>
+    <div id="grid">
+
+    </div>
+    <div style="float:left">
+        <div id="gameid"></div>
+        <div id="up" style="width:50px;height:50px;background:yellow">Up</div>
+        <div id="down" style="width:50px;height:50px;background:red">Down</div>
+    </div>
+
+</body>
+</html>

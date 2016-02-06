@@ -33,14 +33,30 @@ var Home = React.createClass({
 	render() {
 		return (
 			<div className='home'>
-				<h3> Login </h3>
-				<div onClick={this.handleGameCreate}>Create game</div>
-				<form onSubmit={this.handleGameJoin}>
+				<h3> Hyperspace </h3>
+				<form 
+					onSubmit={this.handleGameCreate}
+					className="form-signin"
+					>
+					<input 
+						type="submit"
+						value="Create game"
+						className="btn btn-lg btn-default"
+						/>
+				</form>	
+				<form 
+					onSubmit={this.handleGameJoin}
+					className="form-signin"
+					>
 					<input
 						onChange={this.changeJoinHandler}
 						value={this.state.gameId}
 					/>
-					<input type="submit" value="Join" />
+					<input 
+						type="submit"
+						value="Join game"
+						className="btn btn-lg btn-default"
+					/>
 				</form>	
 			</div>
 		);
@@ -235,7 +251,7 @@ var ChatApp = React.createClass({
 	componentDidMount() {
 		// socket.on('init', this._initialize);
 		// socket.on('send:message', this._messageRecieve);
-		socket.on('player:join', this._playerJoined);
+		socket.on('player:joined', this._playerJoined);
 		// socket.on('user:left', this._userLeft);
 		// socket.on('change:name', this._userChangedName);
 
@@ -311,7 +327,6 @@ var ChatApp = React.createClass({
 
 	handleGameJoin(gameId) {
 		socket.emit('game:join', gameId);
-		this.setState({ _gameId: gameId });
 	},
 
 	_gameCreated(gameId) {
@@ -319,9 +334,9 @@ var ChatApp = React.createClass({
 		this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
 	},
 
-	_gameJoined() {
+	_gameJoined(gameId) {
 		//player location
-		this.setState({ ship: false, _gameState: 'lobby' });
+		this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
 	},
 
 	render() {
@@ -363,7 +378,7 @@ var ChatApp = React.createClass({
         
 
 		return (
-			<div>
+			<div className='site-wrapper'>
                 {panel}
 			</div>
 		);
