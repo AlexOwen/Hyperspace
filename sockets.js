@@ -15,7 +15,7 @@ exports.init = (server) => {
             socket.room = roomID;
             socket.role = 'host';
             games[roomID] = state.init();
-            //attachHandlers(games[roomID]);
+            attachHandlers(games[roomID]);
             socket.emit('game:created', roomID);
             console.log('game:create ' + roomID);
         });
