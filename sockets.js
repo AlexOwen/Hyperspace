@@ -29,7 +29,8 @@ exports.init = (server) => {
             socket.playerID = playerID;
             //return player number
             try {
-                games[socket.room].in.emit('game:join', playerID);
+                games[socket.room].in.emit('player:joined', playerID);
+                socket.emit('game:joined', roomID);
             } catch(e) {
                 console.log("game:join fail, roomID not found: " + roomID);
             }

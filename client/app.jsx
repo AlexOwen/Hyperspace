@@ -251,7 +251,7 @@ var ChatApp = React.createClass({
 	componentDidMount() {
 		// socket.on('init', this._initialize);
 		// socket.on('send:message', this._messageRecieve);
-		socket.on('player:join', this._playerJoined);
+		socket.on('player:joined', this._playerJoined);
 		// socket.on('user:left', this._userLeft);
 		// socket.on('change:name', this._userChangedName);
 
@@ -327,7 +327,6 @@ var ChatApp = React.createClass({
 
 	handleGameJoin(gameId) {
 		socket.emit('game:join', gameId);
-		this.setState({ _gameId: gameId });
 	},
 
 	_gameCreated(gameId) {
@@ -335,9 +334,9 @@ var ChatApp = React.createClass({
 		this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
 	},
 
-	_gameJoined() {
+	_gameJoined(gameId) {
 		//player location
-		this.setState({ ship: false, _gameState: 'lobby' });
+		this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
 	},
 
 	render() {
