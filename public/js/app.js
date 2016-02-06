@@ -36,43 +36,39 @@ var Home = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ className: 'cover-container' },
+			{ className: 'home' },
 			React.createElement(
-				'div',
-				{ className: 'inner cover' },
-				React.createElement(
-					'h3',
-					null,
-					' Hyperspace '
-				),
-				React.createElement(
-					'form',
-					{
-						onSubmit: this.handleGameCreate,
-						className: 'form-signin'
-					},
-					React.createElement('input', {
-						type: 'submit',
-						value: 'Create game',
-						className: 'btn btn-lg btn-default'
-					})
-				),
-				React.createElement(
-					'form',
-					{
-						onSubmit: this.handleGameJoin,
-						className: 'form-signin'
-					},
-					React.createElement('input', {
-						onChange: this.changeJoinHandler,
-						value: this.state.gameId
-					}),
-					React.createElement('input', {
-						type: 'submit',
-						value: 'Join game',
-						className: 'btn btn-lg btn-default'
-					})
-				)
+				'h3',
+				null,
+				' Hyperspace '
+			),
+			React.createElement(
+				'form',
+				{
+					onSubmit: this.handleGameCreate,
+					className: 'form-signin'
+				},
+				React.createElement('input', {
+					type: 'submit',
+					value: 'Create game',
+					className: 'btn btn-lg btn-default'
+				})
+			),
+			React.createElement(
+				'form',
+				{
+					onSubmit: this.handleGameJoin,
+					className: 'form-signin'
+				},
+				React.createElement('input', {
+					onChange: this.changeJoinHandler,
+					value: this.state.gameId
+				}),
+				React.createElement('input', {
+					type: 'submit',
+					value: 'Join game',
+					className: 'btn btn-lg btn-default'
+				})
 			)
 		);
 	}
@@ -443,7 +439,7 @@ var ChatApp = React.createClass({
 
 		return React.createElement(
 			'div',
-			{ className: 'site-wrapper-inner' },
+			{ className: 'site-wrapper' },
 			panel
 		);
 	}
