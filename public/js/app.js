@@ -294,7 +294,8 @@ var PlayerContainer = React.createClass({
             default:
             case 'bridge':
                 rolePanel = React.createElement(PlayerBridge, {
-                    onShipMove: this.props.onShipMove
+                    onShipMove: this.props.onShipMove,
+                    shipStatus: this.props.shipStatus
                 });
                 break;
 
@@ -334,6 +335,19 @@ var PlayerBridge = React.createClass({
         this.props.onShipMove(direction);
     },
 
+    handleShipPower: function handleShipPower(toRole) {
+        console.log(toRole);
+    },
+
+    getHealthColour: function getHealthColour(health) {
+        if (health < 20) {
+            return "red";
+        } else if (health < 50) {
+            return "orange";
+        }
+        return "green";
+    },
+
     render: function render() {
         return React.createElement(
             'div',
@@ -345,21 +359,121 @@ var PlayerBridge = React.createClass({
             ),
             React.createElement(
                 'div',
+                { className: 'power' },
+                React.createElement(
+                    'button',
+                    {
+                        className: 'metal linear',
+                        type: 'button',
+                        onClick: this.handleShipPower.bind(this, "weapons")
+                    },
+                    React.createElement('span', { className: 'icon-weapons' })
+                ),
+                React.createElement(
+                    'button',
+                    {
+                        className: 'metal linear',
+                        type: 'button',
+                        onClick: this.handleShipPower.bind(this, "engineering")
+                    },
+                    React.createElement('span', { className: 'icon-engineering' })
+                ),
+                React.createElement(
+                    'button',
+                    {
+                        className: 'metal linear',
+                        type: 'button',
+                        onClick: this.handleShipPower.bind(this, "shields")
+                    },
+                    React.createElement('span', { className: 'icon-shields' })
+                ),
+                React.createElement('div', { className: 'clr' })
+            ),
+            React.createElement(
+                'div',
+                { className: 'status' },
+                React.createElement(
+                    'ul',
+                    null,
+                    React.createElement(
+                        'li',
+                        null,
+                        'Hull: ',
+                        React.createElement(
+                            'span',
+                            { className: this.getHealthColour(this.props.shipStatus.health.life) },
+                            this.props.shipStatus.health.life,
+                            '%'
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Weapons: ',
+                        React.createElement(
+                            'span',
+                            { className: this.getHealthColour(this.props.shipStatus.health.life) },
+                            this.props.shipStatus.health.life,
+                            '%'
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Engineering: ',
+                        React.createElement(
+                            'span',
+                            { className: this.getHealthColour(this.props.shipStatus.health.life) },
+                            this.props.shipStatus.health.life,
+                            '%'
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Shields: ',
+                        React.createElement(
+                            'span',
+                            { className: this.getHealthColour(this.props.shipStatus.health.shields) },
+                            this.props.shipStatus.health.shields,
+                            '%'
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Bridge: ',
+                        React.createElement(
+                            'span',
+                            { className: this.getHealthColour(this.props.shipStatus.health.life) },
+                            this.props.shipStatus.health.life,
+                            '%'
+                        )
+                    )
+                )
+            ),
+            React.createElement(
+                'div',
                 { className: 'arrows' },
                 React.createElement(
                     'button',
-                    { className: 'metal linear', type: 'button' },
-                    React.createElement('span', {
-                        className: 'glyphicon glyphicon-chevron-up',
+                    {
+                        className: 'metal linear',
+                        type: 'button',
                         onClick: this.handleShipMove.bind(this, "up")
+                    },
+                    React.createElement('span', {
+                        className: 'glyphicon glyphicon-chevron-up'
                     })
                 ),
                 React.createElement(
                     'button',
-                    { className: 'metal linear', type: 'button' },
+                    {
+                        className: 'metal linear',
+                        type: 'button',
+                        onClick: this.handleShipMove.bind(this, "down") },
                     React.createElement('span', {
-                        className: 'glyphicon glyphicon-chevron-down',
-                        onClick: this.handleShipMove.bind(this, "down")
+                        className: 'glyphicon glyphicon-chevron-down'
                     })
                 )
             )
@@ -456,20 +570,27 @@ var GameApp = React.createClass({
             _gameId: null,
             _gameState: 'create',
             // _gameState: 'started',
-            _players: []
+            _players: [],
+            // _playerStates: [],
+            // role: 'bridge'
+            // messages:[],
+            // text: '',
+            _shipStatus: {
+                health: {
+                    life: 0, shields: 0
+                }
+            }
         };
     },
 
-    // _playerStates: [],
-    // role: 'bridge'
-    // messages:[],
-    // text: '',
     componentDidMount: function componentDidMount() {
         socket.on('disconnect', this._disconnect);
         socket.on('game:created', this._gameCreated);
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
+
+        socket.on('ship:status', this._shipStatusUpdate);
 
         // socket.on('player:joined', this._playerJoined);
         // socket.on('player:left', this._playerLeft);
@@ -577,6 +698,11 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+    _shipStatusUpdate: function _shipStatusUpdate(shipStatus) {
+        console.log(shipStatus);
+        this.setState({ _shipStatus: shipStatus });
+    },
+
     render: function render() {
         var panel = React.createElement(Home, {
             onGameCreate: this.handleGameCreate,
@@ -609,6 +735,7 @@ var GameApp = React.createClass({
                 case 'started':
                     panel = React.createElement(PlayerContainer, {
                         gameId: this.state._gameId,
+                        shipStatus: this.state._shipStatus,
                         onShipMove: this.handleShipMove
                     });
                     break;

@@ -211,6 +211,7 @@ var PlayerContainer = React.createClass({
                 rolePanel = 
                     <PlayerBridge 
                         onShipMove = {this.props.onShipMove}
+                        shipStatus = {this.props.shipStatus}
                     />;
                 break;
 
@@ -240,26 +241,99 @@ var PlayerContainer = React.createClass({
 
 var PlayerBridge = React.createClass({
     handleShipMove(direction) {
-        console.log(direction)
+        console.log(direction);
         this.props.onShipMove(direction);   
+    },
+
+    handleShipPower(toRole) {
+        console.log(toRole);
+    },
+
+    getHealthColour(health) {
+        if (health < 20) { return "red"; } else
+        if (health < 50) { return "orange"; }
+        return "green";
     },
 
     render() {
         return (
             <div className="player-bridge container">
                 <p>Bridge</p>
+                <div className="power">
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "weapons")}
+                        >
+                        <span className="icon-weapons"></span>
+                    </button>
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "engineering")}
+                        >
+                        <span className="icon-engineering"></span>
+                    </button>
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "shields")}
+                        >
+                        <span className="icon-shields"></span>
+                    </button>
+                    <div className="clr"></div>
+                </div>
+                <div className="status">
+                    <ul>
+                        <li>
+                            Hull:&nbsp;
+                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}%
+                            </span>
+                        </li>
+                        <li>
+                            Weapons:&nbsp;
+                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}%
+                            </span>
+                        </li>
+                        <li>
+                            Engineering:&nbsp;
+                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}%
+                            </span>
+                        </li>
+                        <li>
+                            Shields:&nbsp;
+                            <span className={this.getHealthColour(this.props.shipStatus.health.shields)}>
+                                {this.props.shipStatus.health.shields}%
+                            </span>
+                        </li>
+                        <li>
+                            Bridge:&nbsp;
+                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}%
+                            </span>
+                        </li>
+                    </ul>
+                </div>
                 <div className="arrows">
-                    <button className="metal linear" type="button">
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipMove.bind(this, "up")}
+                        >
                         <span 
                             className="glyphicon glyphicon-chevron-up"
-                            onClick={this.handleShipMove.bind(this, "up")}
                             >
                         </span>
                     </button>
-                    <button className="metal linear" type="button">
+                    <button
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipMove.bind(this, "down")}>
                         <span 
                             className="glyphicon glyphicon-chevron-down"
-                            onClick={this.handleShipMove.bind(this, "down")}
                             >
                         </span>
                     </button>
@@ -332,6 +406,11 @@ var GameApp = React.createClass({
             // role: 'bridge'
             // messages:[],
             // text: '',
+            _shipStatus: {
+                health: {
+                    life: 0, shields: 0
+                },
+            }
         };
     },
 
@@ -341,6 +420,8 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
+        
+        socket.on('ship:status', this._shipStatusUpdate);
 
         // socket.on('player:joined', this._playerJoined);
         // socket.on('player:left', this._playerLeft);
@@ -448,6 +529,11 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+    _shipStatusUpdate(shipStatus) {
+        console.log(shipStatus);
+        this.setState({ _shipStatus: shipStatus });
+    },
+
     render() {
         var panel = 
             <Home
@@ -488,6 +574,7 @@ var GameApp = React.createClass({
                     panel = 
                         <PlayerContainer
                             gameId = {this.state._gameId}
+                            shipStatus = {this.state._shipStatus}
                             onShipMove = {this.handleShipMove}
                         />
                     break;
