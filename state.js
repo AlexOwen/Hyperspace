@@ -69,79 +69,81 @@ exports.init = () => {
     //enemies
     let enemies = {};
     let createEnemy = (details) => {
-        if (ship.health.life > 0) {
+        if (details.isProjectile && details.parent !== undefined) {
+            if (ship.health.life > 0) {
 
-            let x = 0, y = 0;
-            if (details.startPos === undefined) {
-                if (details.isProjectile) {
-                    x = details.parent.position.x - 1;
-                    y = details.parent.position.y;
-                } else {
-                    x = screen.width + 1;                          //just off the screen
-                    y = Math.floor(Math.random() * screen.height); //random position on screen
-                }
-            } else {
-                x = details.startPos.x;
-                y = details.startPos.y;
-            }
-
-
-            //create the enemy
-            let enemy = {
-                id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
-                position: {
-                    x, y
-                },
-                type: details.type,
-                health: enemyTypes[details.type].health
-            };
-            enemies[enemy.id] = enemy;
-
-            let creationRate = 1;
-            if (details.creationRate !== undefined) {
-                creationRate = details.creationRate;
-            } else {
-                creationRate = enemyTypes[enemy.type].creationRate;
-            }
-
-            //movement
-            enemies[enemy.id].moveTimer = setInterval(() => {
-                if (enemy.position.x - 1 >= -1) {
-                    enemy.position.x--;
-                    bus_out.emit('enemy:position', {
-                        id: enemy.id,
-                        position: enemies[enemy.id].position,
-                        type: enemies[enemy.id].type,
-                        health: enemies[enemy.id].health
-                    });
-                    if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
-                        //emit damage
-                        bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision);
+                let x = 0, y = 0;
+                if (details.startPos === undefined) {
+                    if (details.isProjectile) {
+                        x = details.parent.position.x - 1;
+                        y = details.parent.position.y;
+                    } else {
+                        x = screen.width + 1;                          //just off the screen
+                        y = Math.floor(Math.random() * screen.height); //random position on screen
                     }
                 } else {
-                    enemies[enemy.id] = undefined;
+                    x = details.startPos.x;
+                    y = details.startPos.y;
                 }
-            }, 1000 / (enemyTypes[enemy.type].speed + ship.speed));
 
-            //projectiles
-            if (enemyTypes[enemies[enemy.id].type].gun !== undefined && enemyTypes[enemies[enemy.id].type].gun.projectile !== undefined) {
-                setTimeout(() => {
-                    createEnemy({
-                        type: enemyTypes[enemyTypes[enemies[enemy.id].type].gun.projectile].name,
-                        isProjectile: true,
-                        parent: enemies[enemy.id],
-                        creationRate: enemyTypes[enemies[enemy.id].type].gun.rateOfFire
-                    });
-                }, ((Math.random() * 10000) / level) / enemyTypes[enemies[enemy.id].type].gun.rateOfFire);
-            }
 
-            enemies[enemy.id].createTimer = setTimeout(() => {
-                createEnemy({
+                //create the enemy
+                let enemy = {
+                    id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
+                    position: {
+                        x, y
+                    },
                     type: details.type,
-                    creationRate: creationRate
-                });
-            },
-            ((Math.random() * 10000) / level) / creationRate); //create enemy randomly every 1-10 seconds
+                    health: enemyTypes[details.type].health
+                };
+                enemies[enemy.id] = enemy;
+
+                let creationRate = 1;
+                if (details.creationRate !== undefined) {
+                    creationRate = details.creationRate;
+                } else {
+                    creationRate = enemyTypes[enemy.type].creationRate;
+                }
+
+                //movement
+                enemies[enemy.id].moveTimer = setInterval(() => {
+                    if (enemy.position.x - 1 >= -1) {
+                        enemy.position.x--;
+                        bus_out.emit('enemy:position', {
+                            id: enemy.id,
+                            position: enemies[enemy.id].position,
+                            type: enemies[enemy.id].type,
+                            health: enemies[enemy.id].health
+                        });
+                        if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
+                            //emit damage
+                            bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision);
+                        }
+                    } else {
+                        enemies[enemy.id] = undefined;
+                    }
+                }, 1000 / (enemyTypes[enemy.type].speed + ship.speed));
+
+                //projectiles
+                if (enemyTypes[enemies[enemy.id].type].gun !== undefined && enemyTypes[enemies[enemy.id].type].gun.projectile !== undefined) {
+                    setTimeout(() => {
+                        createEnemy({
+                            type: enemyTypes[enemyTypes[enemies[enemy.id].type].gun.projectile].name,
+                            isProjectile: true,
+                            parent: enemies[enemy.id],
+                            creationRate: enemyTypes[enemies[enemy.id].type].gun.rateOfFire
+                        });
+                    }, ((Math.random() * 10000) / level) / enemyTypes[enemies[enemy.id].type].gun.rateOfFire);
+                }
+
+                enemies[enemy.id].createTimer = setTimeout(() => {
+                    createEnemy({
+                        type: details.type,
+                        creationRate: creationRate
+                    });
+                },
+                ((Math.random() * 10000) / level) / creationRate); //create enemy randomly every 1-10 seconds
+            }
         }
     };
 
