@@ -43,6 +43,7 @@ exports.init = () => {
         setInterval(() => {
             if (enemy.position.x - 1 >= -1) {
                 enemy.position.x--;
+                bus_out.emit('enemy:position', enemy.position);
                 if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
                     //emit damage
                     bus_in.emit('ship:damage', enemy.damage);
@@ -60,7 +61,7 @@ exports.init = () => {
         level = 1;
         setTimeout(createEnemy(), Math.random() * 10000); //create enemy randomly every 1-10 seconds
 
-        bus_out.emit('ship:position:y', ship.position.y);
+        bus_out.emit('ship:position', ship.position);
         bus_out.emit('game:started');
     });
 
@@ -87,7 +88,9 @@ exports.init = () => {
             }
 
             let playerStates = [];
+            let gameReady = true;
             for (player in players) {
+                if (!player.ready) gameReady = false;
                 playerStates.push({
                     number: player.number,
                     ready: player.ready
@@ -95,6 +98,10 @@ exports.init = () => {
             }
 
             bus_out.emit('game:ready_players', playerStates);
+
+            if (gameReady) {
+                bus_in.emit('game:start');
+            }
         } else {
             console.log('Error: player doesn\'t exist');
         }
@@ -106,7 +113,7 @@ exports.init = () => {
     bus_in.on('ship:move:up', () => {
         if (ship.position.y >= 1) {
             ship.position.y = ship.position.y - 1;
-            bus_out.emit('ship:position:y', ship.position.y);
+            bus_out.emit('ship:position', ship.position);
         }
         console.log('ship position: ' + ship.position.y);
     });
@@ -114,7 +121,7 @@ exports.init = () => {
     bus_in.on('ship:move:down', () => {
         if (ship.position.y <= screen.height - 2) {
             ship.position.y = ship.position.y + 1;
-            bus_out.emit('ship:position:y', ship.position.y);
+            bus_out.emit('ship:position', ship.position);
         }
         console.log('ship position: ' + ship.position.y);
     });

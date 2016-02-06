@@ -17,14 +17,14 @@
                 y: 0
             };
 
-            socket.on('ship:position:y', function(pos) {
+            socket.on('ship:position', function(pos) {
                 $('.cell').html('');
-                $('#cell_0_' + pos).html('SHIP!');
+                $('#cell_0_' + pos.y).html('SHIP!');
             });
 
-            socket.on('enemy:position', function(x,y) {
+            socket.on('enemy:position', function(pos) {
                 $('.cell').html('');
-                $('#cell_' + x + '_' + y).html('ENEMY!');
+                $('#cell_' + pos.x + '_' + pos.y).html('ENEMY!');
             });
 
             socket.emit('game:create');

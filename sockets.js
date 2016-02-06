@@ -38,10 +38,6 @@ exports.init = (server) => {
 
         });
 
-        socket.on('game:ready', () => {
-            games[socket.room].in.emit('game:start');
-        });
-
         /*
         state.out.on('game:end', (roomID) => {
 
@@ -63,15 +59,17 @@ exports.init = (server) => {
         });
 
         socket.on('disconnect', () => {
-            games[socket.room].in.emit('player:leave');
+            if (socket.room !== undefined && games[socket.room] !== undefined) {
+                games[socket.room].in.emit('player:leave');
+            }
         });
 
 
         let attachHandlers = (state) => {
             // server to player
-            state.out.on('ship:position:y', (position) => {
-                console.log('ship:position:y out');
-                socket.emit('ship:position:y', position);
+            state.out.on('ship:position', (position) => {
+                console.log('ship:position out');
+                socket.emit('ship:position', position);
             });
 
             state.out.on('player:joined', (playerID, playerNumber) => {
