@@ -53,7 +53,7 @@ exports.init = () => {
                 x: Math.floor(Math.random() * screen.height), //random position on screen
                 y: screen.width + 1     //just off the screen
             },
-            type: basic
+            type: 'basic'
         };
         enemies[enemy.id] = enemy;
 
@@ -85,9 +85,11 @@ exports.init = () => {
     });
 
     bus_in.on('player:join', (playerID) => {
-        players[playerID] = {};
-        players[playerID].number = playerCount++;
-/* remove this */ bus_in.emit('game:start');
+        players[playerID] = {
+            number: playerCount++,
+            ready: false
+        };
+// /* remove this */ bus_in.emit('game:start');
         bus_out.emit('player:joined', playerID, players[playerID].number);
     });
 
@@ -102,12 +104,13 @@ exports.init = () => {
 
     bus_in.on('player:ready', (playerID, isReady) => {
         if (players[playerID] !== undefined) {
-            players[playerID].ready = !players[playerID].ready
+            players[playerID].ready = isReady;
 
             let playerStates = [];
             let gameReady = true;
             for (let player in players) {
-                if (!player.ready) gameReady = false;
+                if (!players[player].ready) gameReady = false;
+                
                 playerStates.push({
                     number: players[player].number,
                     ready: players[player].ready
@@ -115,7 +118,10 @@ exports.init = () => {
             }
             bus_out.emit('game:ready_players', playerStates);
 
-
+            if (gameReady) {
+                console.log(gameReady);
+                bus_in.emit('game:start');
+            }
         } else {
             console.log('Error: player doesn\'t exist');
         }

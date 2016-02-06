@@ -268,11 +268,11 @@ var ChatApp = React.createClass({
 		socket.on('disconnect', this._disconnect);
 		socket.on('game:created', this._gameCreated);
 		socket.on('game:joined', this._gameJoined);
+		socket.on('game:ready_players', this._readyPlayers);
 		socket.on('game:started', this._gameStarted);
 
 		// socket.on('player:joined', this._playerJoined);
 		// socket.on('player:left', this._playerLeft);
-		socket.on('game:ready_players', this._readyPlayers);
 	},
 
 	_disconnect() {
@@ -367,6 +367,7 @@ var ChatApp = React.createClass({
 
 	_gameStarted() {
 		//player location
+		console.log('game:started');
 		this.setState({ _gameState: 'started' });
 	},
 

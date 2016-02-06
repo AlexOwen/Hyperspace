@@ -104,6 +104,7 @@ exports.init = (server) => {
 
             state.out.on('game:started', (playerStates) => {
                 socket.emit('game:started');
+                console.log('game:started');
             });
         };
     });
