@@ -29,12 +29,13 @@ exports.init = (server) => {
             socket.playerID = playerID;
             //return player number
             try {
-                games[socket.room].in.emit('player:joined', playerID);
+                attachHandlers(games[roomID]);
+                games[socket.room].in.emit('player:join', playerID);
                 socket.emit('game:joined', roomID);
             } catch(e) {
                 console.log("game:join fail, roomID not found: " + roomID);
             }
-            
+
         });
 
         /*
@@ -61,13 +62,17 @@ exports.init = (server) => {
 
         let attachHandlers = (state) => {
             // server to player
-            state.out.on('ship:position:v', (position) => {
-                console.log('ship:position:v out');
-                socket.emit('ship:position:v', position);
+            state.out.on('ship:position:y', (position) => {
+                console.log('ship:position:y out');
+                socket.emit('ship:position:y', position);
             });
 
             state.out.on('player:joined', (playerID, playerNumber) => {
                 socket.emit('player:joined', playerNumber);
+            });
+
+            state.out.on('player:left', (playerID, playerNumber) => {
+                socket.emit('player:left', playerNumber);
             });
 
             state.out.on('game:ready_players', (playerStates) => {
