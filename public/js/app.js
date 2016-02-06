@@ -5,426 +5,628 @@ var React = require('react');
 
 var socket = io.connect();
 
+var ROLES = ['bridge', 'weapons', 'engineering', 'shields'];
+
 var Home = React.createClass({
-	displayName: 'Home',
+    displayName: 'Home',
 
-	getInitialState: function getInitialState() {
-		return { gameId: '' };
-	},
+    getInitialState: function getInitialState() {
+        return { gameId: '' };
+    },
 
-	handleGameCreate: function handleGameCreate(e) {
-		e.preventDefault();
-		this.props.onGameCreate();
-	},
+    handleGameCreate: function handleGameCreate(e) {
+        e.preventDefault();
+        this.props.onGameCreate();
+    },
 
-	handleGameJoin: function handleGameJoin(e) {
-		e.preventDefault();
-		var gameId = this.state.gameId;
-		var alphanumericRegex = /^[0-9a-z]+$/;
+    handleGameJoin: function handleGameJoin(e) {
+        e.preventDefault();
+        var gameId = this.state.gameId;
+        var alphanumericRegex = /^[0-9a-z]+$/;
 
-		if (gameId.match(alphanumericRegex) && gameId.length == 5) {
-			this.props.onGameJoin(gameId);
-		} else {
-			this.setState({ gameId: '' });
-		}
-	},
+        if (gameId.match(alphanumericRegex) && gameId.length == 5) {
+            this.props.onGameJoin(gameId);
+        } else {
+            this.setState({ gameId: '' });
+        }
+    },
 
-	changeJoinHandler: function changeJoinHandler(e) {
-		this.setState({ gameId: e.target.value });
-	},
+    changeJoinHandler: function changeJoinHandler(e) {
+        this.setState({ gameId: e.target.value });
+    },
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'home' },
-			React.createElement(
-				'h1',
-				null,
-				'Hyperspace'
-			),
-			React.createElement(
-				'form',
-				{
-					onSubmit: this.handleGameCreate,
-					className: 'form-create'
-				},
-				React.createElement('input', {
-					type: 'submit',
-					value: 'Create game',
-					className: 'btn btn-lg btn-primary'
-				})
-			),
-			React.createElement(
-				'form',
-				{
-					onSubmit: this.handleGameJoin,
-					className: 'form-join'
-				},
-				React.createElement('input', {
-					onChange: this.changeJoinHandler,
-					value: this.state.gameId,
-					placeholder: '12345',
-					className: 'join-text',
-					maxLength: '5',
-					type: 'number'
-				}),
-				React.createElement('input', {
-					type: 'submit',
-					value: 'Join game',
-					className: 'btn btn-lg btn-success join-button'
-				})
-			)
-		);
-	}
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'div',
+                { className: 'header' },
+                React.createElement(
+                    'h1',
+                    null,
+                    'Don\'t Blow Up'
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'center-wrap' },
+                React.createElement(
+                    'div',
+                    { className: 'home center-container' },
+                    React.createElement(
+                        'form',
+                        {
+                            onSubmit: this.handleGameCreate,
+                            className: 'form-create'
+                        },
+                        React.createElement('input', {
+                            type: 'submit',
+                            value: 'Create game',
+                            className: 'btn btn-lg btn-primary'
+                        })
+                    ),
+                    React.createElement(
+                        'form',
+                        {
+                            onSubmit: this.handleGameJoin,
+                            className: 'form-join'
+                        },
+                        React.createElement('input', {
+                            onChange: this.changeJoinHandler,
+                            value: this.state.gameId,
+                            placeholder: '12345',
+                            className: 'join-text',
+                            maxLength: '5',
+                            type: 'number'
+                        }),
+                        React.createElement('input', {
+                            type: 'submit',
+                            value: 'Join game',
+                            className: 'btn btn-lg btn-success join-button'
+                        })
+                    )
+                )
+            )
+        );
+    }
 });
 
 var ShipLobby = React.createClass({
-	displayName: 'ShipLobby',
+    displayName: 'ShipLobby',
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'playerList' },
-			React.createElement(
-				'h1',
-				null,
-				' GameID ',
-				this.props.gameId,
-				' '
-			),
-			React.createElement(
-				'h3',
-				null,
-				' Players '
-			),
-			React.createElement(
-				'ul',
-				null,
-				this.props.players.map(function (player, i) {
-					return React.createElement(
-						'li',
-						{ key: i },
-						'Player ',
-						player.number,
-						', Ready: ',
-						player.ready.toString()
-					);
-				})
-			)
-		);
-	}
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'div',
+                { className: 'header' },
+                React.createElement(
+                    'h1',
+                    null,
+                    'Don\'t Blow Up'
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'center-wrap' },
+                React.createElement(
+                    'div',
+                    { className: 'center-container' },
+                    React.createElement(
+                        'div',
+                        { className: 'container' },
+                        React.createElement(
+                            'h2',
+                            { className: 'shake' },
+                            this.props.gameId
+                        )
+                    ),
+                    React.createElement(
+                        'div',
+                        { className: 'container' },
+                        React.createElement(
+                            'h2',
+                            null,
+                            'Players'
+                        ),
+                        React.createElement(
+                            'ul',
+                            null,
+                            this.props.players.map(function (player, i) {
+                                return React.createElement(
+                                    'li',
+                                    { key: i },
+                                    React.createElement(
+                                        'h3',
+                                        null,
+                                        'Player ',
+                                        player.number,
+                                        '.. ',
+                                        React.createElement(
+                                            'span',
+                                            { className: player.ready ? "green" : "red" },
+                                            player.ready ? "Ready" : "Not Ready",
+                                            ' ',
+                                            React.createElement('span', { className: player.ready ? "glyphicon glyphicon-thumbs-up green" : "glyphicon glyphicon-thumbs-down red" })
+                                        )
+                                    )
+                                );
+                            })
+                        )
+                    )
+                )
+            )
+        );
+    }
 });
 
 var ShipLive = React.createClass({
-	displayName: 'ShipLive',
+    displayName: 'ShipLive',
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'playerList' },
-			React.createElement(
-				'h1',
-				null,
-				'playing live'
-			),
-			React.createElement(
-				'h3',
-				null,
-				' GameID ',
-				this.props.gameId,
-				' '
-			),
-			React.createElement(
-				'h3',
-				null,
-				' Players '
-			),
-			React.createElement(
-				'ul',
-				null,
-				this.props.players.map(function (player, i) {
-					return React.createElement(
-						'li',
-						{ key: i },
-						'Player ',
-						player.number,
-						', Ready: ',
-						player.ready.toString()
-					);
-				})
-			)
-		);
-	}
+    componentDidMount: function componentDidMount() {
+        initShipDisplay(socket);
+    },
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement('div', { id: 'grid' }),
+            React.createElement(
+                'div',
+                { style: { float: 'left' } },
+                React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
+                React.createElement(
+                    'div',
+                    { id: 'life', style: { float: 'left' } },
+                    'Life',
+                    React.createElement('span', null)
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'shields', style: { float: 'left' } },
+                    'Shields',
+                    React.createElement('span', null)
+                )
+            )
+        );
+    }
 });
 
 var PlayerLobby = React.createClass({
-	displayName: 'PlayerLobby',
+    displayName: 'PlayerLobby',
 
-	handleLeft: function handleLeft(e) {
-		e.preventDefault();
+    getInitialState: function getInitialState() {
+        return {
+            isReady: false
+        };
+    },
 
-		this.props.onPlayerReady();
-	},
+    handleReady: function handleReady(e) {
+        e.preventDefault();
+        this.setState({ isReady: true });
+        this.props.onPlayerReady();
+    },
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'playerList' },
-			React.createElement(
-				'h3',
-				null,
-				' Players '
-			),
-			React.createElement(
-				'form',
-				{
-					onSubmit: this.handleLeft
-				},
-				React.createElement('input', {
-					type: 'submit',
-					value: 'Ready',
-					className: 'btn btn-lg btn-default'
-				})
-			),
-			React.createElement(
-				'ul',
-				null,
-				this.props.players.map(function (player, i) {
-					return React.createElement(
-						'li',
-						{ key: i },
-						'Player ',
-						player
-					);
-				})
-			)
-		);
-	}
+    render: function render() {
+        var readyView = React.createElement(
+            'form',
+            {
+                onSubmit: this.handleReady
+            },
+            React.createElement('input', {
+                type: 'submit',
+                value: 'I\'m Ready',
+                className: 'btn btn-lg btn-default'
+            })
+        );
+        if (this.state.isReady) {
+            readyView = React.createElement(
+                'span',
+                null,
+                React.createElement(
+                    'h2',
+                    { className: 'green' },
+                    'Ready and waiting..!'
+                )
+            );
+        }
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'div',
+                { className: 'header' },
+                React.createElement(
+                    'h1',
+                    null,
+                    'Dont Blow Up'
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'center-wrap' },
+                React.createElement(
+                    'div',
+                    { className: 'center-container' },
+                    React.createElement(
+                        'div',
+                        { className: 'container' },
+                        readyView
+                    )
+                )
+            )
+        );
+    }
 });
 
 var PlayerContainer = React.createClass({
-	displayName: 'PlayerContainer',
+    displayName: 'PlayerContainer',
 
-	render: function render() {
-		var rolePanel;
+    getInitialState: function getInitialState() {
+        return {
+            role: 'bridge'
+        };
+    },
 
-		switch (this.props.role) {
-			case 'weapons':
-				rolePanel = React.createElement(PlayerWeapons, null);
-				break;
-			case 'shields':
-				rolePanel = React.createElement(PlayerShields, null);
-				break;
-			case 'engine':
-				rolePanel = React.createElement(PlayerEngine, null);
-				break;
-			default:
-			case 'bridge':
-				rolePanel = React.createElement(PlayerBridge, null);
-				break;
+    handleMenuItem: function handleMenuItem(role) {
+        console.log(role);
+        this.setState({ role: role });
+    },
 
-		}
+    render: function render() {
+        var _this = this;
 
-		return React.createElement(
-			'div',
-			null,
-			React.createElement(
-				'div',
-				null,
-				React.createElement(
-					'p',
-					null,
-					this.props.gameId
-				)
-			),
-			rolePanel
-		);
-	}
+        var rolePanel;
+
+        switch (this.state.role) {
+            case 'weapons':
+                rolePanel = React.createElement(PlayerWeapons, null);
+                break;
+            case 'shields':
+                rolePanel = React.createElement(PlayerShields, null);
+                break;
+            case 'engineering':
+                rolePanel = React.createElement(PlayerEngine, null);
+                break;
+            default:
+            case 'bridge':
+                rolePanel = React.createElement(PlayerBridge, {
+                    onShipMove: this.props.onShipMove
+                });
+                break;
+
+        }
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'div',
+                { className: 'playerNav' },
+                ROLES.map(function (role, i) {
+                    return React.createElement(
+                        'div',
+                        {
+                            className: 'cell',
+                            key: role,
+                            onClick: _this.handleMenuItem.bind(_this, role)
+                        },
+                        React.createElement('span', {
+                            className: _this.state.role == role ? "green icon-" + role : "icon-" + role
+                        })
+                    );
+                }),
+                React.createElement('div', { className: 'clr' })
+            ),
+            rolePanel
+        );
+    }
 });
 
 var PlayerBridge = React.createClass({
-	displayName: 'PlayerBridge',
+    displayName: 'PlayerBridge',
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			null,
-			React.createElement(
-				'h3',
-				null,
-				'The Bridge'
-			)
-		);
-	}
+    handleShipMove: function handleShipMove(direction) {
+        console.log(direction);
+        this.props.onShipMove(direction);
+    },
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            { className: 'player-bridge container' },
+            React.createElement(
+                'p',
+                null,
+                'Bridge'
+            ),
+            React.createElement(
+                'div',
+                { className: 'arrows' },
+                React.createElement(
+                    'button',
+                    { className: 'metal linear', type: 'button' },
+                    React.createElement('span', {
+                        className: 'glyphicon glyphicon-chevron-up',
+                        onClick: this.handleShipMove.bind(this, "up")
+                    })
+                ),
+                React.createElement(
+                    'button',
+                    { className: 'metal linear', type: 'button' },
+                    React.createElement('span', {
+                        className: 'glyphicon glyphicon-chevron-down',
+                        onClick: this.handleShipMove.bind(this, "down")
+                    })
+                )
+            )
+        );
+    }
+});
+
+var PlayerWeapons = React.createClass({
+    displayName: 'PlayerWeapons',
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h3',
+                null,
+                'Weapons'
+            )
+        );
+    }
+});
+
+var PlayerEngine = React.createClass({
+    displayName: 'PlayerEngine',
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h3',
+                null,
+                'Engineering'
+            )
+        );
+    }
+});
+
+var PlayerShields = React.createClass({
+    displayName: 'PlayerShields',
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h3',
+                null,
+                'Shields'
+            )
+        );
+    }
+});
+
+var ShipEnd = React.createClass({
+    displayName: 'ShipEnd',
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h3',
+                null,
+                'The End'
+            )
+        );
+    }
+});
+
+var PlayerEnd = React.createClass({
+    displayName: 'PlayerEnd',
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h3',
+                null,
+                'The End'
+            )
+        );
+    }
 });
 
 var GameApp = React.createClass({
-	displayName: 'GameApp',
+    displayName: 'GameApp',
 
-	getInitialState: function getInitialState() {
-		return {
-			ship: false,
-			_gameId: null,
-			_gameState: 'create',
-			_players: [],
-			// _playerStates: [],
-			role: 'bridge'
-			// messages:[],
-			// text: '',
-		};
-	},
+    getInitialState: function getInitialState() {
+        return {
+            ship: false,
+            _gameId: null,
+            _gameState: 'create',
+            // _gameState: 'started',
+            _players: []
+        };
+    },
 
-	componentDidMount: function componentDidMount() {
-		socket.on('disconnect', this._disconnect);
-		socket.on('game:created', this._gameCreated);
-		socket.on('game:joined', this._gameJoined);
-		socket.on('game:ready_players', this._readyPlayers);
-		socket.on('game:started', this._gameStarted);
+    // _playerStates: [],
+    // role: 'bridge'
+    // messages:[],
+    // text: '',
+    componentDidMount: function componentDidMount() {
+        socket.on('disconnect', this._disconnect);
+        socket.on('game:created', this._gameCreated);
+        socket.on('game:joined', this._gameJoined);
+        socket.on('game:ready_players', this._readyPlayers);
+        socket.on('game:started', this._gameStarted);
 
-		// socket.on('player:joined', this._playerJoined);
-		// socket.on('player:left', this._playerLeft);
-	},
+        // socket.on('player:joined', this._playerJoined);
+        // socket.on('player:left', this._playerLeft);
+    },
 
-	_disconnect: function _disconnect() {
-		this.setState(this.getInitialState());
-	},
+    _disconnect: function _disconnect() {
+        this.setState(this.getInitialState());
+    },
 
-	// _initialize(data) {
-	// 	var {users, name} = data;
-	// 	this.setState({users, user: name});
-	// },
+    // _initialize(data) {
+    //  var {users, name} = data;
+    //  this.setState({users, user: name});
+    // },
 
-	// _messageRecieve(message) {
-	// 	var {messages} = this.state;
-	// 	messages.push(message);
-	// 	this.setState({messages});
-	// },
+    // _messageRecieve(message) {
+    //  var {messages} = this.state;
+    //  messages.push(message);
+    //  this.setState({messages});
+    // },
 
-	// _playerJoined(playerNumber) {
-	// 	console.log("player:joined " + playerNumber)
-	// 	var {_players} = this.state;
-	// 	_players.push(playerNumber);
-	// 	this.setState({_players});
-	// },
+    // _playerJoined(playerNumber) {
+    //  console.log("player:joined " + playerNumber)
+    //  var {_players} = this.state;
+    //  _players.push(playerNumber);
+    //  this.setState({_players});
+    // },
 
-	// _playerLeft(playerNumber) {
-	// 	console.log("player:left " + playerNumber)
-	// 	var {_players} = this.state;
+    // _playerLeft(playerNumber) {
+    //  console.log("player:left " + playerNumber)
+    //  var {_players} = this.state;
 
-	// 	var index = users.indexOf(playerNumber);
-	// 	_players.splice(index, 1);
-	// 	this.setState({_players});
-	// },
+    //  var index = users.indexOf(playerNumber);
+    //  _players.splice(index, 1);
+    //  this.setState({_players});
+    // },
 
-	// _userChangedName(data) {
-	// 	var {oldName, newName} = data;
-	// 	var {users, messages} = this.state;
-	// 	var index = users.indexOf(oldName);
-	// 	users.splice(index, 1, newName);
-	// 	messages.push({
-	// 		user: 'APPLICATION BOT',
-	// 		text : 'Change Name : ' + oldName + ' ==> '+ newName
-	// 	});
-	// 	this.setState({users, messages});
-	// },
+    // _userChangedName(data) {
+    //  var {oldName, newName} = data;
+    //  var {users, messages} = this.state;
+    //  var index = users.indexOf(oldName);
+    //  users.splice(index, 1, newName);
+    //  messages.push({
+    //      user: 'APPLICATION BOT',
+    //      text : 'Change Name : ' + oldName + ' ==> '+ newName
+    //  });
+    //  this.setState({users, messages});
+    // },
 
-	// handleMessageSubmit(message) {
-	// 	var {messages} = this.state;
-	// 	messages.push(message);
-	// 	this.setState({messages});
-	// 	socket.emit('send:message', message);
-	// },
+    // handleMessageSubmit(message) {
+    //  var {messages} = this.state;
+    //  messages.push(message);
+    //  this.setState({messages});
+    //  socket.emit('send:message', message);
+    // },
 
-	// handleChangeName(newName) {
-	// 	var oldName = this.state.user;
-	// 	socket.emit('change:name', { name : newName}, (result) => {
-	// 		if(!result) {
-	// 			return alert('There was an error changing your name');
-	// 		}
-	// 		var {users} = this.state;
-	// 		var index = users.indexOf(oldName);
-	// 		users.splice(index, 1, newName);
-	// 		this.setState({users, user: newName});
-	// 	});
-	// },
+    // handleChangeName(newName) {
+    //  var oldName = this.state.user;
+    //  socket.emit('change:name', { name : newName}, (result) => {
+    //      if(!result) {
+    //          return alert('There was an error changing your name');
+    //      }
+    //      var {users} = this.state;
+    //      var index = users.indexOf(oldName);
+    //      users.splice(index, 1, newName);
+    //      this.setState({users, user: newName});
+    //  });
+    // },
 
-	handleGameCreate: function handleGameCreate() {
-		socket.emit('game:create');
-	},
+    handleGameCreate: function handleGameCreate() {
+        socket.emit('game:create');
+    },
 
-	_gameCreated: function _gameCreated(gameId) {
-		//go to main screen lobby
-		this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
-	},
+    _gameCreated: function _gameCreated(gameId) {
+        //go to main screen lobby
+        this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
+    },
 
-	handleGameJoin: function handleGameJoin(gameId) {
-		socket.emit('game:join', gameId);
-	},
+    handleGameJoin: function handleGameJoin(gameId) {
+        socket.emit('game:join', gameId);
+    },
 
-	_gameJoined: function _gameJoined(gameId) {
-		//player location
-		this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
-	},
+    _gameJoined: function _gameJoined(gameId) {
+        //player location
+        this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
+    },
 
-	handlePlayerReady: function handlePlayerReady() {
-		socket.emit('player:ready', true);
-	},
+    handlePlayerReady: function handlePlayerReady() {
+        socket.emit('player:ready', true);
+    },
 
-	_readyPlayers: function _readyPlayers(players) {
-		//player location
-		this.setState({ _players: players });
-	},
+    _readyPlayers: function _readyPlayers(players) {
+        //player location
+        this.setState({ _players: players });
+    },
 
-	_gameStarted: function _gameStarted() {
-		//player location
-		console.log('game:started');
-		this.setState({ _gameState: 'started' });
-	},
+    _gameStarted: function _gameStarted() {
+        //player location
+        console.log('game:started');
+        this.setState({ _gameState: 'started' });
+    },
 
-	render: function render() {
-		var panel = React.createElement(Home, {
-			onGameCreate: this.handleGameCreate,
-			onGameJoin: this.handleGameJoin
-		});
+    handleShipMove: function handleShipMove(direction) {
+        var command = 'ship:move:' + direction;
+        socket.emit(command);
+        console.log(command);
+    },
 
-		if (this.state.ship) {
-			switch (this.state._gameState) {
-				case 'started':
-					panel = React.createElement(ShipLive, {
-						players: this.state._players,
-						gameId: this.state._gameId
-					});
-					break;
-				case 'lobby':
-					panel = React.createElement(ShipLobby, {
-						players: this.state._players,
-						gameId: this.state._gameId
-					});
-					break;
-			}
-		} else {
-			switch (this.state._gameState) {
-				case 'started':
-					panel = React.createElement(PlayerContainer, {
-						gameId: this.state._gameId,
-						role: this.state.role
-					});
-					break;
-				case 'lobby':
-					panel = React.createElement(PlayerLobby, {
-						players: this.state._players,
-						onPlayerReady: this.handlePlayerReady
-					});
-					break;
-			}
-		}
+    render: function render() {
+        var panel = React.createElement(Home, {
+            onGameCreate: this.handleGameCreate,
+            onGameJoin: this.handleGameJoin
+        });
 
-		return React.createElement(
-			'div',
-			{ className: 'site-wrapper' },
-			panel
-		);
-	}
+        if (this.state.ship) {
+            switch (this.state._gameState) {
+                case 'end':
+                    panel = React.createElement(ShipEnd, null);
+                    break;
+                case 'started':
+                    panel = React.createElement(ShipLive, {
+                        players: this.state._players,
+                        gameId: this.state._gameId
+                    });
+                    break;
+                case 'lobby':
+                    panel = React.createElement(ShipLobby, {
+                        players: this.state._players,
+                        gameId: this.state._gameId
+                    });
+                    break;
+            }
+        } else {
+            switch (this.state._gameState) {
+                case 'end':
+                    panel = React.createElement(PlayerEnd, null);
+                    break;
+                case 'started':
+                    panel = React.createElement(PlayerContainer, {
+                        gameId: this.state._gameId,
+                        onShipMove: this.handleShipMove
+                    });
+                    break;
+                case 'lobby':
+                    panel = React.createElement(PlayerLobby, {
+                        players: this.state._players,
+                        onPlayerReady: this.handlePlayerReady
+                    });
+                    break;
+            }
+        }
+
+        return React.createElement(
+            'div',
+            { className: 'site-wrapper' },
+            panel
+        );
+    }
 });
 
 React.render(React.createElement(GameApp, null), document.getElementById('app'));
