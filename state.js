@@ -64,8 +64,10 @@ exports.init = () => {
     });
 
     bus_in.on('player:join', (playerID) => {
-        players[playerID] = {};
-        players[playerID].number = playerCount++;
+        players[playerID] = {
+            number: playerCount++,
+            ready: false
+        };
 
         bus_out.emit('player:joined', playerID, players[playerID].number);
     });
@@ -81,22 +83,15 @@ exports.init = () => {
 
     bus_in.on('player:ready', (playerID, isReady) => {
         if (players[playerID] !== undefined) {
-            if (isReady) {
-                players[playerID].ready = true;
-            } else {
-                players[playerID].ready = false;
-            }
+            players[playerID].ready = !players[playerID].ready
 
             let playerStates = [];
-            let gameReady = true;
-            for (player in players) {
-                if (!player.ready) gameReady = false;
+            for (var player in players) {
                 playerStates.push({
-                    number: player.number,
-                    ready: player.ready
+                    number: players[player].number,
+                    ready: players[player].ready
                 });
             }
-
             bus_out.emit('game:ready_players', playerStates);
 
 

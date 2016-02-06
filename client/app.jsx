@@ -57,7 +57,7 @@ var Home = React.createClass({
 						value="Join game"
 						className="btn btn-lg btn-default"
 					/>
-				</form>	
+				</form>
 			</div>
 		);
 	}
@@ -74,7 +74,7 @@ var ShipLobby = React.createClass({
 						this.props.players.map((player, i) => {
 							return (
 								<li key={i}>
-									Player {player.name} {player.ready}
+									Player {player.number}, Ready: {player.ready.toString()}
 								</li>
 							);
 						})
@@ -86,16 +86,31 @@ var ShipLobby = React.createClass({
 });
 
 var PlayerLobby = React.createClass({
+	handlePlayerReady(e) {
+		e.preventDefault();
+		
+		this.props.onPlayerReady();
+	},
+
     render() {
         return (
             <div className='playerList'>
                 <h3> Players </h3>
+                <form 
+					onSubmit={this.handlePlayerReady}
+					>
+					<input 
+						type="submit"
+						value="Ready"
+						className="btn btn-lg btn-default"
+					/>
+				</form>
                 <ul>
                     {
                         this.props.players.map((player, i) => {
                             return (
                                 <li key={i}>
-                                    {player}
+                                    Player {player}
                                 </li>
                             );
                         })
@@ -242,6 +257,7 @@ var ChatApp = React.createClass({
             _gameId: null,
             _gameState: 'create',
 			_players: [],
+			// _playerStates: [],
             role: 'bridge'
 			// messages:[],
 			// text: '',
@@ -249,10 +265,17 @@ var ChatApp = React.createClass({
 	},
 
 	componentDidMount() {
+		socket.on('disconnect', this._disconnect);
 		socket.on('game:created', this._gameCreated);
 		socket.on('game:joined', this._gameJoined);
 
-		socket.on('player:joined', this._playerJoined);
+		// socket.on('player:joined', this._playerJoined);
+		// socket.on('player:left', this._playerLeft);
+		socket.on('game:ready_players', this._readyPlayers);
+	},
+
+	_disconnect() {
+		this.setState(this.getInitialState());
 	},
 
 	// _initialize(data) {
@@ -266,23 +289,20 @@ var ChatApp = React.createClass({
 	// 	this.setState({messages});
 	// },
 
-	_playerJoined(playerNumber) {
-		console.log(playerNumber)
-		var {_players} = this.state;
-		_players.push(playerNumber);
-		this.setState({_players});
-	},
+	// _playerJoined(playerNumber) {
+	// 	console.log("player:joined " + playerNumber)
+	// 	var {_players} = this.state;
+	// 	_players.push(playerNumber);
+	// 	this.setState({_players});
+	// },
 
-	// _userLeft(data) {
-	// 	var {users, messages} = this.state;
-	// 	var {name} = data;
-	// 	var index = users.indexOf(name);
-	// 	users.splice(index, 1);
-	// 	messages.push({
-	// 		user: 'APPLICATION BOT',
-	// 		text : name +' Left'
-	// 	});
-	// 	this.setState({users, messages});
+	// _playerLeft(playerNumber) {
+	// 	console.log("player:left " + playerNumber)
+	// 	var {_players} = this.state;
+		
+	// 	var index = users.indexOf(playerNumber);
+	// 	_players.splice(index, 1);
+	// 	this.setState({_players});
 	// },
 
 	// _userChangedName(data) {
@@ -321,18 +341,27 @@ var ChatApp = React.createClass({
 		socket.emit('game:create');
 	},
 
-	handleGameJoin(gameId) {
-		socket.emit('game:join', gameId);
-	},
-
 	_gameCreated(gameId) {
 		//go to main screen lobby
 		this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
 	},
 
+	handleGameJoin(gameId) {
+		socket.emit('game:join', gameId);
+	},
+
 	_gameJoined(gameId) {
 		//player location
 		this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
+	},
+
+	handlePlayerReady() {
+		socket.emit('player:ready', true);
+	},
+
+	_readyPlayers(players) {
+		//player location
+		this.setState({ _players: players });
 	},
 
 	render() {
@@ -367,6 +396,7 @@ var ChatApp = React.createClass({
                     panel = 
                         <PlayerLobby
                             players = {this.state._players}
+                            onPlayerReady = {this.handlePlayerReady}
                         />;
                     break;
             }

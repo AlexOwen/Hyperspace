@@ -101,9 +101,9 @@ var ShipLobby = React.createClass({
 						'li',
 						{ key: i },
 						'Player ',
-						player.name,
-						' ',
-						player.ready
+						player.number,
+						', Ready: ',
+						player.ready.toString()
 					);
 				})
 			)
@@ -113,6 +113,12 @@ var ShipLobby = React.createClass({
 
 var PlayerLobby = React.createClass({
 	displayName: 'PlayerLobby',
+
+	handlePlayerReady: function handlePlayerReady(e) {
+		e.preventDefault();
+
+		this.props.onPlayerReady();
+	},
 
 	render: function render() {
 		return React.createElement(
@@ -124,12 +130,24 @@ var PlayerLobby = React.createClass({
 				' Players '
 			),
 			React.createElement(
+				'form',
+				{
+					onSubmit: this.handlePlayerReady
+				},
+				React.createElement('input', {
+					type: 'submit',
+					value: 'Ready',
+					className: 'btn btn-lg btn-default'
+				})
+			),
+			React.createElement(
 				'ul',
 				null,
 				this.props.players.map(function (player, i) {
 					return React.createElement(
 						'li',
 						{ key: i },
+						'Player ',
 						player
 					);
 				})
@@ -305,6 +323,7 @@ var ChatApp = React.createClass({
 			_gameId: null,
 			_gameState: 'create',
 			_players: [],
+			// _playerStates: [],
 			role: 'bridge'
 			// messages:[],
 			// text: '',
@@ -312,10 +331,17 @@ var ChatApp = React.createClass({
 	},
 
 	componentDidMount: function componentDidMount() {
+		socket.on('disconnect', this._disconnect);
 		socket.on('game:created', this._gameCreated);
 		socket.on('game:joined', this._gameJoined);
 
-		socket.on('player:joined', this._playerJoined);
+		// socket.on('player:joined', this._playerJoined);
+		// socket.on('player:left', this._playerLeft);
+		socket.on('game:ready_players', this._readyPlayers);
+	},
+
+	_disconnect: function _disconnect() {
+		this.setState(this.getInitialState());
 	},
 
 	// _initialize(data) {
@@ -329,24 +355,20 @@ var ChatApp = React.createClass({
 	// 	this.setState({messages});
 	// },
 
-	_playerJoined: function _playerJoined(playerNumber) {
-		console.log(playerNumber);
-		var _players = this.state._players;
+	// _playerJoined(playerNumber) {
+	// 	console.log("player:joined " + playerNumber)
+	// 	var {_players} = this.state;
+	// 	_players.push(playerNumber);
+	// 	this.setState({_players});
+	// },
 
-		_players.push(playerNumber);
-		this.setState({ _players: _players });
-	},
+	// _playerLeft(playerNumber) {
+	// 	console.log("player:left " + playerNumber)
+	// 	var {_players} = this.state;
 
-	// _userLeft(data) {
-	// 	var {users, messages} = this.state;
-	// 	var {name} = data;
-	// 	var index = users.indexOf(name);
-	// 	users.splice(index, 1);
-	// 	messages.push({
-	// 		user: 'APPLICATION BOT',
-	// 		text : name +' Left'
-	// 	});
-	// 	this.setState({users, messages});
+	// 	var index = users.indexOf(playerNumber);
+	// 	_players.splice(index, 1);
+	// 	this.setState({_players});
 	// },
 
 	// _userChangedName(data) {
@@ -385,18 +407,27 @@ var ChatApp = React.createClass({
 		socket.emit('game:create');
 	},
 
-	handleGameJoin: function handleGameJoin(gameId) {
-		socket.emit('game:join', gameId);
-	},
-
 	_gameCreated: function _gameCreated(gameId) {
 		//go to main screen lobby
 		this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
 	},
 
+	handleGameJoin: function handleGameJoin(gameId) {
+		socket.emit('game:join', gameId);
+	},
+
 	_gameJoined: function _gameJoined(gameId) {
 		//player location
 		this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
+	},
+
+	handlePlayerReady: function handlePlayerReady() {
+		socket.emit('player:ready', true);
+	},
+
+	_readyPlayers: function _readyPlayers(players) {
+		//player location
+		this.setState({ _players: players });
 	},
 
 	render: function render() {
@@ -426,7 +457,8 @@ var ChatApp = React.createClass({
 					break;
 				case 'lobby':
 					panel = React.createElement(PlayerLobby, {
-						players: this.state._players
+						players: this.state._players,
+						onPlayerReady: this.handlePlayerReady
 					});
 					break;
 			}

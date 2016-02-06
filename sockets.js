@@ -84,10 +84,12 @@ exports.init = (server) => {
 
             state.out.on('player:left', (playerID, playerNumber) => {
                 socket.emit('player:left', playerNumber);
+                console.log('player:left ' + playerNumber);
             });
 
             state.out.on('game:ready_players', (playerStates) => {
                 socket.emit('game:ready_players', playerStates);
+                console.log('game:ready_players ' + playerStates);
             });
         };
     });
