@@ -20,7 +20,7 @@ exports.init = (server) => {
             console.log('game:create ' + roomID);
         });
 
-        socket.on('player:join', (name, roomID) => {
+        socket.on('game:join', (name, roomID) => {
             let playerID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
             socket.join('roomID');
             socket.room = roomID;
@@ -32,9 +32,9 @@ exports.init = (server) => {
                 games[socket.room].in.emit('player:join', playerID);
 
                 socket.emit('game:joined', roomID);
-                console.log('game:join ' + roomID);
+                console.log('game:joined ' + roomID);
             } catch(e) {
-                console.log("game:join fail, roomID not found: " + roomID);
+                console.log("player:join fail, roomID not found: " + roomID);
             }
 
         });
