@@ -6,6 +6,12 @@ var socket = io.connect();
 
 var ROLES = ['bridge', 'weapons', 'engineering', 'shields']
 
+var getValueColour = function(value) {
+    if (value < 20) { return "red"; } else
+    if (value < 50) { return "orange"; }
+    return "green";
+}
+
 var Home = React.createClass({
     getInitialState() {
         return {gameId: ''};
@@ -249,16 +255,15 @@ var PlayerBridge = React.createClass({
         console.log(toRole);
     },
 
-    getHealthColour(health) {
-        if (health < 20) { return "red"; } else
-        if (health < 50) { return "orange"; }
-        return "green";
-    },
-
     render() {
         return (
             <div className="player-bridge container">
-                <p>Bridge</p>
+                <h3>Bridge:&nbsp;
+                    <span className={getValueColour(this.props.shipStatus.power.bridge)}>
+                        {this.props.shipStatus.power.bridge}
+                        <span className="glyphicon glyphicon-ice-lolly-tasted"></span>
+                    </span>
+                </h3>
                 <div className="power">
                     <button 
                         className="metal linear"
@@ -287,32 +292,37 @@ var PlayerBridge = React.createClass({
                     <ul>
                         <li>
                             Hull:&nbsp;
-                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}%
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Weapons:&nbsp;
-                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}%
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Engineering:&nbsp;
-                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}%
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Shields:&nbsp;
-                            <span className={this.getHealthColour(this.props.shipStatus.health.shields)}>
-                                {this.props.shipStatus.health.shields}%
+                            <span className={getValueColour(this.props.shipStatus.health.shields)}>
+                                {this.props.shipStatus.health.shields}
+                                <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Bridge:&nbsp;
-                            <span className={this.getHealthColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}%
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                     </ul>
@@ -402,13 +412,12 @@ var GameApp = React.createClass({
             _gameState: 'create',
             // _gameState: 'started',
             _players: [],
-            // _playerStates: [],
-            // role: 'bridge'
-            // messages:[],
-            // text: '',
             _shipStatus: {
                 health: {
-                    life: 0, shields: 0
+                    life: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0
+                },
+                power: {
+                    bridge: 0, shields: 0, engineering: 0, weapons: 0
                 },
             }
         };
