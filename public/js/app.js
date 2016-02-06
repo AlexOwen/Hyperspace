@@ -5,6 +5,8 @@ var React = require('react');
 
 var socket = io.connect();
 
+var ROLES = ['bridge', 'weapons', 'engineering', 'shields'];
+
 var Home = React.createClass({
 	displayName: 'Home',
 
@@ -237,11 +239,6 @@ var PlayerLobby = React.createClass({
 					'h2',
 					{ className: 'green' },
 					'Ready and waiting..!'
-				),
-				React.createElement(
-					'h3',
-					null,
-					'Prepare for all hands on deck'
 				)
 			);
 		}
@@ -255,7 +252,7 @@ var PlayerLobby = React.createClass({
 				React.createElement(
 					'h1',
 					null,
-					'Don\'t Blow Up'
+					'Dont Blow Up'
 				)
 			),
 			React.createElement(
@@ -278,10 +275,23 @@ var PlayerLobby = React.createClass({
 var PlayerContainer = React.createClass({
 	displayName: 'PlayerContainer',
 
+	getInitialState: function getInitialState() {
+		return {
+			role: 'bridge'
+		};
+	},
+
+	handleMenuItem: function handleMenuItem(role) {
+		console.log(role);
+		this.setState({ role: role });
+	},
+
 	render: function render() {
+		var _this = this;
+
 		var rolePanel;
 
-		switch (this.props.role) {
+		switch (this.state.role) {
 			case 'weapons':
 				rolePanel = React.createElement(PlayerWeapons, null);
 				break;
@@ -303,12 +313,21 @@ var PlayerContainer = React.createClass({
 			null,
 			React.createElement(
 				'div',
-				null,
-				React.createElement(
-					'p',
-					null,
-					this.props.gameId
-				)
+				{ className: 'playerNav' },
+				ROLES.map(function (role, i) {
+					return React.createElement(
+						'div',
+						{
+							className: 'cell',
+							key: role,
+							onClick: _this.handleMenuItem.bind(_this, role)
+						},
+						React.createElement('span', {
+							className: _this.state.role == role ? "green icon-" + role : "icon-" + role
+						})
+					);
+				}),
+				React.createElement('div', { className: 'clr' })
 			),
 			rolePanel
 		);
@@ -317,6 +336,54 @@ var PlayerContainer = React.createClass({
 
 var PlayerBridge = React.createClass({
 	displayName: 'PlayerBridge',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			null,
+			React.createElement(
+				'h3',
+				null,
+				'The Bridge'
+			)
+		);
+	}
+});
+
+var PlayerWeapons = React.createClass({
+	displayName: 'PlayerWeapons',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			null,
+			React.createElement(
+				'h3',
+				null,
+				'The Bridge'
+			)
+		);
+	}
+});
+
+var PlayerEngine = React.createClass({
+	displayName: 'PlayerEngine',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			null,
+			React.createElement(
+				'h3',
+				null,
+				'The Bridge'
+			)
+		);
+	}
+});
+
+var PlayerShields = React.createClass({
+	displayName: 'PlayerShields',
 
 	render: function render() {
 		return React.createElement(
@@ -370,15 +437,16 @@ var GameApp = React.createClass({
 		return {
 			ship: false,
 			_gameId: null,
-			_gameState: 'create',
-			_players: [],
-			// _playerStates: [],
-			role: 'bridge'
-			// messages:[],
-			// text: '',
+			// _gameState: 'create',
+			_gameState: 'started',
+			_players: []
 		};
 	},
 
+	// _playerStates: [],
+	// role: 'bridge'
+	// messages:[],
+	// text: '',
 	componentDidMount: function componentDidMount() {
 		socket.on('disconnect', this._disconnect);
 		socket.on('game:created', this._gameCreated);
@@ -517,8 +585,7 @@ var GameApp = React.createClass({
 					break;
 				case 'started':
 					panel = React.createElement(PlayerContainer, {
-						gameId: this.state._gameId,
-						role: this.state.role
+						gameId: this.state._gameId
 					});
 					break;
 				case 'lobby':

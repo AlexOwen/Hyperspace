@@ -17,6 +17,10 @@ h1 {
   font-family: 'Audiowide';
 }
 
+.clr {
+  clear: both;
+}
+
 .site-wrapper {
     position: absolute;
     width: 100%;
@@ -107,3 +111,17 @@ form input {
 .lobby {
 
 }
+
+/* PLAYER */
+
+.playerNav {
+  width: 100%;
+}
+
+.playerNav .cell {
+  display: block;
+  float: left;
+  width: 25%;
+  font-size: 60px;
+}
+
