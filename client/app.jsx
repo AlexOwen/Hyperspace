@@ -17,7 +17,13 @@ var Home = React.createClass({
 	handleGameJoin(e) {
 		e.preventDefault();
 		var gameId = this.state.gameId
-		this.props.onGameJoin(gameId);	
+		var alphanumericRegex = /^[0-9a-z]+$/;
+		
+		if(gameId.match(alphanumericRegex) && gameId.length == 5) {
+			this.props.onGameJoin(gameId);	
+		} else {
+			this.setState({ gameId : '' });
+		}
 	},
 
 	changeJoinHandler(e) {
@@ -34,6 +40,7 @@ var Home = React.createClass({
 						onChange={this.changeJoinHandler}
 						value={this.state.gameId}
 					/>
+					<input type="submit" value="Join" />
 				</form>	
 			</div>
 		);
@@ -44,13 +51,14 @@ var ShipLobby = React.createClass({
 	render() {
 		return (
 			<div className='playerList'>
+				<h1> GameID {this.props.gameId} </h1>
 				<h3> Players </h3>
 				<ul>
 					{
 						this.props.players.map((player, i) => {
 							return (
 								<li key={i}>
-									{player}
+									Player {player.name} {player.ready}
 								</li>
 							);
 						})
@@ -77,6 +85,36 @@ var PlayerLobby = React.createClass({
                         })
                     }
                 </ul>               
+            </div>
+        );
+    }
+});
+
+var PlayerContainer = React.createClass({
+    render() {
+    	var rolePanel;
+
+    	switch(this.props.role) {
+            case 'weapons':
+                panel = <PlayerWeapons />;
+                break;
+            case 'shields':
+                panel = <PlayerShields />;
+                break;
+            case 'engine':
+                panel = <PlayerEngine />;
+                break;
+           default:	
+            case 'bridge':
+                panel = <PlayerBridge />;
+                break;
+
+        }
+
+        return (
+            <div>
+            	<PlayerMenu />
+            	{rolePanel}
             </div>
         );
     }
@@ -188,7 +226,7 @@ var ChatApp = React.createClass({
             _gameId: null,
             _gameState: 'create',
 			_players: [],
-            location: 0
+            role: 'bridge'
 			// messages:[],
 			// text: '',
 		};
@@ -302,27 +340,17 @@ var ChatApp = React.createClass({
                     panel = 
                     <ShipLobby
                         players = {this.state._players}
+                        gameId = {this.state._gameId}
                     />;
                     break;
             }
         } else {
             switch(this.state._gameState) {
                 case 'started':
-                    switch(this.state.location) {
-                        case 'weapons':
-                            panel = <div><PlayerMenu /><PlayerWeapons /></div>;
-                            break;
-                        case 'shields':
-                            panel = <div><PlayerMenu /><PlayerShields /></div>;
-                            break;
-                        case 'engine':
-                            panel = <div><PlayerMenu /><PlayerEngine /></div>;
-                            break;
-                        case 'bridge':
-                            panel = <div><PlayerMenu /><PlayerBridge /></div>;
-                            break;
-
-                    }
+                    panel = 
+                    	<PlayerContainer
+                    		role = {this.state.role}
+                    	/>
                     break;
                 case 'lobby':
                     panel = 
