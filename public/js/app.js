@@ -298,12 +298,14 @@ var PlayerContainer = React.createClass({
 			case 'shields':
 				rolePanel = React.createElement(PlayerShields, null);
 				break;
-			case 'engine':
+			case 'engineering':
 				rolePanel = React.createElement(PlayerEngine, null);
 				break;
 			default:
 			case 'bridge':
-				rolePanel = React.createElement(PlayerBridge, null);
+				rolePanel = React.createElement(PlayerBridge, {
+					onShipMove: this.props.onShipMove
+				});
 				break;
 
 		}
@@ -337,14 +339,39 @@ var PlayerContainer = React.createClass({
 var PlayerBridge = React.createClass({
 	displayName: 'PlayerBridge',
 
+	handleShipMove: function handleShipMove(direction) {
+		console.log(direction);
+		this.props.onShipMove(direction);
+	},
+
 	render: function render() {
 		return React.createElement(
 			'div',
-			null,
+			{ className: 'player-bridge container' },
 			React.createElement(
-				'h3',
+				'p',
 				null,
-				'The Bridge'
+				'Bridge'
+			),
+			React.createElement(
+				'div',
+				{ className: 'arrows' },
+				React.createElement(
+					'button',
+					{ className: 'metal linear', type: 'button' },
+					React.createElement('span', {
+						className: 'glyphicon glyphicon-chevron-up',
+						onClick: this.handleShipMove.bind(this, "up")
+					})
+				),
+				React.createElement(
+					'button',
+					{ className: 'metal linear', type: 'button' },
+					React.createElement('span', {
+						className: 'glyphicon glyphicon-chevron-down',
+						onClick: this.handleShipMove.bind(this, "down")
+					})
+				)
 			)
 		);
 	}
@@ -360,7 +387,7 @@ var PlayerWeapons = React.createClass({
 			React.createElement(
 				'h3',
 				null,
-				'The Bridge'
+				'Weapons'
 			)
 		);
 	}
@@ -376,7 +403,7 @@ var PlayerEngine = React.createClass({
 			React.createElement(
 				'h3',
 				null,
-				'The Bridge'
+				'Engineering'
 			)
 		);
 	}
@@ -392,7 +419,7 @@ var PlayerShields = React.createClass({
 			React.createElement(
 				'h3',
 				null,
-				'The Bridge'
+				'Shields'
 			)
 		);
 	}
@@ -554,6 +581,12 @@ var GameApp = React.createClass({
 		this.setState({ _gameState: 'started' });
 	},
 
+	handleShipMove: function handleShipMove(direction) {
+		var command = 'ship:move:' + direction;
+		socket.emit(command);
+		console.log(command);
+	},
+
 	render: function render() {
 		var panel = React.createElement(Home, {
 			onGameCreate: this.handleGameCreate,
@@ -585,7 +618,8 @@ var GameApp = React.createClass({
 					break;
 				case 'started':
 					panel = React.createElement(PlayerContainer, {
-						gameId: this.state._gameId
+						gameId: this.state._gameId,
+						onShipMove: this.handleShipMove
 					});
 					break;
 				case 'lobby':

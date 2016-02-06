@@ -207,12 +207,15 @@ var PlayerContainer = React.createClass({
             case 'shields':
                 rolePanel = <PlayerShields />;
                 break;
-            case 'engine':
+            case 'engineering':
                 rolePanel = <PlayerEngine />;
                 break;
             default:	
             case 'bridge':
-                rolePanel = <PlayerBridge />;
+                rolePanel = 
+                	<PlayerBridge 
+                		onShipMove = {this.props.onShipMove}
+                	/>;
                 break;
 
         }
@@ -240,10 +243,31 @@ var PlayerContainer = React.createClass({
 });
 
 var PlayerBridge = React.createClass({
+	handleShipMove(direction) {
+		console.log(direction)
+		this.props.onShipMove(direction);	
+	},
+
 	render() {
         return (
-            <div>
-                <h3>The Bridge</h3>            
+            <div className="player-bridge container">
+                <p>Bridge</p>
+                <div className="arrows">
+	                <button className="metal linear" type="button">
+	                	<span 
+	                		className="glyphicon glyphicon-chevron-up"
+	                		onClick={this.handleShipMove.bind(this, "up")}
+	                		>
+	                	</span>
+	                </button>
+	                <button className="metal linear" type="button">
+	                	<span 
+	                		className="glyphicon glyphicon-chevron-down"
+	                		onClick={this.handleShipMove.bind(this, "down")}
+	                		>
+	                	</span>
+	                </button>
+                </div>         
             </div>
         );
     }
@@ -253,7 +277,7 @@ var PlayerWeapons = React.createClass({
 	render() {
         return (
             <div>
-                <h3>The Bridge</h3>            
+                <h3>Weapons</h3>            
             </div>
         );
     }
@@ -263,7 +287,7 @@ var PlayerEngine = React.createClass({
 	render() {
         return (
             <div>
-                <h3>The Bridge</h3>            
+                <h3>Engineering</h3>            
             </div>
         );
     }
@@ -273,7 +297,7 @@ var PlayerShields = React.createClass({
 	render() {
         return (
             <div>
-                <h3>The Bridge</h3>            
+                <h3>Shields</h3>            
             </div>
         );
     }
@@ -422,6 +446,12 @@ var GameApp = React.createClass({
 		this.setState({ _gameState: 'started' });
 	},
 
+	handleShipMove(direction) {
+		var command = 'ship:move:' + direction
+		socket.emit(command);
+		console.log(command);
+	},
+
 	render() {
         var panel = 
             <Home
@@ -462,6 +492,7 @@ var GameApp = React.createClass({
                     panel = 
                     	<PlayerContainer
                     		gameId = {this.state._gameId}
+                    		onShipMove = {this.handleShipMove}
                     	/>
                     break;
                 case 'lobby':
