@@ -256,6 +256,7 @@ var ChatApp = React.createClass({
 		// socket.on('change:name', this._userChangedName);
 
 		socket.on('game:created', this._gameCreated);
+		socket.on('game:joined', this._gameJoined);
 	},
 
 	// _initialize(data) {
@@ -353,7 +354,7 @@ var ChatApp = React.createClass({
 					break;
 				case 'lobby':
 					panel = React.createElement(ShipLobby, {
-						players: this.state.players
+						players: this.state._players
 					});
 					break;
 			}
