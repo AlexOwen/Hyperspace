@@ -103,9 +103,11 @@ exports.init = () => {
     });
 
     bus_in.on('player:join', (playerID) => {
-        players[playerID] = {};
-        players[playerID].number = playerCount++;
-///* remove this */ bus_in.emit('game:start');
+        players[playerID] = {
+            number: playerCount++,
+            ready: false
+        };
+// /* remove this */ bus_in.emit('game:start');
         bus_out.emit('player:joined', playerID, players[playerID].number);
     });
 
@@ -120,25 +122,22 @@ exports.init = () => {
 
     bus_in.on('player:ready', (playerID, isReady) => {
         if (players[playerID] !== undefined) {
-            if (isReady) {
-                players[playerID].ready = true;
-            } else {
-                players[playerID].ready = false;
-            }
+            players[playerID].ready = isReady;
 
             let playerStates = [];
             let gameReady = true;
             for (let player in players) {
-                if (!player.ready) gameReady = false;
+                if (!players[player].ready) gameReady = false;
+                
                 playerStates.push({
                     number: players[player].number,
                     ready: players[player].ready
                 });
             }
-
             bus_out.emit('game:ready_players', playerStates);
 
             if (gameReady) {
+                console.log(gameReady);
                 bus_in.emit('game:start');
             }
         } else {
@@ -166,19 +165,14 @@ exports.init = () => {
     });
 
     bus_in.on('ship:damage', (value) => {
-
-        console.log('damage:', value);
         if (ship.health.shields <= 0) {                 //no shields, take damage
             ship.health.life -= value;
-            console.log('damage:life:',ship.health.life);
         } else if (ship.health.shields - value >= 0) {   //shields absorb it
             ship.health.shields -= value;
-            console.log('damage:shields:',ship.health.shields);
         } else if (ship.health.shields - value < 0) {   //shields destroyed, take some damage
             ship.health.shields -= value;
             ship.health.life += ship.health.shields;
             ship.health.shields = 0;
-            console.log('damage:life:',ship.health.life);
         }
 
         bus_out.emit('ship:status', ship);
