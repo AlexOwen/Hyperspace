@@ -46,42 +46,60 @@ exports.init = () => {
     //enemies
     let enemies = {};
     let createEnemy = () => {
-        console.log('Create enemy');
-        let enemy = {
-            id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
-            position: {
-                x: Math.floor(Math.random() * screen.height), //random position on screen
-                y: screen.width + 1     //just off the screen
-            },
-            type: 'basic'
-        };
-        enemies[enemy.id] = enemy;
+        if (ship.health.life > 0) {
+            let enemy = {
+                id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
+                position: {
+                    y: Math.floor(Math.random() * screen.height), //random position on screen
+                    x: screen.width + 1     //just off the screen
+                },
+                type: 'basic'
+            };
+            enemies[enemy.id] = enemy;
 
-        setInterval(() => {
-            if (enemy.position.x - 1 >= -1) {
-                enemy.position.x--;
-                bus_out.emit('enemy:position', {id: enemy.id, position: enemy.position});
-                if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
-                    //emit damage
-                    bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision);
+            enemies[enemy.id].moveTimer = setInterval(() => {
+                if (enemy.position.x - 1 >= -1) {
+                    enemy.position.x--;
+                    bus_out.emit('enemy:position', {id: enemy.id, position: enemy.position});
+                    if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
+                        //emit damage
+                        bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision);
+                    }
+                } else {
+                    enemies[enemy.id] = undefined;
                 }
-            } else {
-                enemies[enemy.id] = undefined;
-            }
-        }, (enemyTypes[enemy.type].speed + ship.speed) * 1000)
+            }, (enemyTypes[enemy.type].speed + ship.speed) * 100);
 
-        setTimeout(() => {createEnemy();}, Math.random() * 1000 * level); //create enemy randomly every 1-10 seconds
+            setTimeout(() => {createEnemy();}, Math.random() * 100 * level); //create enemy randomly every 1-10 seconds
+        }
     };
 
     //set up game
     bus_in.on('game:start', () => {
         level = 1;
         console.log('Start Game');
-        setTimeout(() => {createEnemy();}, Math.random() * 1000 * level); //create enemy randomly every 1-10 seconds
+        createEnemy();
 
         bus_out.emit('ship:position', ship.position);
-        bus_out.emit('ship:health', ship.health);
+        bus_out.emit('ship:status', ship);
         bus_out.emit('game:started');
+    });
+
+    bus_in.on('game:end', (details) => {
+        for (let enemy in enemies) {
+            if (enemies[enemy] !== undefined && enemies[enemy].moveTimer !== undefined) {
+                clearInterval(enemies[enemy].moveTimer);
+            }
+        }
+
+        if (details.reason === 'disconnect') {
+            console.log('disconnect');
+        } else if (details.reason === 'death') {
+            console.log('death');
+        } else if (details.reason === 'win') {
+            console.log('win');
+        }
+        bus_out.emit('game:ended', details);
     });
 
     bus_in.on('player:join', (playerID) => {
@@ -133,7 +151,7 @@ exports.init = () => {
     bus_in.on('ship:move:up', () => {
         if (ship.position.y >= 1) {
             ship.position.y = ship.position.y - 1;
-            bus_out.emit('ship:position:y', ship.position.y);
+            bus_out.emit('ship:position', ship.position);
         }
         console.log('ship position: ' + ship.position.y);
     });
@@ -141,7 +159,7 @@ exports.init = () => {
     bus_in.on('ship:move:down', () => {
         if (ship.position.y <= screen.height - 2) {
             ship.position.y = ship.position.y + 1;
-            bus_out.emit('ship:position:y', ship.position.y);
+            bus_out.emit('ship:position', ship.position);
         }
         console.log('ship position: ' + ship.position.y);
     });
@@ -157,7 +175,10 @@ exports.init = () => {
             ship.health.shields = 0;
         }
 
-        bus_out.emit('ship:health', ship.health);
+        bus_out.emit('ship:status', ship);
+        if (ship.health.life <= 0) {
+            bus_in.emit('game:end', {reason:'death'});
+        }
     });
 
     //engineering

@@ -10,7 +10,7 @@ exports.init = (server) => {
 
         // joining
         socket.on('game:create', () => {
-            let roomID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
+            let roomID = Math.floor(Math.random()*90000) + 10000;
             socket.join('roomID');
             socket.room = roomID;
             socket.role = 'host';
@@ -30,11 +30,9 @@ exports.init = (server) => {
             try {
                 attachHandlers(games[roomID]);
                 games[socket.room].in.emit('player:join', playerID);
-
                 socket.emit('game:joined', roomID);
-                console.log('game:joined ' + roomID);
             } catch(e) {
-                console.log("player:join fail, roomID not found: " + roomID);
+                console.log("game:join fail, roomID not found: " + roomID);
             }
 
         });
@@ -65,7 +63,7 @@ exports.init = (server) => {
                     games[socket.room].in.emit('player:leave');
                 }
             } else if (socket.role === 'host') {
-                games[socket.room].in.emit('game:end');
+                games[socket.room].in.emit('game:end', {reason: 'disconnect'});
             }
         });
 
@@ -76,8 +74,8 @@ exports.init = (server) => {
                 socket.emit('ship:position', position);
             });
 
-            state.out.on('ship:health', (health) => {
-                socket.emit('ship:health', health);
+            state.out.on('ship:status', (health) => {
+                socket.emit('ship:status', health);
             });
 
             state.out.on('enemy:position', (enemy) => {
@@ -86,22 +84,22 @@ exports.init = (server) => {
 
             state.out.on('player:joined', (playerID, playerNumber) => {
                 socket.emit('player:joined', playerNumber);
-                console.log('player:joined ' + playerNumber);
             });
 
             state.out.on('player:left', (playerID, playerNumber) => {
                 socket.emit('player:left', playerNumber);
-                console.log('player:left ' + playerNumber);
             });
 
             state.out.on('game:ready_players', (playerStates) => {
                 socket.emit('game:ready_players', playerStates);
-                console.log('game:ready_players ' + playerStates);
             });
 
             state.out.on('game:started', (playerStates) => {
                 socket.emit('game:started');
-                console.log('game:started');
+            });
+
+            state.out.on('game:ended', (details) => {
+                socket.emit('game:ended', details);
             });
         };
     });
