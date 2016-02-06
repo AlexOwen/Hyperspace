@@ -33,14 +33,30 @@ var Home = React.createClass({
 	render() {
 		return (
 			<div className='home'>
-				<h3> Login </h3>
-				<div onClick={this.handleGameCreate}>Create game</div>
-				<form onSubmit={this.handleGameJoin}>
+				<h3> Hyperspace </h3>
+				<form 
+					onSubmit={this.handleGameCreate}
+					className="form-signin"
+					>
+					<input 
+						type="submit"
+						value="Create game"
+						className="btn btn-lg btn-default"
+						/>
+				</form>	
+				<form 
+					onSubmit={this.handleGameJoin}
+					className="form-signin"
+					>
 					<input
 						onChange={this.changeJoinHandler}
 						value={this.state.gameId}
 					/>
-					<input type="submit" value="Join" />
+					<input 
+						type="submit"
+						value="Join game"
+						className="btn btn-lg btn-default"
+					/>
 				</form>	
 			</div>
 		);
@@ -363,7 +379,7 @@ var ChatApp = React.createClass({
         
 
 		return (
-			<div>
+			<div className='site-wrapper'>
                 {panel}
 			</div>
 		);
