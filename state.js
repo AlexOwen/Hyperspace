@@ -68,7 +68,7 @@ exports.init = () => {
             } else {
                 enemies[enemy.id] = undefined;
             }
-        }, (enemy.speed + ship.speed) * 1000)
+        }, (enemyTypes[enemy.type].speed + ship.speed) * 1000)
 
         setTimeout(() => {createEnemy();}, Math.random() * 1000 * level); //create enemy randomly every 1-10 seconds
     };

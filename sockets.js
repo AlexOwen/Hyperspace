@@ -73,17 +73,14 @@ exports.init = (server) => {
         let attachHandlers = (state) => {
             // server to player
             state.out.on('ship:position', (position) => {
-                console.log('ship:position out');
                 socket.emit('ship:position', position);
             });
 
             state.out.on('ship:health', (health) => {
-                console.log('ship:health out');
                 socket.emit('ship:health', health);
             });
 
             state.out.on('enemy:position', (enemy) => {
-                console.log('enemy:position:', enemy.position);
                 socket.emit('enemy:position', enemy);
             });
 
