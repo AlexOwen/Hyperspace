@@ -15,12 +15,12 @@ exports.init = (server) => {
             socket.room = roomID;
             socket.role = 'host';
             games[roomID] = state.init();
-            attachHandlers(games[roomID]);
+            //attachHandlers(games[roomID]);
             socket.emit('game:created', roomID);
             console.log('game:create ' + roomID);
         });
 
-        socket.on('game:join', (roomID) => {
+        socket.on('player:join', (name, roomID) => {
             let playerID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
             socket.join('roomID');
             socket.room = roomID;
