@@ -73,10 +73,12 @@ exports.init = () => {
     });
 
     bus_in.on('player:leave', (playerID) => {
-        let playerNumber = players[playerID].number;
-        players[playerID] = undefined;
+        if (playerID !== undefined && players[playerID] !== undefined && players[playerID].number !== undefined) {
+            let playerNumber = players[playerID].number;
+            players[playerID] = undefined;
 
-        bus_out.emit('player:left', playerID, playerNumber);
+            bus_out.emit('player:left', playerID, playerNumber);
+        }
     });
 
     bus_in.on('player:ready', (playerID, isReady) => {

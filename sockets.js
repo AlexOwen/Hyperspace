@@ -59,8 +59,12 @@ exports.init = (server) => {
         });
 
         socket.on('disconnect', () => {
-            if (socket.room !== undefined && games[socket.room] !== undefined) {
-                games[socket.room].in.emit('player:leave');
+            if (socket.role === 'player') {
+                if (socket.room !== undefined && games[socket.room] !== undefined) {
+                    games[socket.room].in.emit('player:leave');
+                }
+            } else if (socket.role === 'host') {
+                games[socket.room].in.emit('game:end');
             }
         });
 
