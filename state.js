@@ -60,6 +60,12 @@ exports.init = () => {
             life: 50,
             shields: 50
         },
+        power: {
+            bridge: 0,
+            weapons: 0,
+            shields: 0,
+            engineering: 0
+        },
         damage: {
             weapons: 1
         },
@@ -69,7 +75,7 @@ exports.init = () => {
     //enemies
     let enemies = {};
     let createEnemy = (details) => {
-        if (details.isProjectile && details.parent !== undefined) {
+        if ((details.isProjectile && details.parent !== undefined) || !details.isProjectile) {
             if (ship.health.life > 0) {
 
                 let x = 0, y = 0;
@@ -127,12 +133,14 @@ exports.init = () => {
                 //projectiles
                 if (enemyTypes[enemies[enemy.id].type].gun !== undefined && enemyTypes[enemies[enemy.id].type].gun.projectile !== undefined) {
                     setTimeout(() => {
-                        createEnemy({
-                            type: enemyTypes[enemyTypes[enemies[enemy.id].type].gun.projectile].name,
-                            isProjectile: true,
-                            parent: enemies[enemy.id],
-                            creationRate: enemyTypes[enemies[enemy.id].type].gun.rateOfFire
-                        });
+                        if (enemies[enemy.id] !== undefined) {
+                            createEnemy({
+                                type: enemyTypes[enemyTypes[enemies[enemy.id].type].gun.projectile].name,
+                                isProjectile: true,
+                                parent: enemies[enemy.id],
+                                creationRate: enemyTypes[enemies[enemy.id].type].gun.rateOfFire
+                            });
+                        }
                     }, ((Math.random() * 10000) / level) / enemyTypes[enemies[enemy.id].type].gun.rateOfFire);
                 }
 
@@ -220,23 +228,25 @@ exports.init = () => {
         }
     });
 
+    bus_in.on('ship:get_status', () => {
+        bus_out.emit('ship:status', ship);
+    });
+
     //in game actions
 
     //bridge
     bus_in.on('ship:move:up', () => {
         if (ship.position.y >= 1) {
             ship.position.y = ship.position.y - 1;
-            bus_out.emit('ship:position', ship.position);
+            bus_out.emit('ship:status', ship);
         }
-        console.log('ship position: ' + ship.position.y);
     });
 
     bus_in.on('ship:move:down', () => {
         if (ship.position.y <= screen.height - 2) {
             ship.position.y = ship.position.y + 1;
-            bus_out.emit('ship:position', ship.position);
+            bus_out.emit('ship:status', ship);
         }
-        console.log('ship position: ' + ship.position.y);
     });
 
     bus_in.on('ship:fire', (enemyID) => {
@@ -251,7 +261,28 @@ exports.init = () => {
                 enemies[enemyID].health -= ship.damage.weapons;
             }
         }
-        bus_out.emit('ship:fired', enemies[enemyID]);
+        bus_out.emit('ship:fired', {
+            id: enemies[enemyID].id,
+            position: enemies[enemyID].position,
+            type: enemies[enemyID].type,
+            health: enemies[enemyID].health
+        });
+    });
+
+    bus_in.on('ship:generate_power', () => {
+        ship.power.bridge++;
+        bus_out.emit('ship:status', ship);
+    });
+
+    bus_in.on('ship:move_power', (destination) => {
+        ship.power.bridge--;
+        ship.power[destination]++;
+        bus_out.emit('ship:status', ship);
+    });
+
+    bus_in.on('ship:use_power', (amount, location) => {
+        ship.power[destination] -= amount;
+        bus_out.emit('ship:status', ship);
     });
 
     bus_in.on('ship:damage', (value) => {
