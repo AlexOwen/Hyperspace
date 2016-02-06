@@ -10,7 +10,7 @@ exports.init = (server) => {
 
         // joining
         socket.on('game:create', () => {
-            let roomID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
+            let roomID = Math.floor(Math.random()*90000) + 10000;
             socket.join('roomID');
             socket.room = roomID;
             socket.role = 'host';
@@ -21,7 +21,7 @@ exports.init = (server) => {
         });
 
         socket.on('game:join', (roomID) => {
-            let playerID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
+            let playerID = (Math.random().toString(10) + '00000000000000000').slice(2, 7);
             console.log('game:join ' + roomID);
             socket.join('roomID');
             socket.room = roomID;
@@ -64,7 +64,7 @@ exports.init = (server) => {
                     games[socket.room].in.emit('player:leave');
                 }
             } else if (socket.role === 'host') {
-                games[socket.room].in.emit('game:end');
+                games[socket.room].in.emit('game:end', {reason: 'disconnect'});
             }
         });
 
@@ -75,8 +75,8 @@ exports.init = (server) => {
                 socket.emit('ship:position', position);
             });
 
-            state.out.on('ship:health', (health) => {
-                socket.emit('ship:health', health);
+            state.out.on('ship:status', (health) => {
+                socket.emit('ship:status', health);
             });
 
             state.out.on('enemy:position', (enemy) => {
@@ -97,6 +97,10 @@ exports.init = (server) => {
 
             state.out.on('game:started', (playerStates) => {
                 socket.emit('game:started');
+            });
+
+            state.out.on('game:ended', (details) => {
+                socket.emit('game:ended', details);
             });
         };
     });

@@ -8,16 +8,20 @@
         $(function() {
             var socket = io();
 
-            socket.on('game:created', function(a) {
-                $('#gameid').html(a);
-            });
-
             var ship = {
                 position: {
                     x: 0,
                     y: 0
                 }
             };
+
+            socket.on('game:created', function(a) {
+                $('#gameid').html(a);
+            });
+
+            socket.on('game:ended', function(details) {
+                alert('GAME OVER....' + details.reason);
+            });
 
             var enemies = {};
 
@@ -27,9 +31,11 @@
                 $('#cell_0_' + pos.y).html('SHIP!');
             });
 
-            socket.on('ship:health', function(health) {
-                $('#life span').html(health.life);
-                $('#shields span').html(health.life);
+            socket.on('ship:status', function(ship) {
+                if (ship.health !== undefined && ship.health.life !== undefined && ship.health.shields !== undefined) {
+                    $('#life span').html(ship.health.life);
+                    $('#shields span').html(ship.health.shields);
+                }
             });
 
             socket.on('enemy:position', function(enemy) {
