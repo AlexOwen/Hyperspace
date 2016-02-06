@@ -32,36 +32,42 @@ var Home = React.createClass({
 
 	render() {
 		return (
-			<div className='home'>
-				<h1>Hyperspace</h1>
-				<form 
-					onSubmit={this.handleGameCreate}
-					className="form-create"
-					>
-					<input 
-						type="submit"
-						value="Create game"
-						className="btn btn-lg btn-primary"
-						/>
-				</form>	
-				<form 
-					onSubmit={this.handleGameJoin}
-					className="form-join"
-					>
-					<input
-						onChange={this.changeJoinHandler}
-						value={this.state.gameId}
-						placeholder="12345"
-						className="join-text"
-						maxLength="5"
-						type="number"
-					/>
-					<input 
-						type="submit"
-						value="Join game"
-						className="btn btn-lg btn-success join-button"
-					/>
-				</form>
+			<div>
+				<div className='header'>
+					<h1>Don't Blow Up</h1>
+				</div>
+				<div className='center-wrap'>
+					<div className='home center-container'>
+						<form 
+							onSubmit={this.handleGameCreate}
+							className="form-create"
+							>
+							<input 
+								type="submit"
+								value="Create game"
+								className="btn btn-lg btn-primary"
+								/>
+						</form>	
+						<form 
+							onSubmit={this.handleGameJoin}
+							className="form-join"
+							>
+							<input
+								onChange={this.changeJoinHandler}
+								value={this.state.gameId}
+								placeholder="12345"
+								className="join-text"
+								maxLength="5"
+								type="number"
+							/>
+							<input 
+								type="submit"
+								value="Join game"
+								className="btn btn-lg btn-success join-button"
+							/>
+						</form>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -70,20 +76,37 @@ var Home = React.createClass({
 var ShipLobby = React.createClass({
 	render() {
 		return (
-			<div className='playerList'>
-				<h1> GameID {this.props.gameId} </h1>
-				<h3> Players </h3>
-				<ul>
-					{
-						this.props.players.map((player, i) => {
-							return (
-								<li key={i}>
-									Player {player.number}, Ready: {player.ready.toString()}
-								</li>
-							);
-						})
-					}
-				</ul>				
+			<div>
+				<div className='header'>
+					<h1>Don't Blow Up</h1>
+				</div>
+				<div className='center-wrap'>
+					<div className='center-container'>
+						<div className='container'>
+							<h2 className="shake">{this.props.gameId}</h2>
+						</div>
+						<div className='container'>
+							<h2>Players</h2>
+							<ul>
+								{
+									this.props.players.map((player, i) => {
+										return (
+											<li key={i}>
+												<h3>
+													Player {player.number}..&nbsp;
+													<span className={player.ready ? "green" : "red"}>
+														{player.ready ? "Ready" : "Not Ready"}&nbsp;
+														<span className={player.ready ? "glyphicon glyphicon-thumbs-up green" : "glyphicon glyphicon-thumbs-down red"}></span>
+													</span>
+												</h3>
+											</li>
+										);
+									})
+								}
+							</ul>				
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -113,37 +136,49 @@ var ShipLive = React.createClass({
 });
 
 var PlayerLobby = React.createClass({
-	handleLeft(e) {
+	getInitialState() {
+		return {
+            isReady: false
+		};
+	},
+
+	handleReady(e) {
 		e.preventDefault();
-		
+		this.setState({ isReady : true });
 		this.props.onPlayerReady();
 	},
 
     render() {
+    	var readyView =
+    		<form 
+				onSubmit={this.handleReady}
+				>
+				<input 
+					type="submit"
+					value="I'm Ready"
+					className="btn btn-lg btn-default"
+				/>
+			</form>;
+		if (this.state.isReady) {
+			readyView =
+				<span>
+					<h2 className="green">Ready and waiting..!</h2>
+				</span>;
+		}
+
         return (
-            <div className='playerList'>
-                <h3> Players </h3>
-                <form 
-					onSubmit={this.handleLeft}
-					>
-					<input 
-						type="submit"
-						value="Ready"
-						className="btn btn-lg btn-default"
-					/>
-				</form>
-                <ul>
-                    {
-                        this.props.players.map((player, i) => {
-                            return (
-                                <li key={i}>
-                                    Player {player}
-                                </li>
-                            );
-                        })
-                    }
-                </ul>               
-            </div>
+        	<div>
+	        	<div className='header'>
+					<h1>Don't Blow Up</h1>
+				</div>
+				<div className='center-wrap'>
+					<div className='center-container'>
+						<div className='container'>
+			            	{readyView}
+						</div>
+					</div>
+				</div>
+			</div>
         );
     }
 });
@@ -185,6 +220,26 @@ var PlayerBridge = React.createClass({
         return (
             <div>
                 <h3>The Bridge</h3>            
+            </div>
+        );
+    }
+});
+
+var ShipEnd = React.createClass({
+	render() {
+        return (
+            <div>
+                <h3>The End</h3>            
+            </div>
+        );
+    }
+});
+
+var PlayerEnd = React.createClass({
+	render() {
+        return (
+            <div>
+                <h3>The End</h3>            
             </div>
         );
     }
@@ -321,6 +376,11 @@ var GameApp = React.createClass({
 
         if (this.state.ship) {
             switch(this.state._gameState) {
+            	case 'end':
+                    panel = 
+	                    <ShipEnd
+	                    />
+                    break;
                 case 'started':
                     panel = 
 	                    <ShipLive 
@@ -338,6 +398,11 @@ var GameApp = React.createClass({
             }
         } else {
             switch(this.state._gameState) {
+            	case 'end':
+                    panel = 
+	                    <PlayerEnd
+	                    />
+                    break;
                 case 'started':
                     panel = 
                     	<PlayerContainer

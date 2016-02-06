@@ -1,44 +1,86 @@
 html, body {
     height: 100%;
-    background-color: #333;
+    /*background-color: #333;*/
 }
 
 body {
     color: #fff;
     text-align: center;
     text-shadow: 0 1px 3px rgba(0,0,0,.5);
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    font-family: 'VT323';
+    letter-spacing: 1px;
+}
+
+h1 {
+  font-size: 48px;
+  font-family: 'Audiowide';
 }
 
 .site-wrapper {
-    display: table;
+    position: absolute;
     width: 100%;
     height: 100%;
     min-height: 100%;
-    -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-    box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+    -webkit-/*box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+    box-shad*/ow: inset 0 0 100px rgba(0,0,0,.5);
+    z-index: 10;
 }
 
 input {
   color: #000;
 }
 
-/* HOME */
+.center-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+}
 
-.home form {
+.center-container {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  margin-top: -150px;
+  margin-left: -150px;
+  max-width: 300px;
+}
+
+.container {
+  margin-top: 30px;
   max-width: 300px;
   margin: 0 auto;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.green {
+  color: #00FF00;
+}
+
+.red {
+  color: red;
+}
+
+form {
+  width: 100%;
   margin-top: 30px;
+}
+
+form input {
   width: 100%;
 }
 
-.home form input {
-  width: 100%;
-}
-
-.home form input {
+form input {
   box-sizing: border-box;
   padding: 10px;
-  font-size: 24px;
+  font-size: 28px;
 
   border-radius: 4px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
@@ -48,6 +90,8 @@ input {
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
+/* HOME */
+
 .home form input.join-text {
   letter-spacing: 5px;
   text-align: center;
@@ -56,4 +100,10 @@ input {
 
 .home form input.join-button {
   border-radius: 0 0 4px 4px;
+}
+
+/* Ship Lobby */
+
+.lobby {
+
 }

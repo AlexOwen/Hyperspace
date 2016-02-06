@@ -36,43 +36,55 @@ var Home = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ className: 'home' },
+			null,
 			React.createElement(
-				'h1',
-				null,
-				'Hyperspace'
+				'div',
+				{ className: 'header' },
+				React.createElement(
+					'h1',
+					null,
+					'Don\'t Blow Up'
+				)
 			),
 			React.createElement(
-				'form',
-				{
-					onSubmit: this.handleGameCreate,
-					className: 'form-create'
-				},
-				React.createElement('input', {
-					type: 'submit',
-					value: 'Create game',
-					className: 'btn btn-lg btn-primary'
-				})
-			),
-			React.createElement(
-				'form',
-				{
-					onSubmit: this.handleGameJoin,
-					className: 'form-join'
-				},
-				React.createElement('input', {
-					onChange: this.changeJoinHandler,
-					value: this.state.gameId,
-					placeholder: '12345',
-					className: 'join-text',
-					maxLength: '5',
-					type: 'number'
-				}),
-				React.createElement('input', {
-					type: 'submit',
-					value: 'Join game',
-					className: 'btn btn-lg btn-success join-button'
-				})
+				'div',
+				{ className: 'center-wrap' },
+				React.createElement(
+					'div',
+					{ className: 'home center-container' },
+					React.createElement(
+						'form',
+						{
+							onSubmit: this.handleGameCreate,
+							className: 'form-create'
+						},
+						React.createElement('input', {
+							type: 'submit',
+							value: 'Create game',
+							className: 'btn btn-lg btn-primary'
+						})
+					),
+					React.createElement(
+						'form',
+						{
+							onSubmit: this.handleGameJoin,
+							className: 'form-join'
+						},
+						React.createElement('input', {
+							onChange: this.changeJoinHandler,
+							value: this.state.gameId,
+							placeholder: '12345',
+							className: 'join-text',
+							maxLength: '5',
+							type: 'number'
+						}),
+						React.createElement('input', {
+							type: 'submit',
+							value: 'Join game',
+							className: 'btn btn-lg btn-success join-button'
+						})
+					)
+				)
 			)
 		);
 	}
@@ -84,32 +96,65 @@ var ShipLobby = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ className: 'playerList' },
+			null,
 			React.createElement(
-				'h1',
-				null,
-				' GameID ',
-				this.props.gameId,
-				' '
+				'div',
+				{ className: 'header' },
+				React.createElement(
+					'h1',
+					null,
+					'Don\'t Blow Up'
+				)
 			),
 			React.createElement(
-				'h3',
-				null,
-				' Players '
-			),
-			React.createElement(
-				'ul',
-				null,
-				this.props.players.map(function (player, i) {
-					return React.createElement(
-						'li',
-						{ key: i },
-						'Player ',
-						player.number,
-						', Ready: ',
-						player.ready.toString()
-					);
-				})
+				'div',
+				{ className: 'center-wrap' },
+				React.createElement(
+					'div',
+					{ className: 'center-container' },
+					React.createElement(
+						'div',
+						{ className: 'container' },
+						React.createElement(
+							'h2',
+							{ className: 'shake' },
+							this.props.gameId
+						)
+					),
+					React.createElement(
+						'div',
+						{ className: 'container' },
+						React.createElement(
+							'h2',
+							null,
+							'Players'
+						),
+						React.createElement(
+							'ul',
+							null,
+							this.props.players.map(function (player, i) {
+								return React.createElement(
+									'li',
+									{ key: i },
+									React.createElement(
+										'h3',
+										null,
+										'Player ',
+										player.number,
+										'.. ',
+										React.createElement(
+											'span',
+											{ className: player.ready ? "green" : "red" },
+											player.ready ? "Ready" : "Not Ready",
+											' ',
+											React.createElement('span', { className: player.ready ? "glyphicon glyphicon-thumbs-up green" : "glyphicon glyphicon-thumbs-down red" })
+										)
+									)
+								);
+							})
+						)
+					)
+				)
 			)
 		);
 	}
@@ -160,43 +205,71 @@ var ShipLive = React.createClass({
 var PlayerLobby = React.createClass({
 	displayName: 'PlayerLobby',
 
-	handleLeft: function handleLeft(e) {
-		e.preventDefault();
+	getInitialState: function getInitialState() {
+		return {
+			isReady: false
+		};
+	},
 
+	handleReady: function handleReady(e) {
+		e.preventDefault();
+		this.setState({ isReady: true });
 		this.props.onPlayerReady();
 	},
 
 	render: function render() {
+		var readyView = React.createElement(
+			'form',
+			{
+				onSubmit: this.handleReady
+			},
+			React.createElement('input', {
+				type: 'submit',
+				value: 'I\'m Ready',
+				className: 'btn btn-lg btn-default'
+			})
+		);
+		if (this.state.isReady) {
+			readyView = React.createElement(
+				'span',
+				null,
+				React.createElement(
+					'h2',
+					{ className: 'green' },
+					'Ready and waiting..!'
+				),
+				React.createElement(
+					'h3',
+					null,
+					'Prepare for all hands on deck'
+				)
+			);
+		}
+
 		return React.createElement(
 			'div',
-			{ className: 'playerList' },
+			null,
 			React.createElement(
-				'h3',
-				null,
-				' Players '
+				'div',
+				{ className: 'header' },
+				React.createElement(
+					'h1',
+					null,
+					'Don\'t Blow Up'
+				)
 			),
 			React.createElement(
-				'form',
-				{
-					onSubmit: this.handleLeft
-				},
-				React.createElement('input', {
-					type: 'submit',
-					value: 'Ready',
-					className: 'btn btn-lg btn-default'
-				})
-			),
-			React.createElement(
-				'ul',
-				null,
-				this.props.players.map(function (player, i) {
-					return React.createElement(
-						'li',
-						{ key: i },
-						'Player ',
-						player
-					);
-				})
+				'div',
+				{ className: 'center-wrap' },
+				React.createElement(
+					'div',
+					{ className: 'center-container' },
+					React.createElement(
+						'div',
+						{ className: 'container' },
+						readyView
+					)
+				)
 			)
 		);
 	}
@@ -253,6 +326,38 @@ var PlayerBridge = React.createClass({
 				'h3',
 				null,
 				'The Bridge'
+			)
+		);
+	}
+});
+
+var ShipEnd = React.createClass({
+	displayName: 'ShipEnd',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			null,
+			React.createElement(
+				'h3',
+				null,
+				'The End'
+			)
+		);
+	}
+});
+
+var PlayerEnd = React.createClass({
+	displayName: 'PlayerEnd',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			null,
+			React.createElement(
+				'h3',
+				null,
+				'The End'
 			)
 		);
 	}
@@ -389,6 +494,9 @@ var GameApp = React.createClass({
 
 		if (this.state.ship) {
 			switch (this.state._gameState) {
+				case 'end':
+					panel = React.createElement(ShipEnd, null);
+					break;
 				case 'started':
 					panel = React.createElement(ShipLive, {
 						players: this.state._players,
@@ -404,6 +512,9 @@ var GameApp = React.createClass({
 			}
 		} else {
 			switch (this.state._gameState) {
+				case 'end':
+					panel = React.createElement(PlayerEnd, null);
+					break;
 				case 'started':
 					panel = React.createElement(PlayerContainer, {
 						gameId: this.state._gameId,
