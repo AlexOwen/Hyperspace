@@ -105,7 +105,7 @@ exports.init = () => {
     bus_in.on('player:join', (playerID) => {
         players[playerID] = {};
         players[playerID].number = playerCount++;
-/* remove this */ bus_in.emit('game:start');
+///* remove this */ bus_in.emit('game:start');
         bus_out.emit('player:joined', playerID, players[playerID].number);
     });
 
