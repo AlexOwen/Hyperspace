@@ -1,47 +1,58 @@
 'use strict';
-exports.init = () => {
-    let state = require('./state');
+exports.init = (server) => {
+    let state = require('./state.js');
+    let io = require('socket.io').listen(server);
 
     let games = {};
-    let players = {}; //ship, bridge, engineering, ...
 
-
-    let io = require('socket.io');
-    io.listen(global.app).on('connection', socket => {
-	    log.debug('WebSocket: A user connected');
+    io.on('connection', socket => {
+	    console.log('WebSocket: A user connected');
 
         // joining
         socket.on('game:create', () => {
+            console.log('game:create');
             let roomID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
             socket.join('roomID');
-            games[roomID] = {};
-            games[roomID]['players'] = {};
-            games[roomID].players.host = {};
-            games[roomID].players.host.socket = socket;
-            state.init();
+            socket.room = roomID;
+            socket.role = 'host';
+            games[roomID] = state.init();
+            attachHandlers(games[roomID]);
             socket.emit('game:created', roomID);
         });
 
         socket.on('game:join', (roomID) => {
+            let playerID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
+            console.log('game:join');
             socket.join('roomID');
-            games[roomID].players.p1 = {};
-            games[roomID].players.p1.socket = socket;
-            games[roomID].players.p1.position = 'bridge';
-            socket.emit('player:location', 'bridge');
+            socket.room = roomID;
+            socket.role = 'player';
+            socket.playerID = playerID;
+            socket.emit('game:joined');
         });
+
+        /*
+        state.out.on('game:end', (roomID) => {
+
+        });*/
 
         //player to server
         socket.on('ship:move:up', () => {
-            bus_in.emit('ship:move:up');
+            console.log('ship up');
+            games[socket.room].in.emit('ship:move:up');
         });
 
         socket.on('ship:move:down', () => {
-            bus_in.emit('ship:move:down');
+            console.log('ship down');
+            games[socket.room].in.emit('ship:move:down');
         });
 
-        // server to player
-        bus_out.on('ship:position', (position) => {
-            socket.emit('ship:position', position);
-        });
+        let attachHandlers = (state) => {
+            // server to player
+            state.out.on('ship:position', (position) => {
+                if (socket.role === 'host') {
+                    socket.emit('ship:position', position);
+                }
+            });
+        };
     });
 };

@@ -1,18 +1,15 @@
 'use strict';
 
 let express = require('express');
-global.app = express();
-let events = require('events');
-let sockets = require('./sockets.js');
+var app = express();
+var server = app.listen(3000);
 
-global.bus_in = events.EventEmitter;
-global.bus_out = events.EventEmitter;
+app.use(express.static('debug'));
 
-app.get('/', function (req, res) {
+/*app.get('/', function (req, res) {
   res.send('Hello World!');
   //Dan's shit here
-});
+});*/
 
-app.listen(3000, function () {
 
-});
+require('./sockets.js').init(server);
