@@ -37,11 +37,6 @@ exports.init = (server) => {
 
         });
 
-        /*
-        state.out.on('game:end', (roomID) => {
-
-        });*/
-
         //player to server
         socket.on('player:ready', (isReady) => {
             games[socket.room].in.emit('player:ready', socket.playerID, isReady);
@@ -59,6 +54,22 @@ exports.init = (server) => {
             games[socket.room].in.emit('ship:fire', enemyID);
         });
 
+        socket.on('ship:generate_power', () => {
+            games[socket.room].in.emit('ship:generate_power');
+        });
+
+        socket.on('ship:move_power', (destination) => {
+            games[socket.room].in.emit('ship:move_power');
+        });
+
+        socket.on('ship:use_power', (amount, location) => {
+            games[socket.room].in.emit('ship:use_power');
+        });
+
+        socket.on('ship:get_status', () => {
+            games[socket.room].in.emit('ship:get_status');
+        });
+
         socket.on('disconnect', () => {
             if (socket.role === 'player') {
                 if (socket.room !== undefined && games[socket.room] !== undefined) {
@@ -72,16 +83,13 @@ exports.init = (server) => {
 
         let attachHandlers = (state) => {
             // server to player
-            state.out.on('ship:position', (position) => {
-                socket.emit('ship:position', position);
-            });
 
             state.out.on('ship:fired', (enemy) => {
                 socket.emit('ship:fired', enemy);
             });
 
-            state.out.on('ship:status', (health) => {
-                socket.emit('ship:status', health);
+            state.out.on('ship:status', (ship) => {
+                socket.emit('ship:status', ship);
             });
 
             state.out.on('enemy:position', (enemy) => {

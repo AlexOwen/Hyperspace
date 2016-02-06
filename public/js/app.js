@@ -188,15 +188,15 @@ var ShipLive = React.createClass({
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'life', style: { float: 'left' } },
-                    'Life',
-                    React.createElement('span', null)
+                    { id: 'life', style: { float: 'left', fontSize: '30px' } },
+                    'Hull ',
+                    React.createElement('span', { id: 'life_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'shields', style: { float: 'left' } },
-                    'Shields',
-                    React.createElement('span', null)
+                    { id: 'shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+                    'Shields ',
+                    React.createElement('span', { id: 'shields_value' })
                 )
             )
         );

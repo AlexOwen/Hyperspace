@@ -19,16 +19,16 @@ var Home = React.createClass({
 
     handleGameCreate(e) {
         e.preventDefault();
-        this.props.onGameCreate();  
+        this.props.onGameCreate();
     },
 
     handleGameJoin(e) {
         e.preventDefault();
         var gameId = this.state.gameId
         var alphanumericRegex = /^[0-9a-z]+$/;
-        
+
         if(gameId.match(alphanumericRegex) && gameId.length == 5) {
-            this.props.onGameJoin(gameId);  
+            this.props.onGameJoin(gameId);
         } else {
             this.setState({ gameId : '' });
         }
@@ -46,17 +46,17 @@ var Home = React.createClass({
                 </div>
                 <div className='center-wrap'>
                     <div className='home center-container'>
-                        <form 
+                        <form
                             onSubmit={this.handleGameCreate}
                             className="form-create"
                             >
-                            <input 
+                            <input
                                 type="submit"
                                 value="Create game"
                                 className="btn btn-lg btn-primary"
                                 />
-                        </form> 
-                        <form 
+                        </form>
+                        <form
                             onSubmit={this.handleGameJoin}
                             className="form-join"
                             >
@@ -68,7 +68,7 @@ var Home = React.createClass({
                                 maxLength="5"
                                 type="number"
                             />
-                            <input 
+                            <input
                                 type="submit"
                                 value="Join game"
                                 className="btn btn-lg btn-success join-button"
@@ -111,7 +111,7 @@ var ShipLobby = React.createClass({
                                         );
                                     })
                                 }
-                            </ul>               
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -131,8 +131,8 @@ var ShipLive = React.createClass({
                 </div>
                 <div style={{float:'left'}}>
                     <div id="gameid" style={{float:'left'}}></div>
-                    <div id="life" style={{float:'left'}}>Life<span></span></div>
-                    <div id="shields" style={{float:'left'}}>Shields<span></span></div>
+                    <div id="life" style={{float:'left',fontSize:'30px'}}>Hull <span id="life_value"></span></div>
+                    <div id="shields" style={{float:'left',marginLeft:'25px',fontSize:'30px'}}>Shields <span id="shields_value"></span></div>
                 </div>
             </div>
         );
@@ -154,10 +154,10 @@ var PlayerLobby = React.createClass({
 
     render() {
         var readyView =
-            <form 
+            <form
                 onSubmit={this.handleReady}
                 >
-                <input 
+                <input
                     type="submit"
                     value="I'm Ready"
                     className="btn btn-lg btn-default"
@@ -212,10 +212,10 @@ var PlayerContainer = React.createClass({
             case 'engineering':
                 rolePanel = <PlayerEngine />;
                 break;
-            default:    
+            default:
             case 'bridge':
-                rolePanel = 
-                    <PlayerBridge 
+                rolePanel =
+                    <PlayerBridge
                         onShipMove = {this.props.onShipMove}
                         shipStatus = {this.props.shipStatus}
                     />;
@@ -227,8 +227,8 @@ var PlayerContainer = React.createClass({
             <div>
                 <div className='playerNav'>
                     {ROLES.map((role, i) =>
-                        <div 
-                            className="cell" 
+                        <div
+                            className="cell"
                             key={role}
                             onClick={this.handleMenuItem.bind(this, role)}
                         >
@@ -247,8 +247,8 @@ var PlayerContainer = React.createClass({
 
 var PlayerBridge = React.createClass({
     handleShipMove(direction) {
-        console.log(direction);
-        this.props.onShipMove(direction);   
+        console.log(direction)
+        this.props.onShipMove(direction);
     },
 
     handleShipPower(toRole) {
@@ -347,7 +347,7 @@ var PlayerBridge = React.createClass({
                             >
                         </span>
                     </button>
-                </div>         
+                </div>
             </div>
         );
     }
@@ -357,7 +357,7 @@ var PlayerWeapons = React.createClass({
     render() {
         return (
             <div>
-                <h3>Weapons</h3>            
+                <h3>Weapons</h3>
             </div>
         );
     }
@@ -367,7 +367,7 @@ var PlayerEngine = React.createClass({
     render() {
         return (
             <div>
-                <h3>Engineering</h3>            
+                <h3>Engineering</h3>
             </div>
         );
     }
@@ -377,7 +377,7 @@ var PlayerShields = React.createClass({
     render() {
         return (
             <div>
-                <h3>Shields</h3>            
+                <h3>Shields</h3>
             </div>
         );
     }
@@ -387,7 +387,7 @@ var ShipEnd = React.createClass({
     render() {
         return (
             <div>
-                <h3>The End</h3>            
+                <h3>The End</h3>
             </div>
         );
     }
@@ -397,7 +397,7 @@ var PlayerEnd = React.createClass({
     render() {
         return (
             <div>
-                <h3>The End</h3>            
+                <h3>The End</h3>
             </div>
         );
     }
@@ -461,7 +461,7 @@ var GameApp = React.createClass({
     // _playerLeft(playerNumber) {
     //  console.log("player:left " + playerNumber)
     //  var {_players} = this.state;
-        
+
     //  var index = users.indexOf(playerNumber);
     //  _players.splice(index, 1);
     //  this.setState({_players});
@@ -544,7 +544,7 @@ var GameApp = React.createClass({
     },
 
     render() {
-        var panel = 
+        var panel =
             <Home
                 onGameCreate={this.handleGameCreate}
                 onGameJoin={this.handleGameJoin}
@@ -553,19 +553,19 @@ var GameApp = React.createClass({
         if (this.state.ship) {
             switch(this.state._gameState) {
                 case 'end':
-                    panel = 
+                    panel =
                         <ShipEnd
                         />
                     break;
                 case 'started':
-                    panel = 
-                        <ShipLive 
+                    panel =
+                        <ShipLive
                             players = {this.state._players}
                             gameId = {this.state._gameId}
                         />
                     break;
                 case 'lobby':
-                    panel = 
+                    panel =
                         <ShipLobby
                             players = {this.state._players}
                             gameId = {this.state._gameId}
@@ -575,12 +575,12 @@ var GameApp = React.createClass({
         } else {
             switch(this.state._gameState) {
                 case 'end':
-                    panel = 
+                    panel =
                         <PlayerEnd
                         />
                     break;
                 case 'started':
-                    panel = 
+                    panel =
                         <PlayerContainer
                             gameId = {this.state._gameId}
                             shipStatus = {this.state._shipStatus}
@@ -588,7 +588,7 @@ var GameApp = React.createClass({
                         />
                     break;
                 case 'lobby':
-                    panel = 
+                    panel =
                         <PlayerLobby
                             players = {this.state._players}
                             onPlayerReady = {this.handlePlayerReady}
@@ -596,7 +596,7 @@ var GameApp = React.createClass({
                     break;
             }
         }
-        
+
 
         return (
             <div className='site-wrapper'>

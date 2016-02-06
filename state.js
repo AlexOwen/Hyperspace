@@ -60,6 +60,12 @@ exports.init = () => {
             life: 50,
             shields: 50
         },
+        power: {
+            bridge: 0,
+            weapons: 0,
+            shields: 0,
+            engineering: 0
+        },
         damage: {
             weapons: 1
         },
@@ -69,79 +75,83 @@ exports.init = () => {
     //enemies
     let enemies = {};
     let createEnemy = (details) => {
-        if (ship.health.life > 0) {
+        if ((details.isProjectile && details.parent !== undefined) || !details.isProjectile) {
+            if (ship.health.life > 0) {
 
-            let x = 0, y = 0;
-            if (details.startPos === undefined) {
-                if (details.isProjectile) {
-                    x = details.parent.position.x - 1;
-                    y = details.parent.position.y;
-                } else {
-                    x = screen.width + 1;                          //just off the screen
-                    y = Math.floor(Math.random() * screen.height); //random position on screen
-                }
-            } else {
-                x = details.startPos.x;
-                y = details.startPos.y;
-            }
-
-
-            //create the enemy
-            let enemy = {
-                id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
-                position: {
-                    x, y
-                },
-                type: details.type,
-                health: enemyTypes[details.type].health
-            };
-            enemies[enemy.id] = enemy;
-
-            let creationRate = 1;
-            if (details.creationRate !== undefined) {
-                creationRate = details.creationRate;
-            } else {
-                creationRate = enemyTypes[enemy.type].creationRate;
-            }
-
-            //movement
-            enemies[enemy.id].moveTimer = setInterval(() => {
-                if (enemy.position.x - 1 >= -1) {
-                    enemy.position.x--;
-                    bus_out.emit('enemy:position', {
-                        id: enemy.id,
-                        position: enemies[enemy.id].position,
-                        type: enemies[enemy.id].type,
-                        health: enemies[enemy.id].health
-                    });
-                    if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
-                        //emit damage
-                        bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision);
+                let x = 0, y = 0;
+                if (details.startPos === undefined) {
+                    if (details.isProjectile) {
+                        x = details.parent.position.x - 1;
+                        y = details.parent.position.y;
+                    } else {
+                        x = screen.width + 1;                          //just off the screen
+                        y = Math.floor(Math.random() * screen.height); //random position on screen
                     }
                 } else {
-                    enemies[enemy.id] = undefined;
+                    x = details.startPos.x;
+                    y = details.startPos.y;
                 }
-            }, 1000 / (enemyTypes[enemy.type].speed + ship.speed));
 
-            //projectiles
-            if (enemyTypes[enemies[enemy.id].type].gun !== undefined && enemyTypes[enemies[enemy.id].type].gun.projectile !== undefined) {
-                setTimeout(() => {
-                    createEnemy({
-                        type: enemyTypes[enemyTypes[enemies[enemy.id].type].gun.projectile].name,
-                        isProjectile: true,
-                        parent: enemies[enemy.id],
-                        creationRate: enemyTypes[enemies[enemy.id].type].gun.rateOfFire
-                    });
-                }, ((Math.random() * 10000) / level) / enemyTypes[enemies[enemy.id].type].gun.rateOfFire);
-            }
 
-            enemies[enemy.id].createTimer = setTimeout(() => {
-                createEnemy({
+                //create the enemy
+                let enemy = {
+                    id: (Math.random().toString(36) + '00000000000000000').slice(2, 7),
+                    position: {
+                        x, y
+                    },
                     type: details.type,
-                    creationRate: creationRate
-                });
-            },
-            ((Math.random() * 10000) / level) / creationRate); //create enemy randomly every 1-10 seconds
+                    health: enemyTypes[details.type].health
+                };
+                enemies[enemy.id] = enemy;
+
+                let creationRate = 1;
+                if (details.creationRate !== undefined) {
+                    creationRate = details.creationRate;
+                } else {
+                    creationRate = enemyTypes[enemy.type].creationRate;
+                }
+
+                //movement
+                enemies[enemy.id].moveTimer = setInterval(() => {
+                    if (enemy.position.x - 1 >= -1) {
+                        enemy.position.x--;
+                        bus_out.emit('enemy:position', {
+                            id: enemy.id,
+                            position: enemies[enemy.id].position,
+                            type: enemies[enemy.id].type,
+                            health: enemies[enemy.id].health
+                        });
+                        if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
+                            //emit damage
+                            bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision);
+                        }
+                    } else {
+                        enemies[enemy.id] = undefined;
+                    }
+                }, 1000 / (enemyTypes[enemy.type].speed + ship.speed));
+
+                //projectiles
+                if (enemyTypes[enemies[enemy.id].type].gun !== undefined && enemyTypes[enemies[enemy.id].type].gun.projectile !== undefined) {
+                    setTimeout(() => {
+                        if (enemies[enemy.id] !== undefined) {
+                            createEnemy({
+                                type: enemyTypes[enemyTypes[enemies[enemy.id].type].gun.projectile].name,
+                                isProjectile: true,
+                                parent: enemies[enemy.id],
+                                creationRate: enemyTypes[enemies[enemy.id].type].gun.rateOfFire
+                            });
+                        }
+                    }, ((Math.random() * 10000) / level) / enemyTypes[enemies[enemy.id].type].gun.rateOfFire);
+                }
+
+                enemies[enemy.id].createTimer = setTimeout(() => {
+                    createEnemy({
+                        type: details.type,
+                        creationRate: creationRate
+                    });
+                },
+                ((Math.random() * 10000) / level) / creationRate); //create enemy randomly every 1-10 seconds
+            }
         }
     };
 
@@ -218,23 +228,25 @@ exports.init = () => {
         }
     });
 
+    bus_in.on('ship:get_status', () => {
+        bus_out.emit('ship:status', ship);
+    });
+
     //in game actions
 
     //bridge
     bus_in.on('ship:move:up', () => {
         if (ship.position.y >= 1) {
             ship.position.y = ship.position.y - 1;
-            bus_out.emit('ship:position', ship.position);
+            bus_out.emit('ship:status', ship);
         }
-        console.log('ship position: ' + ship.position.y);
     });
 
     bus_in.on('ship:move:down', () => {
         if (ship.position.y <= screen.height - 2) {
             ship.position.y = ship.position.y + 1;
-            bus_out.emit('ship:position', ship.position);
+            bus_out.emit('ship:status', ship);
         }
-        console.log('ship position: ' + ship.position.y);
     });
 
     bus_in.on('ship:fire', (enemyID) => {
@@ -249,7 +261,28 @@ exports.init = () => {
                 enemies[enemyID].health -= ship.damage.weapons;
             }
         }
-        bus_out.emit('ship:fired', enemies[enemyID]);
+        bus_out.emit('ship:fired', {
+            id: enemies[enemyID].id,
+            position: enemies[enemyID].position,
+            type: enemies[enemyID].type,
+            health: enemies[enemyID].health
+        });
+    });
+
+    bus_in.on('ship:generate_power', () => {
+        ship.power.bridge++;
+        bus_out.emit('ship:status', ship);
+    });
+
+    bus_in.on('ship:move_power', (destination) => {
+        ship.power.bridge--;
+        ship.power[destination]++;
+        bus_out.emit('ship:status', ship);
+    });
+
+    bus_in.on('ship:use_power', (amount, location) => {
+        ship.power[destination] -= amount;
+        bus_out.emit('ship:status', ship);
     });
 
     bus_in.on('ship:damage', (value) => {
