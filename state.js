@@ -13,12 +13,13 @@ exports.init = () => {
     let level = 1;
 
     let screen = {
-        width: 21,
+        width: 100,
         height: 11
     };
 
     let enemyTypes = {
         basic: {
+            health: 1,
             damage: {
                 collision: 10,
                 weapon: 1
@@ -31,7 +32,7 @@ exports.init = () => {
     let ship = {
         position: {
             x: 0,
-            y: 2
+            y: 5
         },
         health: {
             life: 50,
@@ -53,7 +54,8 @@ exports.init = () => {
                     y: Math.floor(Math.random() * screen.height), //random position on screen
                     x: screen.width + 1     //just off the screen
                 },
-                type: 'basic'
+                type: 'basic',
+                health: enemyTypes['basic'].health
             };
             enemies[enemy.id] = enemy;
 
@@ -68,9 +70,9 @@ exports.init = () => {
                 } else {
                     enemies[enemy.id] = undefined;
                 }
-            }, (enemyTypes[enemy.type].speed + ship.speed) * 100);
+            }, (enemyTypes[enemy.type].speed + ship.speed) * 500);
 
-            setTimeout(() => {createEnemy();}, Math.random() * 100 * level); //create enemy randomly every 1-10 seconds
+            enemies[enemy.id].createTimer = setTimeout(() => {createEnemy();}, Math.random() * 1000 * level); //create enemy randomly every 1-10 seconds
         }
     };
 
@@ -105,7 +107,8 @@ exports.init = () => {
     bus_in.on('player:join', (playerID) => {
         players[playerID] = {
             number: playerCount++,
-            ready: false
+            ready: false,
+            health: 100
         };
 // /* remove this */ bus_in.emit('game:start');
         bus_out.emit('player:joined', playerID, players[playerID].number);
@@ -128,7 +131,7 @@ exports.init = () => {
             let gameReady = true;
             for (let player in players) {
                 if (!players[player].ready) gameReady = false;
-                
+
                 playerStates.push({
                     number: players[player].number,
                     ready: players[player].ready
@@ -162,6 +165,21 @@ exports.init = () => {
             bus_out.emit('ship:position', ship.position);
         }
         console.log('ship position: ' + ship.position.y);
+    });
+
+    bus_in.on('ship:fire', (enemyID) => {
+        if (enemies[enemyID] !== undefined) {
+            if (enemies[enemyID].health - ship.damage.weapons <= 0) {
+                enemies[enemyID].health -= ship.damage.weapons;
+                clearInterval(enemies[enemyID].moveTimer);
+                clearTimeout(enemies[enemyID].createTimer);
+                enemies[enemyID].position.x = -1;
+                enemies[enemyID].position.y = -1;
+            } else {
+                enemies[enemyID].health -= ship.damage.weapons;
+            }
+        }
+        bus_out.emit('ship:fired', enemies[enemyID]);
     });
 
     bus_in.on('ship:damage', (value) => {
