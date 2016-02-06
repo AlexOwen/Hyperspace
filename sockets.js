@@ -22,7 +22,6 @@ exports.init = (server) => {
 
         socket.on('game:join', (roomID) => {
             let playerID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
-            console.log('game:join ' + roomID);
             socket.join('roomID');
             socket.room = roomID;
             socket.role = 'player';
@@ -31,7 +30,9 @@ exports.init = (server) => {
             try {
                 attachHandlers(games[roomID]);
                 games[socket.room].in.emit('player:join', playerID);
+                
                 socket.emit('game:joined', roomID);
+                console.log('game:join ' + roomID);
             } catch(e) {
                 console.log("game:join fail, roomID not found: " + roomID);
             }
@@ -78,6 +79,7 @@ exports.init = (server) => {
 
             state.out.on('player:joined', (playerID, playerNumber) => {
                 socket.emit('player:joined', playerNumber);
+                console.log('player:joined ' + playerNumber);
             });
 
             state.out.on('player:left', (playerID, playerNumber) => {
