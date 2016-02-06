@@ -48,13 +48,15 @@ exports.init = (server) => {
         });
 
         socket.on('ship:move:up', () => {
-            console.log('ship up');
             games[socket.room].in.emit('ship:move:up');
         });
 
         socket.on('ship:move:down', () => {
-            console.log('ship down');
             games[socket.room].in.emit('ship:move:down');
+        });
+
+        socket.on('ship:fire', (enemyID) => {
+            games[socket.room].in.emit('ship:fire', enemyID);
         });
 
         socket.on('disconnect', () => {
@@ -72,6 +74,10 @@ exports.init = (server) => {
             // server to player
             state.out.on('ship:position', (position) => {
                 socket.emit('ship:position', position);
+            });
+
+            state.out.on('ship:fired', (enemy) => {
+                socket.emit('ship:fired', enemy);
             });
 
             state.out.on('ship:status', (health) => {

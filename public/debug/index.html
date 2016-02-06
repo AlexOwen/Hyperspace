@@ -1,9 +1,23 @@
 <html>
 <head>
+    <style>
+        #grid {
+            color: #11CC11;
+        }
+
+        .cell.hit {
+            color: red;
+        }
+
+        .cell {
+            background-color: #333;
+        }
+    </style>
+
     <script src="/debug/socket.io.js"></script>
     <script src="/debug/jquery.min.js"></script>
     <script>
-        var width = 21, height = 11;
+        var width = 100, height = 11;
 
         $(function() {
             var socket = io();
@@ -28,7 +42,7 @@
             socket.on('ship:position', function(pos) {
                 $('#cell_' + ship.position.x + '_' + ship.position.y).html('');
                 ship.position = pos;
-                $('#cell_0_' + pos.y).html('SHIP!');
+                $('#cell_0_' + pos.y).html('=>');
             });
 
             socket.on('ship:status', function(ship) {
@@ -38,14 +52,29 @@
                 }
             });
 
+            socket.on('ship:fired', function(enemy) {
+                if (enemy !== undefined && enemy.health !== undefined) {
+                    if (enemy.health <= 0) {
+                        $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).addClass('hit').html('X');
+                        setTimeout(function() {
+                            $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).removeClass('hit').html('').removeAttr('data-id');
+                        }, 500);
+                    } else if (enemy.health <= 0) {
+                        $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).addClass('hit');
+                        setTimeout(function(){$('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).removeClass('hit');}, 500);
+                    }
+                }
+
+            });
+
             socket.on('enemy:position', function(enemy) {
                 if (enemies[enemy.id] === undefined)
                     enemies[enemy.id] = {};
                 if (enemies[enemy.id].position !== undefined)
-                    $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).html('');
+                    $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).removeAttr('data-id').html('');
                 if (!(enemy.position.x === ship.position.x && enemy.position.y === ship.position.y)) {
                     enemies[enemy.id].position = enemy.position;
-                    $('#cell_' + enemy.position.x + '_' + enemy.position.y).html('ENEMY!');
+                    $('#cell_' + enemy.position.x + '_' + enemy.position.y).attr('data-id', enemy.id).attr('data-type', enemy.type).html('<');
                 }
             });
 
@@ -60,9 +89,18 @@
 
             for (var y = 0; y < height; y++) {
                 for (var x = 0; x < width; x++) {
-                    $('#grid').append('<div class="cell" id="cell_' + x + '_' + y + '" style="width:' + 100/width + '%;height:' + 100/(height+1) + '%;float:left;box-sizing:border-box;border:1px solid black;"/>');
+                    $('#grid').append('<div class="cell" id="cell_' + x + '_' + y + '" style="width:' + 100/width + '%;height:' + 100/(height+1) + '%;float:left;"/>');
                 }
             }
+
+            $('div').each(function() {
+                $(this).on('click', function() {
+                    var enemyID = $(this).attr('data-id');
+                    if (enemyID !== undefined) {
+                        socket.emit('ship:fire', enemyID);
+                    }
+                });
+            });
         });
 
     </script>
