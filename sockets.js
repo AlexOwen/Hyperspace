@@ -76,6 +76,16 @@ exports.init = (server) => {
                 socket.emit('ship:position', position);
             });
 
+            state.out.on('ship:health', (health) => {
+                console.log('ship:health out');
+                socket.emit('ship:health', health);
+            });
+
+            state.out.on('enemy:position', (enemy) => {
+                console.log('enemy:position:', enemy.position);
+                socket.emit('enemy:position', enemy);
+            });
+
             state.out.on('player:joined', (playerID, playerNumber) => {
                 socket.emit('player:joined', playerNumber);
             });
@@ -86,6 +96,10 @@ exports.init = (server) => {
 
             state.out.on('game:ready_players', (playerStates) => {
                 socket.emit('game:ready_players', playerStates);
+            });
+
+            state.out.on('game:started', (playerStates) => {
+                socket.emit('game:started');
             });
         };
     });
