@@ -16,18 +16,19 @@ exports.init = (server) => {
             socket.room = roomID;
             socket.role = 'host';
             games[roomID] = state.init();
-            attachHandlers(games[roomID]);
+            //attachHandlers(games[roomID]);
             socket.emit('game:created', roomID);
         });
 
-        socket.on('game:join', (roomID) => {
+        socket.on('player:join', (name, roomID) => {
             let playerID = (Math.random().toString(36) + '00000000000000000').slice(2, 7);
             console.log('game:join');
             socket.join('roomID');
             socket.room = roomID;
             socket.role = 'player';
             socket.playerID = playerID;
-            socket.emit('game:joined');
+            //return player number
+            games[socket.room].in.emit('player:join', playerID);
         });
 
         /*
@@ -36,6 +37,10 @@ exports.init = (server) => {
         });*/
 
         //player to server
+        socket.on('player:ready', (isReady) => {
+            games[socket.room].in.emit('player:ready', socket.playerID, isReady);
+        });
+
         socket.on('ship:move:up', () => {
             console.log('ship up');
             games[socket.room].in.emit('ship:move:up');
@@ -46,12 +51,21 @@ exports.init = (server) => {
             games[socket.room].in.emit('ship:move:down');
         });
 
+
+
         let attachHandlers = (state) => {
             // server to player
-            state.out.on('ship:position', (position) => {
-                if (socket.role === 'host') {
-                    socket.emit('ship:position', position);
-                }
+            state.out.on('ship:position:v', (position) => {
+                console.log('ship:position:v out');
+                socket.emit('ship:position:v', position);
+            });
+
+            state.out.on('player:joined', (playerID, playerNumber) => {
+                socket.emit('player:joined', playerNumber);
+            });
+
+            state.out.on('game:ready_players', (playerStates) => {
+                socket.emit('game:ready_players', playerStates);
             });
         };
     });
