@@ -190,37 +190,37 @@ var ShipLive = React.createClass({
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '18px', 'marginRight': '2%', 'width': '15%' } },
                     'Main Shields ',
                     React.createElement('span', { id: 'main_shields_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '18px', 'marginRight': '2%', 'width': '13%' } },
                     'Hull ',
                     React.createElement('span', { id: 'hull_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '18px', 'marginRight': '2%', 'width': '13%' } },
                     'Bridge ',
                     React.createElement('span', { id: 'bridge_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '18px', 'marginRight': '2%', 'width': '13%' } },
                     'Weapons ',
                     React.createElement('span', { id: 'weapons_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '18px', 'marginRight': '2%', 'width': '13%' } },
                     'Engineering ',
                     React.createElement('span', { id: 'engineering_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'width': '15%' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '18px', 'width': '13%' } },
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
                 )

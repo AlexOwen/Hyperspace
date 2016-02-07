@@ -13,13 +13,13 @@ var initShipDisplay = function(socket, gameID) {
         margin: 'auto',
         marginTop: '20px',
         height: window.innerHeight * 0.85,
-        width: window.innerWidth * 0.85,
+        width: window.innerWidth * 0.95,
         position: 'relative',
         overflow: 'hidden'
     });
 
     $('#game_stats').css({
-        width: window.innerWidth * 0.85,
+        width: window.innerWidth * 0.95,
         position: 'relative',
         margin: 'auto'
     });
