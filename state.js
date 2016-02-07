@@ -305,7 +305,7 @@ exports.init = () => {
         let closest = '';
 
         for (let i = 0; i < screen.width; i++) {
-            for (enemy in enemies) {
+            for (let enemy in enemies) {
                 if (enemies[enemy].position.y === ship.position.y && enemies[enemy].position.x === i && enemy.type === 'basic') {
                     closest = enemies[enemy].id;
                     break;
