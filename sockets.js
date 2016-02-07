@@ -105,6 +105,7 @@ exports.init = (server) => {
             });
 
             state.out.on('ship:status', (ship) => {
+                console.log(ship.position);
                 socket.emit('ship:status', ship);
             });
 

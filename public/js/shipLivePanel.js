@@ -1,7 +1,5 @@
 var initShipDisplay = function(socket) {
 
-    $('#stars, #stars2, #stars3').remove();
-
     var width = 20, height = 7;
 
     var speeds = {
@@ -56,8 +54,7 @@ var initShipDisplay = function(socket) {
         } else {
             if (newY > oldY || newY < oldY) {          //move down/up
                 if (object.type === 'ship') {
-                    console.log('ship');
-                    $(object.elem).animate({top: 'calc(' + (newPosition.y) * vGridUnit + '%)'}, animateSpeed, 'linear');
+                    $(object.elem).animate({top: (newPosition.y+0.3) * vGridUnit + '%'}, animateSpeed, 'linear');
                 } else {
                     $(object.elem).animate({top: 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)'}, animateSpeed, 'linear');
                 }
@@ -68,8 +65,11 @@ var initShipDisplay = function(socket) {
     };
 
     var place = function(object, newPosition) {
-        console.log(newPosition);
-        $(object.elem).css('top', 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)');
+        if (object.type === 'ship') {
+            $(object.elem).css('top', (newPosition.y+0.3) * vGridUnit + '%');
+        } else {
+            $(object.elem).css('top', 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)');
+        }
         $(object.elem).css('left', newPosition.x * hGridUnit + '%');
     };
 
