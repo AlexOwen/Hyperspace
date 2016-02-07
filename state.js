@@ -379,8 +379,8 @@ exports.init = () => {
 
     //engineering
     bus_in.on('ship:repair', (value, location) => {
-        if (ship.engineering.power >= 2) {
-            ship.engineering.power -= 2;
+        if (ship.power.engineering >= 2) {
+            ship.power.engineering -= 2;
             if (ship.health[location] >= ship.max_health[location]) {
                 //do nothing...
             } else if (ship.health[location] + value >= ship.max_health[location]) {
