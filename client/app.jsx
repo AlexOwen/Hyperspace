@@ -860,9 +860,9 @@ var GameApp = React.createClass({
     },
 
     handleCauseEngineDamage(toRole) {
-        var command = 'ship:damage'
+        var command = 'ship:cause_damage'
         socket.emit(command, 1, toRole);
-        console.log(command);
+        console.log(command + ' ' + toRole);
     },
 
     handleShipRepair(toRole) {
