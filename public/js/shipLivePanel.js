@@ -1,5 +1,7 @@
 var initShipDisplay = function(socket) {
 
+    $('#stars,#stars2,#stars3').hide();
+
     var width = 20, height = 7;
 
     var speeds = {
@@ -29,10 +31,13 @@ var initShipDisplay = function(socket) {
     var hGridUnit = 1/width * 100;
     var vGridUnit = 1/height * 100;
     var move = function(object, newPosition) {
-        console.log(speeds[object.type], speeds['ship']);
-        var animateSpeed = (1000 / (speeds[object.type] + speeds['ship'])) - 20;
+        var animateSpeed = 300;
+        if (object.type === 'ship') {
+            animateSpeed = 100;
+        } else {
+            animateSpeed = (1000 / (speeds[object.type] + speeds['ship'])) - 20;
+        }
 
-        console.log(newPosition);
         var newX = newPosition.x;
         var newY = newPosition.y;
         var oldX = object.position.x;
@@ -59,13 +64,13 @@ var initShipDisplay = function(socket) {
     place(ship, {x: 0, y: 3});
 
     socket.on('ship:status', function(shipData) {
-        if (shipData.health !== undefined && shipData.health.life !== undefined && shipData.health.shields !== undefined) {
-            $('#life_value').html(shipData.health.life);
-            if (shipData.health.life < 10) {
+        if (shipData.health !== undefined && shipData.health.hull !== undefined && shipData.health.main_shields !== undefined) {
+            $('#life_value').html(shipData.health.hull);
+            if (shipData.health.hull < 10) {
                 $('#life_value').css('color', '#C90606');
             }
-            $('#shields_value').html(shipData.health.shields);
-            if (shipData.health.shields < 10) {
+            $('#shields_value').html(shipData.health.main_shields);
+            if (shipData.health.main_shields < 10) {
                 $('#shields_value').css('color', '#C90606');
             }
         }
@@ -76,19 +81,23 @@ var initShipDisplay = function(socket) {
     });
 
     socket.on('ship:fired', function(enemy) {
+        enemyDamaged(enemy);
+    });
+
+    var enemyDamaged = (enemy) {
         if (enemy !== undefined && enemy.health !== undefined) {
             if (enemy.health <= 0) {
-                $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).addClass('hit').html('X');
+                $('#enemy_' + enemy.id).addClass('hit').html('X');
                 setTimeout(function() {
-                    $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).removeClass('hit').html('').removeAttr('data-id');
+                    $('#enemy_' + enemy.id).remove();
                 }, 500);
-            } else if (enemy.health <= 0) {
-                $('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).addClass('hit');
-                setTimeout(function(){$('#cell_' + enemies[enemy.id].position.x + '_' + enemies[enemy.id].position.y).removeClass('hit');}, 500);
+            } else if (enemy.health > 0) {
+                var oldHtml = $('#enemy_' + enemy.id).html();
+                $('#enemy_' + enemy.id).addClass('hit').html('X');
+                setTimeout(function(){$('#enemy_' + enemy.id).removeClass('hit').html(oldHtml);}, 500);
             }
         }
-
-    });
+    };
 
     var start = true;
     socket.on('enemy:position', function(enemy) {
@@ -99,16 +108,22 @@ var initShipDisplay = function(socket) {
         var symbol = '';
 
         if (enemy.type === 'asteroid') {
-            symbol = '<i class="icon-asteroid1"></i>';
+            symbol = '<i class="asteroid icon-asteroid1" style="color:#AAA;"></i>';
         } else if (enemy.type === 'basic') {
-            symbol = '<i class="icon-ship1"></i>';
+            symbol = '<i class="basic icon-ship1"></i>';
         } else if (enemy.type === 'projectile') {
-            symbol = '<i class="icon-weapons"></i>';
+            symbol = '<i class="projectile icon-weapons"></i>';
         }
 
         if (enemies[enemy.id] === undefined) {
             enemies[enemy.id] = {};
-            $('#grid').append('<div id="enemy_' + enemy.id + '" style="position:absolute;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#C90606">' + symbol + '</div>');
+            $('#grid').append('<div class="enemy" id="enemy_' + enemy.id + '" style="position:absolute;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#C90606" data-id="' + enemy.id + '">' + symbol + '</div>');
+            $('#enemy_' + enemy.id).on('click', function() {
+                var enemyID = $(this).attr('data-id');
+                if (enemyID !== undefined) {
+                    socket.emit('ship:fire', enemyID);
+                }
+            });
             enemies[enemy.id].elem = $('#enemy_' + enemy.id);
         }
 
@@ -125,24 +140,8 @@ var initShipDisplay = function(socket) {
         if (!(enemy.position.x === ship.position.x && enemy.position.y === ship.position.y)) {
             move(enemies[enemy.id], {x: enemy.position.x, y: enemy.position.y});
             enemies[enemy.id].position = enemy.position;
+        } else {
+            enemyDamaged(enemy);
         }
-    });
-
-    /*for (var y = 0; y < height; y++) {
-        for (var x = 0; x < width; x++) {
-            $('#grid').append('<div id="cell_' + x + '_' + y + '" style="width:' + 100/width + '%;height:' + 100/(height+1) + '%;float:left;"/>');
-        }
-    }
-    $('#grid div').css('font-size', ($('#grid').height()/height) - 40);*/
-
-
-
-    $('div').each(function() {
-        $(this).on('click', function() {
-            var enemyID = $(this).attr('data-id');
-            if (enemyID !== undefined) {
-                socket.emit('ship:fire', enemyID);
-            }
-        });
     });
 };

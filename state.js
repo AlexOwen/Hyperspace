@@ -57,8 +57,20 @@ exports.init = () => {
             y: 3
         },
         health: {
-            life: 50,
-            shields: 50
+            hull: 50,
+            main_shields: 50,
+            shields: 10,
+            engineering: 10,
+            weapons: 10,
+            bridge: 10
+        },
+        max_health: {
+            hull: 50,
+            main_shields: 50,
+            shields: 10,
+            engineering: 10,
+            weapons: 10,
+            bridge: 10
         },
         power: {
             bridge: 0,
@@ -76,7 +88,7 @@ exports.init = () => {
     let enemies = {};
     let createEnemy = (details) => {
         if ((details.isProjectile && details.parent !== undefined) || !details.isProjectile) {
-            if (ship.health.life > 0) {
+            if (ship.health.hull > 0) {
 
                 let x = 0, y = 0;
                 if (details.startPos === undefined) {
@@ -123,7 +135,7 @@ exports.init = () => {
                         });
                         if (enemy.position.y === ship.position.y && enemy.position.x === ship.position.x) {
                             //emit damage
-                            bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision);
+                            bus_in.emit('ship:damage', enemyTypes[enemy.type].damage.collision, 'random');
                         }
                     } else {
                         enemies[enemy.id] = undefined;
@@ -154,6 +166,28 @@ exports.init = () => {
             }
         }
     };
+
+    bus_in.on('enemy:get_closest', () => {
+        let enemyList = [];
+
+        for (enemy in enemies) {
+            if (enemies[enemy].position.x === 1 && enemyList.length < 6) {
+                enemies.push(enemies[enemy].id);
+            } else {break;}
+        }
+        for (enemy in enemies) {
+            if (enemies[enemy].position.x === 2 && enemyList.length < 6) {
+                enemies.push(enemies[enemy].id);
+            } else {break;}
+        }
+        for (enemy in enemies) {
+            if (enemies[enemy].position.x === 3 && enemyList.length < 6) {
+                enemies.push(enemies[enemy].id);
+            } else {break;}
+        }
+
+        bus_out.emit('enemy:closest', enemyList);
+    });
 
     //set up game
     bus_in.on('game:start', () => {
@@ -236,17 +270,23 @@ exports.init = () => {
 
     //bridge
     bus_in.on('ship:move:up', () => {
-        if (ship.position.y >= 1) {
-            ship.position.y = ship.position.y - 1;
-            bus_out.emit('ship:status', ship);
+        if (ship.bridge.power >= 2) {
+            ship.bridge.power -= 2;
+            if (ship.position.y >= 1) {
+                ship.position.y = ship.position.y - 1;
+            }
         }
+        bus_out.emit('ship:status', ship);
     });
 
     bus_in.on('ship:move:down', () => {
-        if (ship.position.y <= screen.height - 2) {
-            ship.position.y = ship.position.y + 1;
-            bus_out.emit('ship:status', ship);
+        if (ship.bridge.power >= 2) {
+            ship.bridge.power -= 2;
+            if (ship.position.y <= screen.height - 2) {
+                ship.position.y = ship.position.y + 1;
+            }
         }
+        bus_out.emit('ship:status', ship);
     });
 
     bus_in.on('ship:fire', (enemyID) => {
@@ -285,27 +325,61 @@ exports.init = () => {
         bus_out.emit('ship:status', ship);
     });
 
-    bus_in.on('ship:damage', (value) => {
-        if (ship.health.shields <= 0) {                 //no shields, take damage
-            ship.health.life -= value;
-        } else if (ship.health.shields - value >= 0) {   //shields absorb it
-            ship.health.shields -= value;
-        } else if (ship.health.shields - value < 0) {   //shields destroyed, take some damage
-            ship.health.shields -= value;
-            ship.health.life += ship.health.shields;
-            ship.health.shields = 0;
+    bus_in.on('ship:damage', (value, location) => {
+        let damage = (value, location) => {
+            if (location === 'random') {
+                for (location in ship.health) {
+                    let randomNumber = Math.floor(Math.random() * 6);
+                    let randomLocation = '';
+                    switch (randomNumber) {
+                        case 0: randomLocation = 'bridge'; break;
+                        case 1: randomLocation = 'engineering'; break;
+                        case 2: randomLocation = 'shields'; break;
+                        case 3: randomLocation = 'weapons'; break;
+                        case 4: randomLocation = 'hull'; break;
+                        case 5: randomLocation = 'hull'; break;
+                    }
+                    damage(1, randomLocation);
+                }
+            } else {
+                ship.health[location] -= value;
+                if (ship.health[location] < 0) {
+                    ship.health[location] = 0;
+                }
+            }
+        };
+
+        if (ship.health.main_shields <= 0) {                 //no shields, take damage
+            damage(value, location);
+        } else if (ship.health.main_shields - value >= 0) {   //shields absorb it
+            ship.health.main_shields -= value;
+        } else if (ship.health.main_shields - value < 0) {   //shields destroyed, take some damage
+            ship.health.main_shields -= value;
+            damage(-ship.health.main_shields, location);
+            ship.health.main_shields = 0;
         }
 
-        bus_out.emit('ship:status', ship);
-        if (ship.health.life <= 0) {
+        if (ship.health.hull <= 0) {
+            ship.health.hull = 0;
             bus_in.emit('game:end', {reason:'death'});
         }
+        bus_out.emit('ship:status', ship);
     });
 
     //engineering
-
-    //weapons
-    bus_in.on('ship:fire:weapon', () => {});
+    bus_in.on('ship:repair', (value, location) => {
+        if (ship.engineering.power >= 2) {
+            ship.engineering.power -= 2;
+            if (ship.health[location] >= ship.max_health[location]) {
+                //do nothing...
+            } else if (ship.health[location] + value >= ship.max_health[location]) {
+                ship.health[location] = ship.max_health[location];
+            } else if (ship.health[location] + value <= ship.max_health[location]) {
+                ship.health[location] += value;
+            }
+        }
+        bus_out.emit('ship:status', ship);
+    });
 
     return {
         in: bus_in,

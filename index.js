@@ -9,11 +9,4 @@ console.log("server running on port : " + port)
 
 // app.use(express.static('debug'));
 app.use(express.static('public'));
-
-/*app.get('/', function (req, res) {
-  res.send('Hello World!');
-  //Dan's shit here
-});*/
-
-
 require('./sockets.js').init(server);
