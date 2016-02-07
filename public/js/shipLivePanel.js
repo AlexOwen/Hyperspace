@@ -1,5 +1,7 @@
 var initShipDisplay = function(socket) {
 
+    $('#stars, #stars2, #stars3').remove();
+
     var width = 20, height = 7;
 
     var speeds = {
@@ -9,7 +11,20 @@ var initShipDisplay = function(socket) {
         basic: 1
     }
 
-    $('#grid').css('height', window.innerHeight * 0.85).css('width', window.innerWidth * 0.85).css('position', 'relative').css('overflow', 'hidden');
+    $('#grid').css({
+        margin: 'auto',
+        marginTop: '20px',
+        height: window.innerHeight * 0.85,
+        width: window.innerWidth * 0.85,
+        position: 'relative',
+        overflow: 'hidden'
+    });
+
+    $('#game_stats').css({
+        width: window.innerWidth * 0.85,
+        position: 'relative',
+        margin: 'auto'
+    });
 
     var ship = {
         type: 'ship',
@@ -40,7 +55,7 @@ var initShipDisplay = function(socket) {
             $(object.elem).remove();
         } else {
             if (newY > oldY || newY < oldY) {          //move down/up
-                $(object.elem).animate({top: newPosition.y * vGridUnit + '%'}, animateSpeed, 'linear');
+                $(object.elem).animate({top: 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)'}, animateSpeed, 'linear');
             } else if (newX > oldX || newX < oldX) {   //move right/left
                 $(object.elem).animate({left: newPosition.x * hGridUnit + '%'}, animateSpeed, 'linear');
             }
@@ -49,11 +64,11 @@ var initShipDisplay = function(socket) {
 
     var place = function(object, newPosition) {
         console.log(newPosition);
-        $(object.elem).css('top', newPosition.y * vGridUnit + '%');
+        $(object.elem).css('top', 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)');
         $(object.elem).css('left', newPosition.x * hGridUnit + '%');
     };
 
-    $('#grid').append('<div id="ship" style="position:absolute;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#17AE17">=></div>');
+    $('#grid').append('<div id="ship" style="position:absolute;width:margin:auto;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#17AE17;">=></div>');
     ship.elem = $('#ship');
     place(ship, {x: 0, y: 3});
 
@@ -111,7 +126,7 @@ var initShipDisplay = function(socket) {
 
         if (enemies[enemy.id] === undefined) {
             enemies[enemy.id] = {};
-            $('#grid').append('<div class="enemy" id="enemy_' + enemy.id + '" style="position:absolute;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#C90606;margin:auto;margin-top:20px" data-id="' + enemy.id + '">' + symbol + '</div>');
+            $('#grid').append('<div class="enemy" id="enemy_' + enemy.id + '" style="position:absolute;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#C90606;width:' + hGridUnit + '%;height:' + vGridUnit + '%;line-height:' + vGridUnit + '%;position:absolute;" data-id="' + enemy.id + '">' + symbol + '</div>');
             $('#enemy_' + enemy.id).on('click', function() {
                 var enemyID = $(this).attr('data-id');
                 if (enemyID !== undefined) {
@@ -138,4 +153,8 @@ var initShipDisplay = function(socket) {
             enemyDamaged(enemy);
         }
     });
+
+    for (var j=0; j < width * height; j++) {
+        $('#grid').append('<div class="grid_cell" style="border:1px solid #17ae17;width:' + 100/width + '%;height:' + 100/height + '%; box-sizing:border-box;float:left;opacity:0.5"/>');
+    }
 };

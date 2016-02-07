@@ -188,7 +188,7 @@ var ShipLive = React.createClass({
             React.createElement('div', { id: 'grid' }),
             React.createElement(
                 'div',
-                { style: { float: 'left' } },
+                { id: 'game_stats' },
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
