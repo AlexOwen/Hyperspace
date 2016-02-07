@@ -58,7 +58,7 @@ exports.init = () => {
         },
         health: {
             hull: 50,
-            main_shields: 50,
+            main_shields: 10,
             shields: 10,
             engineering: 10,
             weapons: 10,
@@ -305,7 +305,7 @@ exports.init = () => {
         let closest = '';
 
         for (let i = 0; i < screen.width; i++) {
-            for (enemy in enemies) {
+            for (let enemy in enemies) {
                 if (enemies[enemy].position.y === ship.position.y && enemies[enemy].position.x === i && enemy.type === 'basic') {
                     closest = enemies[enemy].id;
                     break;

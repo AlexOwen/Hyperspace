@@ -55,7 +55,12 @@ var initShipDisplay = function(socket) {
             $(object.elem).remove();
         } else {
             if (newY > oldY || newY < oldY) {          //move down/up
-                $(object.elem).animate({top: 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)'}, animateSpeed, 'linear');
+                if (object.type === 'ship') {
+                    console.log('ship');
+                    $(object.elem).animate({top: 'calc(' + (newPosition.y) * vGridUnit + '%)'}, animateSpeed, 'linear');
+                } else {
+                    $(object.elem).animate({top: 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)'}, animateSpeed, 'linear');
+                }
             } else if (newX > oldX || newX < oldX) {   //move right/left
                 $(object.elem).animate({left: newPosition.x * hGridUnit + '%'}, animateSpeed, 'linear');
             }
@@ -68,7 +73,7 @@ var initShipDisplay = function(socket) {
         $(object.elem).css('left', newPosition.x * hGridUnit + '%');
     };
 
-    $('#grid').append('<div id="ship" style="position:absolute;width:margin:auto;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#17AE17;">=></div>');
+    $('#grid').append('<div id="ship" style="position:absolute;width:margin:auto;width:' + hGridUnit + '%;height:' + vGridUnit + '%;"><img src="/img/ship.png" style="height:60%;""/></div>');
     ship.elem = $('#ship');
     place(ship, {x: 0, y: 3});
 
@@ -96,7 +101,7 @@ var initShipDisplay = function(socket) {
     var enemyDamaged = function(enemy) {
         if (enemy !== undefined && enemy.health !== undefined) {
             if (enemy.health <= 0) {
-                $('#enemy_' + enemy.id).addClass('hit').html('X');
+                $('#enemy_' + enemy.id).html('X');
                 setTimeout(function() {
                     $('#enemy_' + enemy.id).remove();
                 }, 500);
