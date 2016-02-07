@@ -282,3 +282,19 @@ button.text span {
 }
 
 /* PLAYER SHIELDS */
+
+/* SHIT FAN */
+.shitfan {
+  background-color: rgba(255,0,0,.5);
+}
+
+.shitfan:before {
+  content: "Need to repair!";
+  font-size: 24px;
+  text-align: center;
+  vertical-align: middle; 
+}
+
+.shitfan div {
+  visibility: hidden;
+}

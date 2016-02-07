@@ -289,120 +289,122 @@ var PlayerBridge = React.createClass({
                         <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
-                <div className="section power small">
-                    <button
-                        className="metal linear"
-                        type="button"
-                        onClick={this.handleMovePower.bind(this, "weapons")}
-                        >
-                        <span className="icon-weapons"></span>
-                        <span className="tr">
-                            -1<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                        <span className="br">
-                            +1<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                    </button>
-                    <button
-                        className="metal linear"
-                        type="button"
-                        onClick={this.handleMovePower.bind(this, "engineering")}
-                        >
-                        <span className="icon-engineering"></span>
-                        <span className="tr">
-                            -1<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                        <span className="br">
-                            +1<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                    </button>
-                    <button
-                        className="metal linear"
-                        type="button"
-                        onClick={this.handleMovePower.bind(this, "shields")}
-                        >
-                        <span className="icon-shields"></span>
-                        <span className="tr">
-                            -1<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                        <span className="br">
-                            +1<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                    </button>
-                    <div className="clr"></div>
-                </div>
-                <div className="section status">
-                    <ul>
-                        <li>
-                            Hull:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.hull)}>
-                                {this.props.shipStatus.health.hull} / 50
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Main shields:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.main_shields)}>
-                                {this.props.shipStatus.health.main_shields} / 50
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Weapons:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.weapons)}>
-                                {this.props.shipStatus.health.weapons} / 10
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Engineering:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.engineering)}>
-                                {this.props.shipStatus.health.engineering} / 10
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Shields:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.shields)}>
-                                {this.props.shipStatus.health.shields} / 10
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Bridge:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.bridge)}>
-                                {this.props.shipStatus.health.bridge} / 10
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-                <div className="section arrows">
-                    <button
-                        className="metal linear"
-                        type="button"
-                        onClick={this.handleShipMove.bind(this, "up")}
-                        >
-                        <span
-                            className="glyphicon glyphicon-chevron-up"
+                <div className={this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok"}>
+                    <div className="section power small">
+                        <button
+                            className="metal linear"
+                            type="button"
+                            onClick={this.handleMovePower.bind(this, "weapons")}
                             >
-                        </span>
-                        <span className="tr">
-                            -2<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                    </button>
-                    <button
-                        className="metal linear"
-                        type="button"
-                        onClick={this.handleShipMove.bind(this, "down")}>
-                        <span
-                            className="glyphicon glyphicon-chevron-down"
+                            <span className="icon-weapons"></span>
+                            <span className="tr">
+                                -1<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                            <span className="br">
+                                +1<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                        </button>
+                        <button
+                            className="metal linear"
+                            type="button"
+                            onClick={this.handleMovePower.bind(this, "engineering")}
                             >
-                        </span>
-                        <span className="tr">
-                            -2<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                    </button>
+                            <span className="icon-engineering"></span>
+                            <span className="tr">
+                                -1<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                            <span className="br">
+                                +1<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                        </button>
+                        <button
+                            className="metal linear"
+                            type="button"
+                            onClick={this.handleMovePower.bind(this, "shields")}
+                            >
+                            <span className="icon-shields"></span>
+                            <span className="tr">
+                                -1<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                            <span className="br">
+                                +1<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                        </button>
+                        <div className="clr"></div>
+                    </div>
+                    <div className="section status">
+                        <ul>
+                            <li>
+                                Hull:&nbsp;
+                                <span className="red">
+                                    {this.props.shipStatus.health.hull} / 50
+                                    <span className="glyphicon glyphicon-apple"></span>
+                                </span>
+                            </li>
+                            <li>
+                                Main shields:&nbsp;
+                                <span className="blue">
+                                    {this.props.shipStatus.health.main_shields} / 50
+                                    <span className="glyphicon glyphicon-apple"></span>
+                                </span>
+                            </li>
+                            <li>
+                                Weapons:&nbsp;
+                                <span className="green">
+                                    {this.props.shipStatus.health.weapons} / 10
+                                    <span className="glyphicon glyphicon-apple"></span>
+                                </span>
+                            </li>
+                            <li>
+                                Engineering:&nbsp;
+                                <span className="green">
+                                    {this.props.shipStatus.health.engineering} / 10
+                                    <span className="glyphicon glyphicon-apple"></span>
+                                </span>
+                            </li>
+                            <li>
+                                Shields:&nbsp;
+                                <span className="green">
+                                    {this.props.shipStatus.health.shields} / 10
+                                    <span className="glyphicon glyphicon-apple"></span>
+                                </span>
+                            </li>
+                            <li>
+                                Bridge:&nbsp;
+                                <span className="green">
+                                    {this.props.shipStatus.health.bridge} / 10
+                                    <span className="glyphicon glyphicon-apple"></span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="section arrows">
+                        <button
+                            className="metal linear"
+                            type="button"
+                            onClick={this.handleShipMove.bind(this, "up")}
+                            >
+                            <span
+                                className="glyphicon glyphicon-chevron-up"
+                                >
+                            </span>
+                            <span className="tr">
+                                -2<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                        </button>
+                        <button
+                            className="metal linear"
+                            type="button"
+                            onClick={this.handleShipMove.bind(this, "down")}>
+                            <span
+                                className="glyphicon glyphicon-chevron-down"
+                                >
+                            </span>
+                            <span className="tr">
+                                -2<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
         );
@@ -436,17 +438,19 @@ var PlayerWeapons = React.createClass({
                         <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
-                <div className="section arrows">
-                    <button
-                        className="metal linear text"
-                        type="button"
-                        onClick={this.handleClickFire}>
-                        <span>FIRE!
-                        </span>
-                        <span className="tr">
-                            -2<span className="glyphicon glyphicon-flash"></span>
-                        </span>
-                    </button>
+                <div className={this.props.shipStatus.health.weapons < 1 ? "shitfan" : "aok"}>
+                    <div className="section arrows">
+                        <button
+                            className="metal linear text"
+                            type="button"
+                            onClick={this.handleClickFire}>
+                            <span>FIRE!
+                            </span>
+                            <span className="tr">
+                                -2<span className="glyphicon glyphicon-flash"></span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
         );
@@ -515,19 +519,21 @@ var PlayerEngine = React.createClass({
                         <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
-                <div className="section grid">
-                    {this.state.cellItems.map((x, i) =>
-                        <div
-                            className="cell noselect"
-                            key={i}
-                            onClick={this.handleClickCell.bind(this, i)}
-                        >
-                            <span>{x}</span>
-                        </div>
-                    )}
-                    <div className="clr"></div>
-                    <div className="cell target"><span>{this.state.targetItem}</span></div>
-                    <div className="clr"></div>
+                <div className={this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok"}>
+                    <div className="section grid">
+                        {this.state.cellItems.map((x, i) =>
+                            <div
+                                className="metal linear cell noselect"
+                                key={i}
+                                onClick={this.handleClickCell.bind(this, i)}
+                            >
+                                <span>{x}</span>
+                            </div>
+                        )}
+                        <div className="clr"></div>
+                        <div className="cell target"><span>{this.state.targetItem}</span></div>
+                        <div className="clr"></div>
+                    </div>
                 </div>
                 <div className="section power small">
                     <button
@@ -697,31 +703,33 @@ var PlayerShields = React.createClass({
                         <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
-                <div className="section grid">
-                    {this.state.cellItems.map((x, i) =>
-                        <div
-                            className={x === '' ? "cell noselect metal linear non-vis" : "cell noselect metal linear"}
-                            key={i}
-                            onClick={this.handleClickCell.bind(this, i)}
-                        >
-                            <span>{_.contains(this.state.shownCells, i) ? x : ''}</span>
-                        </div>
-                    )}
-                    <div className="clr"></div>
-                </div>
-                <div className="section status">
-                    <h3 >
-                    Cost:&nbsp;<span className="blue">{this.state.cost}<span className="glyphicon glyphicon-flash"></span></span>
-                    </h3>
-                </div>
-                <div className="section reset">
-                    <button
-                        className="metal linear text"
-                        type="button"
-                        onClick={this.handleReset}
-                        >
-                        <span>Reset board</span>
-                    </button>
+                <div className={this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok"}>
+                    <div className="section grid">
+                        {this.state.cellItems.map((x, i) =>
+                            <div
+                                className={x === '' ? "cell noselect metal linear non-vis" : "cell noselect metal linear"}
+                                key={i}
+                                onClick={this.handleClickCell.bind(this, i)}
+                            >
+                                <span>{_.contains(this.state.shownCells, i) ? x : ''}</span>
+                            </div>
+                        )}
+                        <div className="clr"></div>
+                    </div>
+                    <div className="section status">
+                        <h3 >
+                        Cost:&nbsp;<span className="blue">{this.state.cost}<span className="glyphicon glyphicon-flash"></span></span>
+                        </h3>
+                    </div>
+                    <div className="section reset">
+                        <button
+                            className="metal linear text"
+                            type="button"
+                            onClick={this.handleReset}
+                            >
+                            <span>Reset board</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         );
