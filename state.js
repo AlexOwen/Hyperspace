@@ -330,8 +330,8 @@ exports.init = () => {
     });
 
     bus_in.on('ship:use_power', (amount, location) => {
-        if (ship.power[destination] >= amount) {
-            ship.power[destination] -= amount;
+        if (ship.power[location] >= amount) {
+            ship.power[location] -= amount;
             bus_out.emit('ship:status', ship);
         }
     });
