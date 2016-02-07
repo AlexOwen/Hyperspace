@@ -7,9 +7,10 @@ var socket = io.connect();
 var ROLES = ['bridge', 'weapons', 'engineering', 'shields']
 
 var getValueColour = function(value) {
-    if (value < 20) { return "red"; } else
-    if (value < 50) { return "orange"; }
-    return "green";
+    // if (value < 20) { return "red"; } else
+    // if (value < 50) { return "orange"; }
+    // return "green";
+    return "blue";
 }
 
 var Home = React.createClass({
@@ -126,21 +127,21 @@ var ShipLobby = React.createClass({
 
 var ShipLive = React.createClass({
     componentDidMount: function() {
-        initShipDisplay(socket);
+        initShipDisplay(socket, this.props.gameId);
     },
     render() {
         return (
             <div>
                 <div id="grid">
                 </div>
-                <div id="game_stats">
+                <div id="game_stats" style={{'position':'relative'}}>
                     <div id="gameid" style={{float:'left'}}></div>
-                    <div id="main_shields" style={{float:'left',marginLeft:'20px',fontSize:'30px','marginRight':'20px'}}>Main Shields <span id="main_shields_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Hull <span id="hull_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Bridge <span id="bridge_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Weapons <span id="weapons_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Engineering <span id="engineering_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px'}}>Shields <span id="shields_value"></span></div>
+                    <div id="main_shields" style={{float:'left',marginLeft:'20px',fontSize:'30px','marginRight':'20px','width':'15%'}}>Main Shields <span id="main_shields_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Hull <span id="hull_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Bridge <span id="bridge_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Weapons <span id="weapons_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Engineering <span id="engineering_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','width':'15%'}}>Shields <span id="shields_value"></span></div>
                 </div>
                 <div>
                     <h2 id="current_game_id" class="shake" style={{font-size:24px}}></h2>
@@ -225,6 +226,8 @@ var PlayerContainer = React.createClass({
                 rolePanel =
                     <PlayerShields
                         shipStatus = {this.props.shipStatus}
+                        onShieldAdd = {this.props.onShieldAdd}
+                        onShieldUsePower = {this.props.onShieldUsePower}
                     />;
                 break;
             case 'engineering':
@@ -336,42 +339,42 @@ var PlayerBridge = React.createClass({
                         <li>
                             Hull:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.hull)}>
-                                {this.props.shipStatus.health.hull}
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Weapons:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.weapons)}>
-                                {this.props.shipStatus.health.weapons}
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Engineering:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.engineering)}>
-                                {this.props.shipStatus.health.engineering}
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Shields:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.shields)}>
-                                {this.props.shipStatus.health.shields}
-                                <span className="glyphicon glyphicon-apple"></span>
-                            </span>
-                        </li>
-                        <li>
-                            Bridge:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.bridge)}>
-                                {this.props.shipStatus.health.bridge}
+                                {this.props.shipStatus.health.hull} / 50
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Main shields:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.main_shields)}>
-                                {this.props.shipStatus.health.main_shields}
+                                {this.props.shipStatus.health.main_shields} / 50
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Weapons:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.weapons)}>
+                                {this.props.shipStatus.health.weapons} / 10
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Engineering:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.engineering)}>
+                                {this.props.shipStatus.health.engineering} / 10
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Shields:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.shields)}>
+                                {this.props.shipStatus.health.shields} / 10
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Bridge:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.bridge)}>
+                                {this.props.shipStatus.health.bridge} / 10
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
@@ -442,6 +445,9 @@ var PlayerWeapons = React.createClass({
                         type="button"
                         onClick={this.handleClickFire}>
                         <span>FIRE!
+                        </span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
                         </span>
                     </button>
                 </div>
@@ -608,7 +614,7 @@ var PlayerShields = React.createClass({
             cellItems: [],
             shownCells: [],
             isShowing: false,
-            cost: 0,
+            cost: 1,
         };
     },
 
@@ -620,13 +626,11 @@ var PlayerShields = React.createClass({
         window.clearTimeout(this.timeout);
     },
 
-    handleShipPower(toRole) {
-        // increasing power
-    },
-
     handleClickCell(i) {
         var shownCells = this.state.shownCells;
         var cellItems = this.state.cellItems;
+        var cost = this.state.cost;
+
         console.log(i);
         if (cellItems[i] === ''
             || (this.state.isShowing && shownCells.length == 2)
@@ -641,14 +645,14 @@ var PlayerShields = React.createClass({
             shownCells.push(i);
             if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
                 console.log("+1");
-                // this.props.onGenerateBridgePower();
+                this.props.onShieldAdd(10);
                 this.timeout = window.setTimeout(this.removeTiles, 500);
             } else {
                 console.log("-1");
-                // this.props.onCauseEngineDamage();
                 window.navigator.vibrate(200);
                 this.timeout = window.setTimeout(this.resetShown, 500);
             }
+            this.props.onShieldUsePower(cost);
         }
         console.log(shownCells);
         console.log(cellItems);
@@ -699,8 +703,7 @@ var PlayerShields = React.createClass({
                 <div className="section grid">
                     {this.state.cellItems.map((x, i) =>
                         <div
-                            className="cell noselect metal linear"
-                            disabled={x != ''}
+                            className={x === '' ? "cell noselect metal linear non-vis" : "cell noselect metal linear"}
                             key={i}
                             onClick={this.handleClickCell.bind(this, i)}
                         >
@@ -710,8 +713,8 @@ var PlayerShields = React.createClass({
                     <div className="clr"></div>
                 </div>
                 <div className="section status">
-                    <h3>
-                    Cost:&nbsp;{this.state.cost}<span className="glyphicon glyphicon-apple"></span>
+                    <h3 >
+                    Cost:&nbsp;<span className="blue">{this.state.cost}<span className="glyphicon glyphicon-flash"></span></span>
                     </h3>
                 </div>
                 <div className="section reset">
@@ -764,7 +767,7 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
-        socket.on('game:endeded', this._gameEnded);
+        socket.on('game:ended', this._gameEnded);
 
         socket.on('ship:status', this._shipStatusUpdate);
 
@@ -866,6 +869,18 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+    handleShieldAdd(shield) {
+        var command = 'ship:repair'
+        socket.emit(command, "main_shields", shield);
+        console.log(command + ' ' + shield);
+    },
+
+    handleShieldUsePower(power) {
+        var command = 'ship:use_power'
+        socket.emit(command, power, "shields");
+        console.log(command + ' ' + power);
+    },
+
     render() {
         var panel =
             <Home
@@ -907,6 +922,9 @@ var GameApp = React.createClass({
                             onGenerateBridgePower = {this.handleGenerateBridgePower}
                             onShipRepair = {this.handleShipRepair}
                             onFire = {this.handleFire}
+                            onShieldAdd = {this.handleShieldAdd}
+                            onShieldUsePower = {this.handleShieldUsePower}
+
                         />
                     break;
                 case 'lobby':

@@ -322,14 +322,18 @@ exports.init = () => {
     });
 
     bus_in.on('ship:move_power', (destination) => {
-        ship.power.bridge--;
-        ship.power[destination]++;
-        bus_out.emit('ship:status', ship);
+        if (ship.power.bridge >= 1) {
+            ship.power.bridge--;
+            ship.power[destination]++;
+            bus_out.emit('ship:status', ship);
+        }
     });
 
     bus_in.on('ship:use_power', (amount, location) => {
-        ship.power[location] -= amount;
-        bus_out.emit('ship:status', ship);
+        if (ship.power[location] >= amount) {
+            ship.power[location] -= amount;
+            bus_out.emit('ship:status', ship);
+        }
     });
 
     bus_in.on('ship:damage', (value, location) => {

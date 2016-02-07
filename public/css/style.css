@@ -74,6 +74,14 @@ ul {
   color: red;
 }
 
+.blue {
+  color: hsl(210, 100%, 60%);
+}
+
+.non-vis {
+  visibility: hidden !important;
+}
+
 form {
   width: 100%;
   margin-top: 30px;
@@ -188,6 +196,11 @@ a { text-decoration: none; display: block; }
   font-size: 42px;
 }
 
+.grid .cell span {
+  display: block;
+  margin-top: -15px;
+}
+
 .grid .cell.disabled {
   background-color: grey;
 }
@@ -223,6 +236,32 @@ button span {
 
 button.text span {
   margin-top: -18px;
+}
+
+.tr {
+    position: absolute;
+    right: 11px;
+    color: red;
+}
+
+.br {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    color: green;
+}
+
+.section .tr {
+  bottom: 5px;
+}
+
+.section.small .tr {
+  bottom: 15px;
+}
+
+.tr span, .br span {
+  font-size: 12px;
+  display: inline;
 }
 
 /* PLAYER BRIDGE */

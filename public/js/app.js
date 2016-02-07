@@ -8,12 +8,10 @@ var socket = io.connect();
 var ROLES = ['bridge', 'weapons', 'engineering', 'shields'];
 
 var getValueColour = function getValueColour(value) {
-    if (value < 20) {
-        return "red";
-    } else if (value < 50) {
-        return "orange";
-    }
-    return "green";
+    // if (value < 20) { return "red"; } else
+    // if (value < 50) { return "orange"; }
+    // return "green";
+    return "blue";
 };
 
 var Home = React.createClass({
@@ -188,41 +186,41 @@ var ShipLive = React.createClass({
             React.createElement('div', { id: 'grid' }),
             React.createElement(
                 'div',
-                { id: 'game_stats' },
+                { id: 'game_stats', style: { 'position': 'relative' } },
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Main Shields ',
                     React.createElement('span', { id: 'main_shields_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Hull ',
                     React.createElement('span', { id: 'hull_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Bridge ',
                     React.createElement('span', { id: 'bridge_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Weapons ',
                     React.createElement('span', { id: 'weapons_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Engineering ',
                     React.createElement('span', { id: 'engineering_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'width': '15%' } },
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
                 )
@@ -327,7 +325,9 @@ var PlayerContainer = React.createClass({
                 break;
             case 'shields':
                 rolePanel = React.createElement(PlayerShields, {
-                    shipStatus: this.props.shipStatus
+                    shipStatus: this.props.shipStatus,
+                    onShieldAdd: this.props.onShieldAdd,
+                    onShieldUsePower: this.props.onShieldUsePower
                 });
                 break;
             case 'engineering':
@@ -484,50 +484,7 @@ var PlayerBridge = React.createClass({
                             'span',
                             { className: getValueColour(this.props.shipStatus.health.hull) },
                             this.props.shipStatus.health.hull,
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Weapons: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.weapons) },
-                            this.props.shipStatus.health.weapons,
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Engineering: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.engineering) },
-                            this.props.shipStatus.health.engineering,
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Shields: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.shields) },
-                            this.props.shipStatus.health.shields,
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Bridge: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.bridge) },
-                            this.props.shipStatus.health.bridge,
+                            ' / 50',
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -539,6 +496,55 @@ var PlayerBridge = React.createClass({
                             'span',
                             { className: getValueColour(this.props.shipStatus.health.main_shields) },
                             this.props.shipStatus.health.main_shields,
+                            ' / 50',
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Weapons: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.weapons) },
+                            this.props.shipStatus.health.weapons,
+                            ' / 10',
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Engineering: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.engineering) },
+                            this.props.shipStatus.health.engineering,
+                            ' / 10',
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Shields: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.shields) },
+                            this.props.shipStatus.health.shields,
+                            ' / 10',
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Bridge: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.bridge) },
+                            this.props.shipStatus.health.bridge,
+                            ' / 10',
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     )
@@ -628,6 +634,12 @@ var PlayerWeapons = React.createClass({
                         'span',
                         null,
                         'FIRE!'
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                     )
                 )
             )
@@ -875,13 +887,11 @@ var PlayerShields = React.createClass({
         window.clearTimeout(this.timeout);
     },
 
-    handleShipPower: function handleShipPower(toRole) {
-        // increasing power
-    },
-
     handleClickCell: function handleClickCell(i) {
         var shownCells = this.state.shownCells;
         var cellItems = this.state.cellItems;
+        var cost = this.state.cost;
+
         console.log(i);
         if (cellItems[i] === '' || this.state.isShowing && shownCells.length == 2 || shownCells.length == 1 && shownCells[0] == i) {
             console.log('nothing there');
@@ -894,14 +904,14 @@ var PlayerShields = React.createClass({
             shownCells.push(i);
             if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
                 console.log("+1");
-                // this.props.onGenerateBridgePower();
+                this.props.onShieldAdd(10);
                 this.timeout = window.setTimeout(this.removeTiles, 500);
             } else {
                 console.log("-1");
-                // this.props.onCauseEngineDamage();
                 window.navigator.vibrate(200);
                 this.timeout = window.setTimeout(this.resetShown, 500);
             }
+            this.props.onShieldUsePower(cost);
         }
         console.log(shownCells);
         console.log(cellItems);
@@ -964,8 +974,7 @@ var PlayerShields = React.createClass({
                     return React.createElement(
                         'div',
                         {
-                            className: 'cell noselect metal linear',
-                            disabled: x != '',
+                            className: x === '' ? "cell noselect metal linear non-vis" : "cell noselect metal linear",
                             key: i,
                             onClick: _this3.handleClickCell.bind(_this3, i)
                         },
@@ -985,8 +994,12 @@ var PlayerShields = React.createClass({
                     'h3',
                     null,
                     'Cost: ',
-                    this.state.cost,
-                    React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                    React.createElement(
+                        'span',
+                        { className: 'blue' },
+                        this.state.cost,
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    )
                 )
             ),
             React.createElement(
@@ -1053,7 +1066,7 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
-        socket.on('game:endeded', this._gameEnded);
+        socket.on('game:ended', this._gameEnded);
 
         socket.on('ship:status', this._shipStatusUpdate);
 
@@ -1155,6 +1168,18 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+    handleShieldAdd: function handleShieldAdd(shield) {
+        var command = 'ship:repair';
+        socket.emit(command, "main_shields", shield);
+        console.log(command + ' ' + shield);
+    },
+
+    handleShieldUsePower: function handleShieldUsePower(power) {
+        var command = 'ship:use_power';
+        socket.emit(command, power, "shields");
+        console.log(command + ' ' + power);
+    },
+
     render: function render() {
         var panel = React.createElement(Home, {
             onGameCreate: this.handleGameCreate,
@@ -1189,7 +1214,10 @@ var GameApp = React.createClass({
                         onCauseEngineDamage: this.handleCauseEngineDamage,
                         onGenerateBridgePower: this.handleGenerateBridgePower,
                         onShipRepair: this.handleShipRepair,
-                        onFire: this.handleFire
+                        onFire: this.handleFire,
+                        onShieldAdd: this.handleShieldAdd,
+                        onShieldUsePower: this.handleShieldUsePower
+
                     });
                     break;
                 case 'lobby':
