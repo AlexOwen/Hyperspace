@@ -135,7 +135,7 @@ var ShipLive = React.createClass({
                 </div>
                 <div id="game_stats">
                     <div id="gameid" style={{float:'left'}}></div>
-                    <div id="main_shields" style={{float:'left',marginLeft:'25px',fontSize:'30px'}}>Main Shields <span id="main_shields_value"></span></div>
+                    <div id="main_shields" style={{float:'left',marginLeft:'20px',fontSize:'30px','marginRight':'20px'}}>Main Shields <span id="main_shields_value"></span></div>
                     <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Hull <span id="hull_value"></span></div>
                     <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Bridge <span id="bridge_value"></span></div>
                     <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Weapons <span id="weapons_value"></span></div>

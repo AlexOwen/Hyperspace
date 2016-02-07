@@ -328,7 +328,7 @@ exports.init = () => {
     });
 
     bus_in.on('ship:use_power', (amount, location) => {
-        ship.power[destination] -= amount;
+        ship.power[location] -= amount;
         bus_out.emit('ship:status', ship);
     });
 

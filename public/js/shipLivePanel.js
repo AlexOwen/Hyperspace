@@ -54,7 +54,7 @@ var initShipDisplay = function(socket) {
         } else {
             if (newY > oldY || newY < oldY) {          //move down/up
                 if (object.type === 'ship') {
-                    $(object.elem).animate({top: (newPosition.y+0.3) * vGridUnit + '%'}, animateSpeed, 'linear');
+                    $(object.elem).animate({top: (((newPosition.y+0.3) * vGridUnit) - 1.5) + '%'}, animateSpeed, 'linear');
                 } else {
                     $(object.elem).animate({top: 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)'}, animateSpeed, 'linear');
                 }
@@ -66,7 +66,7 @@ var initShipDisplay = function(socket) {
 
     var place = function(object, newPosition) {
         if (object.type === 'ship') {
-            $(object.elem).css('top', (newPosition.y+0.3) * vGridUnit + '%');
+            $(object.elem).css('top', (((newPosition.y+0.3) * vGridUnit) - 1.5) + '%');
         } else {
             $(object.elem).css('top', 'calc(' + (newPosition.y+0.5) * vGridUnit + '% - 15px)');
         }

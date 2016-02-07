@@ -192,7 +192,7 @@ var ShipLive = React.createClass({
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'main_shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px' } },
                     'Main Shields ',
                     React.createElement('span', { id: 'main_shields_value' })
                 ),
