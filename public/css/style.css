@@ -169,32 +169,67 @@ a { text-decoration: none; display: block; }
     inset hsla(210,100%,100%,.7) 0  2px 1px 7px;
 }
 
-/* PLAYER BRIDGE */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
 
-.player-bridge .arrows .glyphicon {
+.grid .cell {
+  display: block;
+  float: left;
+  width: 33%;
+  background-color: green;
+  height: 60px;
+  font-size: 42px;
+}
+
+.section {
+  margin-top: 15px;
+}
+
+button .glyphicon {
   display: block;
   font-size: 60px;
 }
 
-.player-bridge .arrows button {
-  width: 100%;
-}
-
-.player-bridge .power span {
-  display: block;
-  margin-top: -15px;
-  font-size: 40px;
-}
-
-.player-bridge .power button {
+.small button {
   float: left;
   width: 30%;
   margin-right: 7px;
 }
 
-.player-bridge .status, .player-bridge .power, .player-bridge .arrows {
-  margin-top: 15px;
+.small.left-shift {
+  margin-top: 7px;
+}
+
+.small.left-shift button:first-child {
+  margin-left: 20%;
+}
+
+.small button span {
+  display: block;
+  margin-top: -6px;
+  font-size: 40px;
+}
+
+/* PLAYER BRIDGE */
+
+.player-bridge .arrows button {
+  width: 100%;
 }
 
 .player-bridge .status span {
   font-size: 20px;
+}
+
+/* PLAYER ENGINE */
+
+.player-engine .grid .cell.target {
+  background: none;
+  margin-left: 33%;
+}
