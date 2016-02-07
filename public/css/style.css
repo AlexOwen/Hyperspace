@@ -225,6 +225,32 @@ button.text span {
   margin-top: -18px;
 }
 
+.tr {
+    position: absolute;
+    right: 11px;
+    color: red;
+}
+
+.br {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    color: green;
+}
+
+.section .tr {
+  bottom: 5px;
+}
+
+.section.small .tr {
+  bottom: 15px;
+}
+
+.tr span, .br span {
+  font-size: 12px;
+  display: inline;
+}
+
 /* PLAYER BRIDGE */
 
 .player-bridge .arrows button {
