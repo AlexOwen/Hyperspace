@@ -211,6 +211,7 @@ var PlayerContainer = React.createClass({
                 rolePanel = 
                     <PlayerWeapons
                         shipStatus = {this.props.shipStatus}
+                        onFire = {this.props.onFire}
                     />;
                 break;
             case 'shields':
@@ -278,7 +279,7 @@ var PlayerBridge = React.createClass({
                 <h3>Bridge:&nbsp;
                     <span className={getValueColour(this.props.shipStatus.power.bridge)}>
                         {this.props.shipStatus.power.bridge}
-                        <span className="glyphicon glyphicon-ice-lolly-tasted"></span>
+                        <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
                 <div className="section power small">
@@ -288,6 +289,12 @@ var PlayerBridge = React.createClass({
                         onClick={this.handleMovePower.bind(this, "weapons")}
                         >
                         <span className="icon-weapons"></span>
+                        <span className="tr">
+                            -1<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-flash"></span>
+                        </span>
                     </button>
                     <button 
                         className="metal linear"
@@ -295,6 +302,12 @@ var PlayerBridge = React.createClass({
                         onClick={this.handleMovePower.bind(this, "engineering")}
                         >
                         <span className="icon-engineering"></span>
+                        <span className="tr">
+                            -1<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-flash"></span>
+                        </span>
                     </button>
                     <button 
                         className="metal linear"
@@ -302,6 +315,12 @@ var PlayerBridge = React.createClass({
                         onClick={this.handleMovePower.bind(this, "shields")}
                         >
                         <span className="icon-shields"></span>
+                        <span className="tr">
+                            -1<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-flash"></span>
+                        </span>
                     </button>
                     <div className="clr"></div>
                 </div>
@@ -361,6 +380,9 @@ var PlayerBridge = React.createClass({
                             className="glyphicon glyphicon-chevron-up"
                             >
                         </span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
                     </button>
                     <button
                         className="metal linear"
@@ -370,6 +392,9 @@ var PlayerBridge = React.createClass({
                             className="glyphicon glyphicon-chevron-down"
                             >
                         </span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
                     </button>
                 </div>
             </div>
@@ -378,14 +403,46 @@ var PlayerBridge = React.createClass({
 });
 
 var PlayerWeapons = React.createClass({
+    getInitialState() {
+        return {
+        };
+    },
+
+    componentDidMount: function() {
+        
+    },
+
+    componentWillUnmount: function() {
+        
+    },
+
+    handleClickFire() {
+        this.props.onFire();
+    },
+
     render() {
         return (
-            <div>
-                <h3>Weapons</h3>
+            <div className="player-engine container">
+                <h3>Weapons:&nbsp;
+                    <span className={getValueColour(this.props.shipStatus.power.weapons)}>
+                        {this.props.shipStatus.power.weapons}
+                        <span className="glyphicon glyphicon-flash"></span>
+                    </span>
+                </h3>
+                <div className="section arrows">
+                    <button
+                        className="metal linear text"
+                        type="button"
+                        onClick={this.handleClickFire}>
+                        <span>FIRE!
+                        </span>
+                    </button>
+                </div>
             </div>
         );
     }
 });
+
 
 var PlayerEngine = React.createClass({
     getInitialState() {
@@ -404,15 +461,15 @@ var PlayerEngine = React.createClass({
     },
 
     handleShipRepair(toRole) {
-        // this.props.onShipRepair(roRole);
-        this.props.onShipRepair("random");
+        this.props.onShipRepair(toRole);
+        // this.props.onShipRepair("random");
     },
 
     handleClickCell(i) {
         if (this.state.cellItems[i] == this.state.targetItem) {
             this.props.onGenerateBridgePower();
         } else {
-            this.props.onCauseEngineDamage();
+            this.props.onCauseEngineDamage("random");
             window.navigator.vibrate(200);
         }
 
@@ -445,7 +502,7 @@ var PlayerEngine = React.createClass({
                 <h3>Engineering:&nbsp;
                     <span className={getValueColour(this.props.shipStatus.power.engineering)}>
                         {this.props.shipStatus.power.engineering}
-                        <span className="glyphicon glyphicon-ice-lolly-tasted"></span>
+                        <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
                 <div className="section grid">
@@ -468,7 +525,13 @@ var PlayerEngine = React.createClass({
                         type="button"
                         onClick={this.handleShipRepair.bind(this, "hull")}
                         >
-                        <span className="icon-hull"></span>
+                        <span className="icon-noun_79117_cc"></span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-apple"></span>
+                        </span>
                     </button>
                     <button 
                         className="metal linear"
@@ -476,6 +539,12 @@ var PlayerEngine = React.createClass({
                         onClick={this.handleShipRepair.bind(this, "bridge")}
                         >
                         <span className="icon-bridge"></span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-apple"></span>
+                        </span>
                     </button>
                     <button 
                         className="metal linear"
@@ -483,6 +552,12 @@ var PlayerEngine = React.createClass({
                         onClick={this.handleShipRepair.bind(this, "weapons")}
                         >
                         <span className="icon-weapons"></span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-apple"></span>
+                        </span>
                     </button>
                     <div className="clr"></div>
                 </div>
@@ -493,6 +568,12 @@ var PlayerEngine = React.createClass({
                         onClick={this.handleShipRepair.bind(this, "engineering")}
                         >
                         <span className="icon-engineering"></span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-apple"></span>
+                        </span>
                     </button>
                     <button 
                         className="metal linear"
@@ -500,6 +581,12 @@ var PlayerEngine = React.createClass({
                         onClick={this.handleShipRepair.bind(this, "shields")}
                         >
                         <span className="icon-shields"></span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
+                        <span className="br">
+                            +1<span className="glyphicon glyphicon-apple"></span>
+                        </span>
                     </button>
                     <div className="clr"></div>
                 </div>
@@ -599,7 +686,7 @@ var PlayerShields = React.createClass({
                 <h3>Shields:&nbsp;
                     <span className={getValueColour(this.props.shipStatus.power.shields)}>
                         {this.props.shipStatus.power.shields}
-                        <span className="glyphicon glyphicon-ice-lolly-tasted"></span>
+                        <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
                 <div className="section grid">
@@ -760,9 +847,15 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
-    handleShipPower(toRole) {
+    handleShipRepair(toRole) {
         var command = 'ship:repair'
         socket.emit(command, toRole);
+        console.log(command);
+    },
+
+    handleFire() {
+        var command = 'ship:fire_closest'
+        socket.emit(command);
         console.log(command);
     },
 
@@ -806,6 +899,7 @@ var GameApp = React.createClass({
                             onCauseEngineDamage = {this.handleCauseEngineDamage}
                             onGenerateBridgePower = {this.handleGenerateBridgePower}
                             onShipRepair = {this.handleShipRepair}
+                            onFire = {this.handleFire}
                         />
                     break;
                 case 'lobby':
