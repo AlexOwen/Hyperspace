@@ -863,6 +863,18 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+    handleShieldAdd(shield) {
+        var command = 'ship:repair'
+        socket.emit(command, "main_shields", shield);
+        console.log(command);
+    },
+
+    handleShieldUsePower(power) {
+        var command = 'ship:use_power'
+        socket.emit(command, power, "shields");
+        console.log(command);
+    },
+
     render() {
         var panel =
             <Home
@@ -904,6 +916,9 @@ var GameApp = React.createClass({
                             onGenerateBridgePower = {this.handleGenerateBridgePower}
                             onShipRepair = {this.handleShipRepair}
                             onFire = {this.handleFire}
+                            onShieldAdd = {this.handleShieldAdd}
+                            onShieldUsePower = {this.handleShieldUsePower}
+                        
                         />
                     break;
                 case 'lobby':
