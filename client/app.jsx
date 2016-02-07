@@ -509,17 +509,7 @@ var PlayerShields = React.createClass({
     }
 });
 
-var ShipEnd = React.createClass({
-    render() {
-        return (
-            <div>
-                <h3>The End</h3>
-            </div>
-        );
-    }
-});
-
-var PlayerEnd = React.createClass({
+var GameEnd = React.createClass({
     render() {
         return (
             <div>
@@ -555,6 +545,7 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
+        socket.on('game:endeded', this._gameEnded);
         
         socket.on('ship:status', this._shipStatusUpdate);
 
@@ -599,12 +590,18 @@ var GameApp = React.createClass({
         this.setState({ _players: players });
     },
 
-    // GAME START
+    // GAME START END
 
     _gameStarted() {
         //player location
         console.log('game:started');
         this.setState({ _gameState: 'started' });
+    },
+
+    _gameStarted() {
+        //player location
+        console.log('game:ended');
+        this.setState({ _gameState: 'ended' });
     },
 
     // SHIP
@@ -645,13 +642,12 @@ var GameApp = React.createClass({
                 onGameJoin={this.handleGameJoin}
             />;
 
-        if (this.state.ship) {
+        if (this.state._gameState == 'ended') {
+            panel =
+                <GameEnd
+                />
+        } else if (this.state.ship) {
             switch(this.state._gameState) {
-                case 'end':
-                    panel =
-                        <ShipEnd
-                        />
-                    break;
                 case 'started':
                     panel =
                         <ShipLive
@@ -669,11 +665,6 @@ var GameApp = React.createClass({
             }
         } else {
             switch(this.state._gameState) {
-                case 'end':
-                    panel =
-                        <PlayerEnd
-                        />
-                    break;
                 case 'started':
                     panel =
                         <PlayerContainer

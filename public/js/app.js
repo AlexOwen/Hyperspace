@@ -691,24 +691,8 @@ var PlayerShields = React.createClass({
     }
 });
 
-var ShipEnd = React.createClass({
-    displayName: 'ShipEnd',
-
-    render: function render() {
-        return React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'h3',
-                null,
-                'The End'
-            )
-        );
-    }
-});
-
-var PlayerEnd = React.createClass({
-    displayName: 'PlayerEnd',
+var GameEnd = React.createClass({
+    displayName: 'GameEnd',
 
     render: function render() {
         return React.createElement(
@@ -750,6 +734,7 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
+        socket.on('game:endeded', this._gameEnded);
 
         socket.on('ship:status', this._shipStatusUpdate);
 
@@ -794,12 +779,18 @@ var GameApp = React.createClass({
         this.setState({ _players: players });
     },
 
-    // GAME START
+    // GAME START END
 
     _gameStarted: function _gameStarted() {
         //player location
         console.log('game:started');
         this.setState({ _gameState: 'started' });
+    },
+
+    _gameStarted: function _gameStarted() {
+        //player location
+        console.log('game:ended');
+        this.setState({ _gameState: 'ended' });
     },
 
     // SHIP
@@ -839,11 +830,10 @@ var GameApp = React.createClass({
             onGameJoin: this.handleGameJoin
         });
 
-        if (this.state.ship) {
+        if (this.state._gameState == 'ended') {
+            panel = React.createElement(GameEnd, null);
+        } else if (this.state.ship) {
             switch (this.state._gameState) {
-                case 'end':
-                    panel = React.createElement(ShipEnd, null);
-                    break;
                 case 'started':
                     panel = React.createElement(ShipLive, {
                         players: this.state._players,
@@ -859,9 +849,6 @@ var GameApp = React.createClass({
             }
         } else {
             switch (this.state._gameState) {
-                case 'end':
-                    panel = React.createElement(PlayerEnd, null);
-                    break;
                 case 'started':
                     panel = React.createElement(PlayerContainer, {
                         gameId: this.state._gameId,
