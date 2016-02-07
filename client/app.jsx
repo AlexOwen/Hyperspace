@@ -459,21 +459,21 @@ var PlayerEngine = React.createClass({
                     <button 
                         className="metal linear"
                         type="button"
-                        onClick={this.handleShipPower.bind(this, "hull")}
+                        onClick={this.handleShipRepair.bind(this, "hull")}
                         >
                         <span className="icon-hull"></span>
                     </button>
                     <button 
                         className="metal linear"
                         type="button"
-                        onClick={this.handleShipPower.bind(this, "bridge")}
+                        onClick={this.handleShipRepair.bind(this, "bridge")}
                         >
                         <span className="icon-bridge"></span>
                     </button>
                     <button 
                         className="metal linear"
                         type="button"
-                        onClick={this.handleShipPower.bind(this, "weapons")}
+                        onClick={this.handleShipRepair.bind(this, "weapons")}
                         >
                         <span className="icon-weapons"></span>
                     </button>
@@ -483,14 +483,14 @@ var PlayerEngine = React.createClass({
                     <button 
                         className="metal linear"
                         type="button"
-                        onClick={this.handleShipPower.bind(this, "engineering")}
+                        onClick={this.handleShipRepair.bind(this, "engineering")}
                         >
                         <span className="icon-engineering"></span>
                     </button>
                     <button 
                         className="metal linear"
                         type="button"
-                        onClick={this.handleShipPower.bind(this, "shields")}
+                        onClick={this.handleShipRepair.bind(this, "shields")}
                         >
                         <span className="icon-shields"></span>
                     </button>
