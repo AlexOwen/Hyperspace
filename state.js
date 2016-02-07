@@ -385,7 +385,7 @@ exports.init = () => {
                 //do nothing...
             } else if (ship.health[location] + value >= ship.max_health[location]) {
                 ship.health[location] = ship.max_health[location];
-            } else if (ship.health[location] + value <= ship.max_health[location]) {
+            } else if (ship.health[location] + value < ship.max_health[location]) {
                 ship.health[location] += value;
             }
         }
