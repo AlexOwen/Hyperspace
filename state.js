@@ -13,7 +13,7 @@ exports.init = () => {
     let level = 1;
 
     let screen = {
-        width: 35,
+        width: 20,
         height: 7
     };
 
@@ -54,7 +54,7 @@ exports.init = () => {
     let ship = {
         position: {
             x: 0,
-            y: 5
+            y: 3
         },
         health: {
             life: 50,
