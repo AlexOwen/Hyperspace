@@ -54,6 +54,10 @@ exports.init = (server) => {
             games[socket.room].in.emit('ship:fire', enemyID);
         });
 
+        socket.on('ship:fire_closest', (enemyID) => {
+            games[socket.room].in.emit('ship:fire_closest');
+        });
+
         socket.on('ship:generate_power', () => {
             games[socket.room].in.emit('ship:generate_power');
         });

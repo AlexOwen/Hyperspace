@@ -73,10 +73,10 @@ exports.init = () => {
             bridge: 10
         },
         power: {
-            bridge: 0,
-            weapons: 0,
-            shields: 0,
-            engineering: 0
+            bridge: 10,
+            weapons: 10,
+            shields: 10,
+            engineering: 10
         },
         damage: {
             weapons: 1
@@ -301,20 +301,39 @@ exports.init = () => {
         });
     });
 
+    bus_in.on('ship:fire_closest', () => {
+        let closest = '';
+
+        for (let i = 0; i < screen.width; i++) {
+            for (enemy in enemies) {
+                if (enemies[enemy].position.y === ship.position.y && enemies[enemy].position.x === i && enemy.type === 'basic') {
+                    closest = enemies[enemy].id;
+                    break;
+                }
+            }
+        }
+
+        bus_in.emit('ship:fire', closest);
+    });
+
     bus_in.on('ship:generate_power', () => {
         ship.power.bridge++;
         bus_out.emit('ship:status', ship);
     });
 
     bus_in.on('ship:move_power', (destination) => {
-        ship.power.bridge--;
-        ship.power[destination]++;
-        bus_out.emit('ship:status', ship);
+        if (ship.power.bridge >= 1) {
+            ship.power.bridge--;
+            ship.power[destination]++;
+            bus_out.emit('ship:status', ship);
+        }
     });
 
     bus_in.on('ship:use_power', (amount, location) => {
-        ship.power[destination] -= amount;
-        bus_out.emit('ship:status', ship);
+        if (ship.power[destination] >= amount) {
+            ship.power[destination] -= amount;
+            bus_out.emit('ship:status', ship);
+        }
     });
 
     bus_in.on('ship:damage', (value, location) => {
