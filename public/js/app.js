@@ -414,186 +414,190 @@ var PlayerBridge = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: 'section power small' },
+                { className: this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok" },
                 React.createElement(
-                    'button',
-                    {
-                        className: 'metal linear',
-                        type: 'button',
-                        onClick: this.handleMovePower.bind(this, "weapons")
-                    },
-                    React.createElement('span', { className: 'icon-weapons' }),
+                    'div',
+                    { className: 'section power small' },
                     React.createElement(
-                        'span',
-                        { className: 'tr' },
-                        '-1',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        'button',
+                        {
+                            className: 'metal linear',
+                            type: 'button',
+                            onClick: this.handleMovePower.bind(this, "weapons")
+                        },
+                        React.createElement('span', { className: 'icon-weapons' }),
+                        React.createElement(
+                            'span',
+                            { className: 'tr' },
+                            '-1',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        ),
+                        React.createElement(
+                            'span',
+                            { className: 'br' },
+                            '+1',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        )
                     ),
                     React.createElement(
-                        'span',
-                        { className: 'br' },
-                        '+1',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        'button',
+                        {
+                            className: 'metal linear',
+                            type: 'button',
+                            onClick: this.handleMovePower.bind(this, "engineering")
+                        },
+                        React.createElement('span', { className: 'icon-engineering' }),
+                        React.createElement(
+                            'span',
+                            { className: 'tr' },
+                            '-1',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        ),
+                        React.createElement(
+                            'span',
+                            { className: 'br' },
+                            '+1',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        )
+                    ),
+                    React.createElement(
+                        'button',
+                        {
+                            className: 'metal linear',
+                            type: 'button',
+                            onClick: this.handleMovePower.bind(this, "shields")
+                        },
+                        React.createElement('span', { className: 'icon-shields' }),
+                        React.createElement(
+                            'span',
+                            { className: 'tr' },
+                            '-1',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        ),
+                        React.createElement(
+                            'span',
+                            { className: 'br' },
+                            '+1',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        )
+                    ),
+                    React.createElement('div', { className: 'clr' })
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'section status' },
+                    React.createElement(
+                        'ul',
+                        null,
+                        React.createElement(
+                            'li',
+                            null,
+                            'Hull: ',
+                            React.createElement(
+                                'span',
+                                { className: 'red' },
+                                this.props.shipStatus.health.hull,
+                                ' / 50',
+                                React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            )
+                        ),
+                        React.createElement(
+                            'li',
+                            null,
+                            'Main shields: ',
+                            React.createElement(
+                                'span',
+                                { className: 'blue' },
+                                this.props.shipStatus.health.main_shields,
+                                ' / 50',
+                                React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            )
+                        ),
+                        React.createElement(
+                            'li',
+                            null,
+                            'Weapons: ',
+                            React.createElement(
+                                'span',
+                                { className: 'green' },
+                                this.props.shipStatus.health.weapons,
+                                ' / 10',
+                                React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            )
+                        ),
+                        React.createElement(
+                            'li',
+                            null,
+                            'Engineering: ',
+                            React.createElement(
+                                'span',
+                                { className: 'green' },
+                                this.props.shipStatus.health.engineering,
+                                ' / 10',
+                                React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            )
+                        ),
+                        React.createElement(
+                            'li',
+                            null,
+                            'Shields: ',
+                            React.createElement(
+                                'span',
+                                { className: 'green' },
+                                this.props.shipStatus.health.shields,
+                                ' / 10',
+                                React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            )
+                        ),
+                        React.createElement(
+                            'li',
+                            null,
+                            'Bridge: ',
+                            React.createElement(
+                                'span',
+                                { className: 'green' },
+                                this.props.shipStatus.health.bridge,
+                                ' / 10',
+                                React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            )
+                        )
                     )
                 ),
                 React.createElement(
-                    'button',
-                    {
-                        className: 'metal linear',
-                        type: 'button',
-                        onClick: this.handleMovePower.bind(this, "engineering")
-                    },
-                    React.createElement('span', { className: 'icon-engineering' }),
+                    'div',
+                    { className: 'section arrows' },
                     React.createElement(
-                        'span',
-                        { className: 'tr' },
-                        '-1',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'br' },
-                        '+1',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
-                    )
-                ),
-                React.createElement(
-                    'button',
-                    {
-                        className: 'metal linear',
-                        type: 'button',
-                        onClick: this.handleMovePower.bind(this, "shields")
-                    },
-                    React.createElement('span', { className: 'icon-shields' }),
-                    React.createElement(
-                        'span',
-                        { className: 'tr' },
-                        '-1',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'br' },
-                        '+1',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
-                    )
-                ),
-                React.createElement('div', { className: 'clr' })
-            ),
-            React.createElement(
-                'div',
-                { className: 'section status' },
-                React.createElement(
-                    'ul',
-                    null,
-                    React.createElement(
-                        'li',
-                        null,
-                        'Hull: ',
+                        'button',
+                        {
+                            className: 'metal linear',
+                            type: 'button',
+                            onClick: this.handleShipMove.bind(this, "up")
+                        },
+                        React.createElement('span', {
+                            className: 'glyphicon glyphicon-chevron-up'
+                        }),
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.hull) },
-                            this.props.shipStatus.health.hull,
-                            ' / 50',
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            { className: 'tr' },
+                            '-2',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                         )
                     ),
                     React.createElement(
-                        'li',
-                        null,
-                        'Main shields: ',
+                        'button',
+                        {
+                            className: 'metal linear',
+                            type: 'button',
+                            onClick: this.handleShipMove.bind(this, "down") },
+                        React.createElement('span', {
+                            className: 'glyphicon glyphicon-chevron-down'
+                        }),
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.main_shields) },
-                            this.props.shipStatus.health.main_shields,
-                            ' / 50',
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                            { className: 'tr' },
+                            '-2',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                         )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Weapons: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.weapons) },
-                            this.props.shipStatus.health.weapons,
-                            ' / 10',
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Engineering: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.engineering) },
-                            this.props.shipStatus.health.engineering,
-                            ' / 10',
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Shields: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.shields) },
-                            this.props.shipStatus.health.shields,
-                            ' / 10',
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Bridge: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.bridge) },
-                            this.props.shipStatus.health.bridge,
-                            ' / 10',
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    )
-                )
-            ),
-            React.createElement(
-                'div',
-                { className: 'section arrows' },
-                React.createElement(
-                    'button',
-                    {
-                        className: 'metal linear',
-                        type: 'button',
-                        onClick: this.handleShipMove.bind(this, "up")
-                    },
-                    React.createElement('span', {
-                        className: 'glyphicon glyphicon-chevron-up'
-                    }),
-                    React.createElement(
-                        'span',
-                        { className: 'tr' },
-                        '-2',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
-                    )
-                ),
-                React.createElement(
-                    'button',
-                    {
-                        className: 'metal linear',
-                        type: 'button',
-                        onClick: this.handleShipMove.bind(this, "down") },
-                    React.createElement('span', {
-                        className: 'glyphicon glyphicon-chevron-down'
-                    }),
-                    React.createElement(
-                        'span',
-                        { className: 'tr' },
-                        '-2',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                     )
                 )
             )
@@ -633,23 +637,27 @@ var PlayerWeapons = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: 'section arrows' },
+                { className: this.props.shipStatus.health.weapons < 1 ? "shitfan" : "aok" },
                 React.createElement(
-                    'button',
-                    {
-                        className: 'metal linear text',
-                        type: 'button',
-                        onClick: this.handleClickFire },
+                    'div',
+                    { className: 'section arrows' },
                     React.createElement(
-                        'span',
-                        null,
-                        'FIRE!'
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'tr' },
-                        '-2',
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        'button',
+                        {
+                            className: 'metal linear text',
+                            type: 'button',
+                            onClick: this.handleClickFire },
+                        React.createElement(
+                            'span',
+                            null,
+                            'FIRE!'
+                        ),
+                        React.createElement(
+                            'span',
+                            { className: 'tr' },
+                            '-2',
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        )
                     )
                 )
             )
@@ -730,33 +738,37 @@ var PlayerEngine = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: 'section grid' },
-                this.state.cellItems.map(function (x, i) {
-                    return React.createElement(
+                { className: this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok" },
+                React.createElement(
+                    'div',
+                    { className: 'section grid' },
+                    this.state.cellItems.map(function (x, i) {
+                        return React.createElement(
+                            'div',
+                            {
+                                className: 'metal linear cell noselect',
+                                key: i,
+                                onClick: _this2.handleClickCell.bind(_this2, i)
+                            },
+                            React.createElement(
+                                'span',
+                                null,
+                                x
+                            )
+                        );
+                    }),
+                    React.createElement('div', { className: 'clr' }),
+                    React.createElement(
                         'div',
-                        {
-                            className: 'cell noselect',
-                            key: i,
-                            onClick: _this2.handleClickCell.bind(_this2, i)
-                        },
+                        { className: 'cell target' },
                         React.createElement(
                             'span',
                             null,
-                            x
+                            this.state.targetItem
                         )
-                    );
-                }),
-                React.createElement('div', { className: 'clr' }),
-                React.createElement(
-                    'div',
-                    { className: 'cell target' },
-                    React.createElement(
-                        'span',
-                        null,
-                        this.state.targetItem
-                    )
-                ),
-                React.createElement('div', { className: 'clr' })
+                    ),
+                    React.createElement('div', { className: 'clr' })
+                )
             ),
             React.createElement(
                 'div',
@@ -956,7 +968,7 @@ var PlayerShields = React.createClass({
         }
         cellItems = _.shuffle(cellItems);
 
-        this.setState({ cellItems: cellItems, cost: 0 });
+        this.setState({ cellItems: cellItems, cost: 1 });
         this.resetShown();
     },
 
@@ -979,53 +991,57 @@ var PlayerShields = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: 'section grid' },
-                this.state.cellItems.map(function (x, i) {
-                    return React.createElement(
-                        'div',
+                { className: this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok" },
+                React.createElement(
+                    'div',
+                    { className: 'section grid' },
+                    this.state.cellItems.map(function (x, i) {
+                        return React.createElement(
+                            'div',
+                            {
+                                className: x === '' ? "cell noselect metal linear non-vis" : "cell noselect metal linear",
+                                key: i,
+                                onClick: _this3.handleClickCell.bind(_this3, i)
+                            },
+                            React.createElement(
+                                'span',
+                                null,
+                                _.contains(_this3.state.shownCells, i) ? x : ''
+                            )
+                        );
+                    }),
+                    React.createElement('div', { className: 'clr' })
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'section status' },
+                    React.createElement(
+                        'h3',
+                        null,
+                        'Cost: ',
+                        React.createElement(
+                            'span',
+                            { className: 'blue' },
+                            this.state.cost,
+                            React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                        )
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'section reset' },
+                    React.createElement(
+                        'button',
                         {
-                            className: x === '' ? "cell noselect metal linear non-vis" : "cell noselect metal linear",
-                            key: i,
-                            onClick: _this3.handleClickCell.bind(_this3, i)
+                            className: 'metal linear text',
+                            type: 'button',
+                            onClick: this.handleReset
                         },
                         React.createElement(
                             'span',
                             null,
-                            _.contains(_this3.state.shownCells, i) ? x : ''
+                            'Reset board'
                         )
-                    );
-                }),
-                React.createElement('div', { className: 'clr' })
-            ),
-            React.createElement(
-                'div',
-                { className: 'section status' },
-                React.createElement(
-                    'h3',
-                    null,
-                    'Cost: ',
-                    React.createElement(
-                        'span',
-                        { className: 'blue' },
-                        this.state.cost,
-                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
-                    )
-                )
-            ),
-            React.createElement(
-                'div',
-                { className: 'section reset' },
-                React.createElement(
-                    'button',
-                    {
-                        className: 'metal linear text',
-                        type: 'button',
-                        onClick: this.handleReset
-                    },
-                    React.createElement(
-                        'span',
-                        null,
-                        'Reset board'
                     )
                 )
             )
