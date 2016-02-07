@@ -292,13 +292,14 @@ exports.init = () => {
             } else {
                 enemies[enemyID].health -= ship.damage.weapons;
             }
+
+            bus_out.emit('ship:fired', {
+                id: enemies[enemyID].id,
+                position: enemies[enemyID].position,
+                type: enemies[enemyID].type,
+                health: enemies[enemyID].health
+            });
         }
-        bus_out.emit('ship:fired', {
-            id: enemies[enemyID].id,
-            position: enemies[enemyID].position,
-            type: enemies[enemyID].type,
-            health: enemies[enemyID].health
-        });
     });
 
     bus_in.on('ship:fire_closest', () => {
@@ -306,9 +307,11 @@ exports.init = () => {
 
         for (let i = 0; i < screen.width; i++) {
             for (let enemy in enemies) {
-                if (enemies[enemy].position.y === ship.position.y && enemies[enemy].position.x === i && enemy.type === 'basic') {
-                    closest = enemies[enemy].id;
-                    break;
+                if (enemy !== undefined && enemies[enemy] !== undefined && enemies[enemy].position !== undefined) {
+                    if (enemy.type === 'basic' && enemies[enemy].position.y === ship.position.y && enemies[enemy].position.x === i) {
+                        closest = enemies[enemy].id;
+                        break;
+                    }
                 }
             }
         }

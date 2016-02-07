@@ -143,8 +143,8 @@ var ShipLive = React.createClass({
                     <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Engineering <span id="engineering_value"></span></div>
                     <div id="hull" style={{float:'left',fontSize:'30px','width':'15%'}}>Shields <span id="shields_value"></span></div>
                 </div>
-                <div>
-                    <h2 id="current_game_id" class="shake" style={{font-size:24px}}></h2>
+                <div style={{'clear':'both'}}>
+                    <span style={{'fontSize':'24px'}}>Game ID: </span><span id="current_game_id" style={{'fontSize':'24px'}}></span>
                 </div>
             </div>
         );

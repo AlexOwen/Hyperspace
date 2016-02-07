@@ -177,7 +177,7 @@ var ShipLive = React.createClass({
     displayName: 'ShipLive',
 
     componentDidMount: function componentDidMount() {
-        initShipDisplay(socket);
+        initShipDisplay(socket, this.props.gameId);
     },
     render: function render() {
         return React.createElement(
@@ -224,6 +224,16 @@ var ShipLive = React.createClass({
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
                 )
+            ),
+            React.createElement(
+                'div',
+                { style: { 'clear': 'both' } },
+                React.createElement(
+                    'span',
+                    { style: { 'fontSize': '24px' } },
+                    'Game ID: '
+                ),
+                React.createElement('span', { id: 'current_game_id', style: { 'fontSize': '24px' } })
             )
         );
     }
@@ -875,7 +885,7 @@ var PlayerShields = React.createClass({
             cellItems: [],
             shownCells: [],
             isShowing: false,
-            cost: 0
+            cost: 1
         };
     },
 
