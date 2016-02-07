@@ -20,10 +20,6 @@ var initShipDisplay = function(socket) {
         }
     };
 
-    socket.on('game:ended', function(details) {
-        alert('GAME OVER....' + details.reason);
-    });
-
     var enemies = {};
 
     var hGridUnit = 1/width * 100;
