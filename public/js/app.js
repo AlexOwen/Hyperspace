@@ -678,14 +678,153 @@ var PlayerEngine = React.createClass({
 var PlayerShields = React.createClass({
     displayName: 'PlayerShields',
 
+    getInitialState: function getInitialState() {
+        return {
+            cellItems: [],
+            shownCells: [],
+            isShowing: false,
+            cost: 0
+        };
+    },
+
+    componentDidMount: function componentDidMount() {
+        this.handleReset();
+    },
+
+    componentWillUnmount: function componentWillUnmount() {
+        window.clearTimeout(this.timeout);
+    },
+
+    handleShipPower: function handleShipPower(toRole) {
+        // increasing power
+    },
+
+    handleClickCell: function handleClickCell(i) {
+        var shownCells = this.state.shownCells;
+        var cellItems = this.state.cellItems;
+        console.log(i);
+        if (cellItems[i] === '' || this.state.isShowing && shownCells.length == 2 || shownCells.length == 1 && shownCells[0] == i) {
+            console.log('nothing there');
+            return;
+        }
+
+        if (shownCells.length == 0) {
+            shownCells.push(i);
+        } else if (shownCells.length == 1) {
+            shownCells.push(i);
+            if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
+                console.log("+1");
+                // this.props.onGeneratePower();
+                this.timeout = window.setTimeout(this.removeTiles, 500);
+            } else {
+                console.log("-1");
+                // this.props.onCauseEngineDamage();
+                window.navigator.vibrate(200);
+                this.timeout = window.setTimeout(this.resetShown, 500);
+            }
+        }
+        console.log(shownCells);
+        console.log(cellItems);
+
+        this.setState({ shownCells: shownCells });
+        this.setState({ isShowing: true });
+    },
+
+    removeTiles: function removeTiles() {
+        var shownCells = this.state.shownCells;
+        var cellItems = this.state.cellItems;
+        var cost = this.state.cost + 1;
+
+        if (shownCells.length == 2) {
+            if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
+                cellItems[shownCells[0]] = '';
+                cellItems[shownCells[1]] = '';
+            }
+        }
+        // this.setState({cellItems});
+        this.setState({ shownCells: [], isShowing: false, cost: cost });
+    },
+
+    resetShown: function resetShown() {
+        this.setState({ shownCells: [], isShowing: false });
+    },
+
+    handleReset: function handleReset() {
+        var cellItems = [];
+        for (var i = 0; i < 12; i++) {
+            cellItems.push(Math.floor(i / 2));
+        }
+        cellItems = _.shuffle(cellItems);
+
+        this.setState({ cellItems: cellItems, cost: 0 });
+        this.resetShown();
+    },
+
     render: function render() {
+        var _this3 = this;
+
         return React.createElement(
             'div',
-            null,
+            { className: 'player-engine container' },
             React.createElement(
                 'h3',
                 null,
-                'Shields'
+                'Shields: ',
+                React.createElement(
+                    'span',
+                    { className: getValueColour(this.props.shipStatus.power.shields) },
+                    this.props.shipStatus.power.shields,
+                    React.createElement('span', { className: 'glyphicon glyphicon-ice-lolly-tasted' })
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'section grid' },
+                this.state.cellItems.map(function (x, i) {
+                    return React.createElement(
+                        'div',
+                        {
+                            className: 'cell noselect metal linear',
+                            disabled: x != '',
+                            key: i,
+                            onClick: _this3.handleClickCell.bind(_this3, i)
+                        },
+                        React.createElement(
+                            'span',
+                            null,
+                            _.contains(_this3.state.shownCells, i) ? x : ''
+                        )
+                    );
+                }),
+                React.createElement('div', { className: 'clr' })
+            ),
+            React.createElement(
+                'div',
+                { className: 'section status' },
+                React.createElement(
+                    'h3',
+                    null,
+                    'Cost: ',
+                    this.state.cost,
+                    React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'section reset' },
+                React.createElement(
+                    'button',
+                    {
+                        className: 'metal linear text',
+                        type: 'button',
+                        onClick: this.handleReset
+                    },
+                    React.createElement(
+                        'span',
+                        null,
+                        'Reset board'
+                    )
+                )
             )
         );
     }
@@ -714,8 +853,8 @@ var GameApp = React.createClass({
         return {
             ship: false,
             _gameId: null,
-            _gameState: 'create',
-            // _gameState: 'started',
+            // _gameState: 'create',
+            _gameState: 'started',
             _players: [],
             _shipStatus: {
                 health: {

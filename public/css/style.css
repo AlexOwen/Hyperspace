@@ -183,9 +183,13 @@ a { text-decoration: none; display: block; }
   display: block;
   float: left;
   width: 33%;
-  background-color: green;
+  background-color: grey;
   height: 60px;
   font-size: 42px;
+}
+
+.grid .cell.disabled {
+  background-color: grey;
 }
 
 .section {
@@ -211,10 +215,14 @@ button .glyphicon {
   margin-left: 20%;
 }
 
-.small button span {
+button span {
   display: block;
   margin-top: -6px;
   font-size: 40px;
+}
+
+button.text span {
+  margin-top: -18px;
 }
 
 /* PLAYER BRIDGE */
@@ -233,3 +241,5 @@ button .glyphicon {
   background: none;
   margin-left: 33%;
 }
+
+/* PLAYER SHIELDS */

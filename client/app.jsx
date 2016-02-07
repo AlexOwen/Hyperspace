@@ -500,10 +500,126 @@ var PlayerEngine = React.createClass({
 });
 
 var PlayerShields = React.createClass({
+    getInitialState() {
+        return {
+            cellItems: [],
+            shownCells: [],
+            isShowing: false,
+            cost: 0,
+        };
+    },
+
+    componentDidMount: function() {
+        this.handleReset();
+    },
+
+    componentWillUnmount: function() {
+        window.clearTimeout(this.timeout);
+    },
+
+    handleShipPower(toRole) {
+        // increasing power
+    },
+
+    handleClickCell(i) {
+        var shownCells = this.state.shownCells;
+        var cellItems = this.state.cellItems;
+        console.log(i);
+        if (cellItems[i] === ''
+            || (this.state.isShowing && shownCells.length == 2)
+            || (shownCells.length == 1 && shownCells[0] == i)) {
+            console.log('nothing there')
+            return
+        }
+
+        if (shownCells.length == 0){
+            shownCells.push(i);
+        } else if (shownCells.length == 1){
+            shownCells.push(i);
+            if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
+                console.log("+1");
+                // this.props.onGeneratePower();
+                this.timeout = window.setTimeout(this.removeTiles, 500);
+            } else {
+                console.log("-1");
+                // this.props.onCauseEngineDamage();
+                window.navigator.vibrate(200);
+                this.timeout = window.setTimeout(this.resetShown, 500);
+            }
+        }
+        console.log(shownCells);
+        console.log(cellItems);
+        
+        this.setState({shownCells});
+        this.setState({isShowing: true});
+    },
+
+    removeTiles() {
+        var shownCells = this.state.shownCells;
+        var cellItems = this.state.cellItems;
+        var cost = this.state.cost + 1;
+
+        if (shownCells.length == 2){
+            if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
+                cellItems[shownCells[0]] = '';
+                cellItems[shownCells[1]] = '';
+            }
+        }
+        // this.setState({cellItems});
+        this.setState({shownCells: [], isShowing: false, cost: cost});
+    },
+
+    resetShown() {
+        this.setState({shownCells: [], isShowing: false});
+    },
+
+    handleReset() {
+        var cellItems = []
+        for (var i =0; i<12; i++){
+            cellItems.push(Math.floor(i/2));
+        }
+        cellItems = _.shuffle(cellItems);
+        
+        this.setState({cellItems: cellItems, cost: 0});
+        this.resetShown();
+    },
+
     render() {
         return (
-            <div>
-                <h3>Shields</h3>
+            <div className="player-engine container">
+                <h3>Shields:&nbsp;
+                    <span className={getValueColour(this.props.shipStatus.power.shields)}>
+                        {this.props.shipStatus.power.shields}
+                        <span className="glyphicon glyphicon-ice-lolly-tasted"></span>
+                    </span>
+                </h3>
+                <div className="section grid">
+                    {this.state.cellItems.map((x, i) =>
+                        <div
+                            className="cell noselect metal linear"
+                            disabled={x != ''}
+                            key={i}
+                            onClick={this.handleClickCell.bind(this, i)}
+                        >
+                            <span>{_.contains(this.state.shownCells, i) ? x : ''}</span>
+                        </div>
+                    )}
+                    <div className="clr"></div>
+                </div>
+                <div className="section status">
+                    <h3>
+                    Cost:&nbsp;{this.state.cost}<span className="glyphicon glyphicon-apple"></span>
+                    </h3>
+                </div>
+                <div className="section reset">
+                    <button 
+                        className="metal linear text"
+                        type="button"
+                        onClick={this.handleReset}
+                        >
+                        <span>Reset board</span>
+                    </button>
+                </div>
             </div>
         );
     }
@@ -525,8 +641,8 @@ var GameApp = React.createClass({
         return {
             ship: false,
             _gameId: null,
-            _gameState: 'create',
-            // _gameState: 'started',
+            // _gameState: 'create',
+            _gameState: 'started',
             _players: [],
             _shipStatus: {
                 health: {
