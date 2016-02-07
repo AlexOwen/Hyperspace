@@ -190,13 +190,37 @@ var ShipLive = React.createClass({
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'life', style: { float: 'left', fontSize: '30px' } },
-                    'Hull ',
-                    React.createElement('span', { id: 'life_value' })
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+                    'Main Shields ',
+                    React.createElement('span', { id: 'main_shields_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Hull ',
+                    React.createElement('span', { id: 'hull_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Bridge ',
+                    React.createElement('span', { id: 'bridge_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Weapons ',
+                    React.createElement('span', { id: 'weapons_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Engineering ',
+                    React.createElement('span', { id: 'engineering_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
                 )
@@ -1181,6 +1205,7 @@ var GameApp = React.createClass({
                         onFire: this.handleFire,
                         onShieldAdd: this.handleShieldAdd,
                         onShieldUsePower: this.handleShieldUsePower
+
                     });
                     break;
                 case 'lobby':
