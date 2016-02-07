@@ -866,13 +866,13 @@ var GameApp = React.createClass({
     handleShieldAdd(shield) {
         var command = 'ship:repair'
         socket.emit(command, "main_shields", shield);
-        console.log(command);
+        console.log(command + ' ' + shield);
     },
 
     handleShieldUsePower(power) {
         var command = 'ship:use_power'
         socket.emit(command, power, "shields");
-        console.log(command);
+        console.log(command + ' ' + power);
     },
 
     render() {

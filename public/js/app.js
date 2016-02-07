@@ -190,31 +190,31 @@ var ShipLive = React.createClass({
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'main_shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px' } },
                     'Main Shields ',
                     React.createElement('span', { id: 'main_shields_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
                     'Hull ',
                     React.createElement('span', { id: 'hull_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
                     'Bridge ',
                     React.createElement('span', { id: 'bridge_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
                     'Weapons ',
                     React.createElement('span', { id: 'weapons_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
                     'Engineering ',
                     React.createElement('span', { id: 'engineering_value' })
                 ),
