@@ -59,11 +59,23 @@ exports.init = (server) => {
         });
 
         socket.on('ship:move_power', (destination) => {
-            games[socket.room].in.emit('ship:move_power');
+            games[socket.room].in.emit('ship:move_power', destination);
         });
 
         socket.on('ship:use_power', (amount, location) => {
-            games[socket.room].in.emit('ship:use_power');
+            games[socket.room].in.emit('ship:use_power', amount, location);
+        });
+
+        socket.on('ship:cause_damage', (amount, location) => {
+            games[socket.room].in.emit('ship:damage', amount, location);
+        });
+
+        socket.on('ship:repair', (location) => {
+            games[socket.room].in.emit('ship:repair', 1, location);
+        });
+
+        socket.on('ship:get_closest', () => {
+            games[socket.room].in.emit('enemies:get_closest');
         });
 
         socket.on('ship:get_status', () => {
@@ -94,6 +106,10 @@ exports.init = (server) => {
 
             state.out.on('enemy:position', (enemy) => {
                 socket.emit('enemy:position', enemy);
+            });
+
+            state.out.on('enemy:closest', (enemyList) => {
+                socket.emit('enemy:closest', enemyList);
             });
 
             state.out.on('player:joined', (playerID, playerNumber) => {
