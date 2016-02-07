@@ -170,20 +170,12 @@ exports.init = () => {
     bus_in.on('enemy:get_closest', () => {
         let enemyList = [];
 
-        for (enemy in enemies) {
-            if (enemies[enemy].position.x === 1 && enemyList.length < 6) {
-                enemies.push(enemies[enemy].id);
-            } else {break;}
-        }
-        for (enemy in enemies) {
-            if (enemies[enemy].position.x === 2 && enemyList.length < 6) {
-                enemies.push(enemies[enemy].id);
-            } else {break;}
-        }
-        for (enemy in enemies) {
-            if (enemies[enemy].position.x === 3 && enemyList.length < 6) {
-                enemies.push(enemies[enemy].id);
-            } else {break;}
+        for (let i = 0; i < screen.width; i++) {
+            for (enemy in enemies) {
+                if (enemies[enemy].position.x === i && enemyList.length < 6 && enemy.type === 'basic') {
+                    enemies.push(enemies[enemy].id);
+                } else {break;}
+            }
         }
 
         bus_out.emit('enemy:closest', enemyList);
@@ -270,8 +262,8 @@ exports.init = () => {
 
     //bridge
     bus_in.on('ship:move:up', () => {
-        if (ship.bridge.power >= 2) {
-            ship.bridge.power -= 2;
+        if (ship.power.bridge >= 2) {
+            ship.power.bridge -= 2;
             if (ship.position.y >= 1) {
                 ship.position.y = ship.position.y - 1;
             }
@@ -280,8 +272,8 @@ exports.init = () => {
     });
 
     bus_in.on('ship:move:down', () => {
-        if (ship.bridge.power >= 2) {
-            ship.bridge.power -= 2;
+        if (ship.power.bridge >= 2) {
+            ship.power.bridge -= 2;
             if (ship.position.y <= screen.height - 2) {
                 ship.position.y = ship.position.y + 1;
             }
