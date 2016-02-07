@@ -968,7 +968,7 @@ var PlayerShields = React.createClass({
         }
         cellItems = _.shuffle(cellItems);
 
-        this.setState({ cellItems: cellItems, cost: 0 });
+        this.setState({ cellItems: cellItems, cost: 1 });
         this.resetShown();
     },
 

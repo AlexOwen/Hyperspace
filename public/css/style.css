@@ -286,6 +286,7 @@ button.text span {
 /* SHIT FAN */
 .shitfan {
   background-color: rgba(255,0,0,.5);
+  
 }
 
 .shitfan:before {
