@@ -134,14 +134,14 @@ var ShipLive = React.createClass({
             <div>
                 <div id="grid">
                 </div>
-                <div id="game_stats">
+                <div id="game_stats" style={{'position':'relative'}}>
                     <div id="gameid" style={{float:'left'}}></div>
-                    <div id="main_shields" style={{float:'left',marginLeft:'20px',fontSize:'30px','marginRight':'20px'}}>Main Shields <span id="main_shields_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Hull <span id="hull_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Bridge <span id="bridge_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Weapons <span id="weapons_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px'}}>Engineering <span id="engineering_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px'}}>Shields <span id="shields_value"></span></div>
+                    <div id="main_shields" style={{float:'left',marginLeft:'20px',fontSize:'30px','marginRight':'20px','width':'15%'}}>Main Shields <span id="main_shields_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Hull <span id="hull_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Bridge <span id="bridge_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Weapons <span id="weapons_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Engineering <span id="engineering_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px','width':'15%'}}>Shields <span id="shields_value"></span></div>
                 </div>
             </div>
         );
@@ -918,7 +918,7 @@ var GameApp = React.createClass({
                             onFire = {this.handleFire}
                             onShieldAdd = {this.handleShieldAdd}
                             onShieldUsePower = {this.handleShieldUsePower}
-                        
+
                         />
                     break;
                 case 'lobby':
