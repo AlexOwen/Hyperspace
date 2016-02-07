@@ -58,7 +58,7 @@ exports.init = () => {
         },
         health: {
             hull: 50,
-            main_shields: 50,
+            main_shields: 10,
             shields: 10,
             engineering: 10,
             weapons: 10,
