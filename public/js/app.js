@@ -626,7 +626,7 @@ var PlayerEngine = React.createClass({
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "hull")
+                        onClick: this.handleShipRepair.bind(this, "hull")
                     },
                     React.createElement('span', { className: 'icon-hull' })
                 ),
@@ -635,7 +635,7 @@ var PlayerEngine = React.createClass({
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "bridge")
+                        onClick: this.handleShipRepair.bind(this, "bridge")
                     },
                     React.createElement('span', { className: 'icon-bridge' })
                 ),
@@ -644,7 +644,7 @@ var PlayerEngine = React.createClass({
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "weapons")
+                        onClick: this.handleShipRepair.bind(this, "weapons")
                     },
                     React.createElement('span', { className: 'icon-weapons' })
                 ),
@@ -658,7 +658,7 @@ var PlayerEngine = React.createClass({
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "engineering")
+                        onClick: this.handleShipRepair.bind(this, "engineering")
                     },
                     React.createElement('span', { className: 'icon-engineering' })
                 ),
@@ -667,7 +667,7 @@ var PlayerEngine = React.createClass({
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "shields")
+                        onClick: this.handleShipRepair.bind(this, "shields")
                     },
                     React.createElement('span', { className: 'icon-shields' })
                 ),

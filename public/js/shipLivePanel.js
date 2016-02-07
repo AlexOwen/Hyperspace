@@ -84,7 +84,7 @@ var initShipDisplay = function(socket) {
         enemyDamaged(enemy);
     });
 
-    var enemyDamaged = (enemy) {
+    var enemyDamaged = function(enemy) {
         if (enemy !== undefined && enemy.health !== undefined) {
             if (enemy.health <= 0) {
                 $('#enemy_' + enemy.id).addClass('hit').html('X');
