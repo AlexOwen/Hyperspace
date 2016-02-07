@@ -1,4 +1,4 @@
-var initShipDisplay = function(socket) {
+var initShipDisplay = function(socket, gameID) {
 
     var width = 20, height = 7;
 
@@ -23,6 +23,8 @@ var initShipDisplay = function(socket) {
         position: 'relative',
         margin: 'auto'
     });
+
+    $('#current_game_id').html(gameID);
 
     var ship = {
         type: 'ship',

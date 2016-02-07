@@ -224,6 +224,16 @@ var ShipLive = React.createClass({
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
                 )
+            ),
+            React.createElement(
+                'div',
+                { style: { 'clear': 'both' } },
+                React.createElement(
+                    'span',
+                    { style: { 'fontSize': '24px' } },
+                    'Game ID: '
+                ),
+                React.createElement('span', { id: 'current_game_id', style: { 'fontSize': '24px' } })
             )
         );
     }
