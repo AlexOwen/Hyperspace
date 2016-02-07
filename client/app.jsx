@@ -127,7 +127,7 @@ var ShipLobby = React.createClass({
 
 var ShipLive = React.createClass({
     componentDidMount: function() {
-        initShipDisplay(socket);
+        initShipDisplay(socket, this.props.gameId);
     },
     render() {
         return (
@@ -611,7 +611,7 @@ var PlayerShields = React.createClass({
             cellItems: [],
             shownCells: [],
             isShowing: false,
-            cost: 0,
+            cost: 1,
         };
     },
 
