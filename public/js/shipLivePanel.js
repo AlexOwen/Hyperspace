@@ -30,7 +30,7 @@ var initShipDisplay = function(socket) {
     var vGridUnit = 1/height * 100;
     var move = function(object, newPosition) {
         console.log(speeds[object.type], speeds['ship']);
-        var animateSpeed = (1000 / (speeds[object.type] + speeds['ship'])) - 30;
+        var animateSpeed = (1000 / (speeds[object.type] + speeds['ship'])) - 20;
 
         console.log(newPosition);
         var newX = newPosition.x;
