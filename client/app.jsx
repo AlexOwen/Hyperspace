@@ -133,7 +133,7 @@ var ShipLive = React.createClass({
             <div>
                 <div id="grid">
                 </div>
-                <div style={{float:'left'}}>
+                <div id="game_stats">
                     <div id="gameid" style={{float:'left'}}></div>
                     <div id="life" style={{float:'left',fontSize:'30px'}}>Hull <span id="life_value"></span></div>
                     <div id="shields" style={{float:'left',marginLeft:'25px',fontSize:'30px'}}>Shields <span id="shields_value"></span></div>
@@ -208,20 +208,20 @@ var PlayerContainer = React.createClass({
 
         switch(this.state.role) {
             case 'weapons':
-                rolePanel = 
+                rolePanel =
                     <PlayerWeapons
                         shipStatus = {this.props.shipStatus}
                     />;
                 break;
             case 'shields':
-                rolePanel = 
+                rolePanel =
                     <PlayerShields
                         shipStatus = {this.props.shipStatus}
                     />;
                 break;
             case 'engineering':
-                rolePanel = 
-                    <PlayerEngine 
+                rolePanel =
+                    <PlayerEngine
                         shipStatus = {this.props.shipStatus}
                         onGenerateBridgePower = {this.props.onGenerateBridgePower}
                         onCauseEngineDamage = {this.props.onCauseEngineDamage}
@@ -282,21 +282,21 @@ var PlayerBridge = React.createClass({
                     </span>
                 </h3>
                 <div className="section power small">
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleMovePower.bind(this, "weapons")}
                         >
                         <span className="icon-weapons"></span>
                     </button>
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleMovePower.bind(this, "engineering")}
                         >
                         <span className="icon-engineering"></span>
                     </button>
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleMovePower.bind(this, "shields")}
@@ -345,12 +345,12 @@ var PlayerBridge = React.createClass({
                     </ul>
                 </div>
                 <div className="section arrows">
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleShipMove.bind(this, "up")}
                         >
-                        <span 
+                        <span
                             className="glyphicon glyphicon-chevron-up"
                             >
                         </span>
@@ -359,7 +359,7 @@ var PlayerBridge = React.createClass({
                         className="metal linear"
                         type="button"
                         onClick={this.handleShipMove.bind(this, "down")}>
-                        <span 
+                        <span
                             className="glyphicon glyphicon-chevron-down"
                             >
                         </span>
@@ -456,21 +456,21 @@ var PlayerEngine = React.createClass({
                     <div className="clr"></div>
                 </div>
                 <div className="section power small">
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleShipRepair.bind(this, "hull")}
                         >
                         <span className="icon-hull"></span>
                     </button>
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleShipRepair.bind(this, "bridge")}
                         >
                         <span className="icon-bridge"></span>
                     </button>
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleShipRepair.bind(this, "weapons")}
@@ -480,14 +480,14 @@ var PlayerEngine = React.createClass({
                     <div className="clr"></div>
                 </div>
                 <div className="section power small left-shift">
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleShipRepair.bind(this, "engineering")}
                         >
                         <span className="icon-engineering"></span>
                     </button>
-                    <button 
+                    <button
                         className="metal linear"
                         type="button"
                         onClick={this.handleShipRepair.bind(this, "shields")}
@@ -551,7 +551,7 @@ var PlayerShields = React.createClass({
         }
         console.log(shownCells);
         console.log(cellItems);
-        
+
         this.setState({shownCells});
         this.setState({isShowing: true});
     },
@@ -581,7 +581,7 @@ var PlayerShields = React.createClass({
             cellItems.push(Math.floor(i/2));
         }
         cellItems = _.shuffle(cellItems);
-        
+
         this.setState({cellItems: cellItems, cost: 0});
         this.resetShown();
     },
@@ -614,7 +614,7 @@ var PlayerShields = React.createClass({
                     </h3>
                 </div>
                 <div className="section reset">
-                    <button 
+                    <button
                         className="metal linear text"
                         type="button"
                         onClick={this.handleReset}
@@ -664,7 +664,7 @@ var GameApp = React.createClass({
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
         socket.on('game:endeded', this._gameEnded);
-        
+
         socket.on('ship:status', this._shipStatusUpdate);
 
         // socket.on('player:joined', this._playerJoined);
