@@ -29,10 +29,10 @@ var Home = React.createClass({
 
         if(gameId.match(alphanumericRegex) && gameId.length == 5) {
             this.props.onGameJoin(gameId);
-            document.body.requestFullscreen();
-            if(navigator.userAgent.match(/Android/i)){
-                window.scrollTo(0,1);
-            }
+            // document.body.requestFullscreen();
+            // if(navigator.userAgent.match(/Android/i)){
+            //     window.scrollTo(0,1);
+            // }
         } else {
             this.setState({ gameId : '' });
         }
