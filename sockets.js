@@ -74,8 +74,9 @@ exports.init = (server) => {
             games[socket.room].in.emit('ship:damage', amount, location);
         });
 
-        socket.on('ship:repair', (location) => {
-            games[socket.room].in.emit('ship:repair', 1, location);
+        socket.on('ship:repair', (location, value) => {
+            if (value === undefined) value = 1;
+            games[socket.room].in.emit('ship:repair', value, location);
         });
 
         socket.on('ship:get_closest', () => {
@@ -105,7 +106,6 @@ exports.init = (server) => {
             });
 
             state.out.on('ship:status', (ship) => {
-                console.log(ship.position);
                 socket.emit('ship:status', ship);
             });
 

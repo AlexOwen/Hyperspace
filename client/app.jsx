@@ -136,8 +136,12 @@ var ShipLive = React.createClass({
                 </div>
                 <div id="game_stats">
                     <div id="gameid" style={{float:'left'}}></div>
-                    <div id="life" style={{float:'left',fontSize:'30px'}}>Hull <span id="life_value"></span></div>
-                    <div id="shields" style={{float:'left',marginLeft:'25px',fontSize:'30px'}}>Shields <span id="shields_value"></span></div>
+                    <div id="main_shields" style={{float:'left',marginLeft:'25px',fontSize:'30px'}}>Main Shields <span id="main_shields_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px'}}>Hull <span id="hull_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px'}}>Bridge <span id="bridge_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px'}}>Weapons <span id="weapons_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px'}}>Engineering <span id="engineering_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'30px'}}>Shields <span id="shields_value"></span></div>
                 </div>
             </div>
         );
@@ -412,11 +416,11 @@ var PlayerWeapons = React.createClass({
     },
 
     componentDidMount: function() {
-        
+
     },
 
     componentWillUnmount: function() {
-        
+
     },
 
     handleClickFire() {
@@ -859,18 +863,6 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
-    handleShieldAdd(shield) {
-        var command = 'ship:repair'
-        socket.emit(command, "main_shields", shield);
-        console.log(command);
-    },
-
-    handleShieldUsePower(power) {
-        var command = 'ship:use_power'
-        socket.emit(command, power, "shields");
-        console.log(command);
-    },
-
     render() {
         var panel =
             <Home
@@ -912,8 +904,6 @@ var GameApp = React.createClass({
                             onGenerateBridgePower = {this.handleGenerateBridgePower}
                             onShipRepair = {this.handleShipRepair}
                             onFire = {this.handleFire}
-                            onShieldAdd = {this.handleShieldAdd}
-                            onShieldUsePower = {this.handleShieldUsePower}
                         />
                     break;
                 case 'lobby':

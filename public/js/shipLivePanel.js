@@ -79,12 +79,33 @@ var initShipDisplay = function(socket) {
 
     socket.on('ship:status', function(shipData) {
         if (shipData.health !== undefined && shipData.health.hull !== undefined && shipData.health.main_shields !== undefined) {
-            $('#life_value').html(shipData.health.hull);
+            $('#hull_value').html(shipData.health.hull);
             if (shipData.health.hull < 10) {
-                $('#life_value').css('color', '#C90606');
+                $('#hull_value').css('color', '#C90606');
             }
-            $('#shields_value').html(shipData.health.main_shields);
+
+            $('#main_shields_value').html(shipData.health.main_shields);
             if (shipData.health.main_shields < 10) {
+                $('#main_shields_value').css('color', '#C90606');
+            }
+
+            $('#bridge_value').html(shipData.health.bridge);
+            if (shipData.health.bridge < 10) {
+                $('#bridge_value').css('color', '#C90606');
+            }
+
+            $('#engineering_value').html(shipData.health.engineering);
+            if (shipData.health.engineering < 10) {
+                $('#engineering_value').css('color', '#C90606');
+            }
+
+            $('#weapons_value').html(shipData.health.weapons);
+            if (shipData.health.weapons < 10) {
+                $('#weapons_value').css('color', '#C90606');
+            }
+
+            $('#shields_value').html(shipData.health.shields);
+            if (shipData.health.shields < 10) {
                 $('#shields_value').css('color', '#C90606');
             }
         }
