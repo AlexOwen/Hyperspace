@@ -1,7 +1,5 @@
 var initShipDisplay = function(socket) {
 
-    $('#stars,#stars2,#stars3').hide();
-
     var width = 20, height = 7;
 
     var speeds = {
