@@ -192,13 +192,37 @@ var ShipLive = React.createClass({
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'life', style: { float: 'left', fontSize: '30px' } },
-                    'Hull ',
-                    React.createElement('span', { id: 'life_value' })
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+                    'Main Shields ',
+                    React.createElement('span', { id: 'main_shields_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Hull ',
+                    React.createElement('span', { id: 'hull_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Bridge ',
+                    React.createElement('span', { id: 'bridge_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Weapons ',
+                    React.createElement('span', { id: 'weapons_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    'Engineering ',
+                    React.createElement('span', { id: 'engineering_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
                 )
@@ -280,7 +304,7 @@ var PlayerContainer = React.createClass({
 
     getInitialState: function getInitialState() {
         return {
-            role: 'bridge'
+            role: _.sample(ROLES)
         };
     },
 
@@ -297,7 +321,8 @@ var PlayerContainer = React.createClass({
         switch (this.state.role) {
             case 'weapons':
                 rolePanel = React.createElement(PlayerWeapons, {
-                    shipStatus: this.props.shipStatus
+                    shipStatus: this.props.shipStatus,
+                    onFire: this.props.onFire
                 });
                 break;
             case 'shields':
@@ -374,7 +399,7 @@ var PlayerBridge = React.createClass({
                     'span',
                     { className: getValueColour(this.props.shipStatus.power.bridge) },
                     this.props.shipStatus.power.bridge,
-                    React.createElement('span', { className: 'glyphicon glyphicon-ice-lolly-tasted' })
+                    React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                 )
             ),
             React.createElement(
@@ -387,7 +412,19 @@ var PlayerBridge = React.createClass({
                         type: 'button',
                         onClick: this.handleMovePower.bind(this, "weapons")
                     },
-                    React.createElement('span', { className: 'icon-weapons' })
+                    React.createElement('span', { className: 'icon-weapons' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    )
                 ),
                 React.createElement(
                     'button',
@@ -396,7 +433,19 @@ var PlayerBridge = React.createClass({
                         type: 'button',
                         onClick: this.handleMovePower.bind(this, "engineering")
                     },
-                    React.createElement('span', { className: 'icon-engineering' })
+                    React.createElement('span', { className: 'icon-engineering' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    )
                 ),
                 React.createElement(
                     'button',
@@ -405,7 +454,19 @@ var PlayerBridge = React.createClass({
                         type: 'button',
                         onClick: this.handleMovePower.bind(this, "shields")
                     },
-                    React.createElement('span', { className: 'icon-shields' })
+                    React.createElement('span', { className: 'icon-shields' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    )
                 ),
                 React.createElement('div', { className: 'clr' })
             ),
@@ -421,8 +482,8 @@ var PlayerBridge = React.createClass({
                         'Hull: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.hull) },
+                            this.props.shipStatus.health.hull,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -432,8 +493,8 @@ var PlayerBridge = React.createClass({
                         'Weapons: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.weapons) },
+                            this.props.shipStatus.health.weapons,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -443,8 +504,8 @@ var PlayerBridge = React.createClass({
                         'Engineering: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.engineering) },
+                            this.props.shipStatus.health.engineering,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -465,8 +526,19 @@ var PlayerBridge = React.createClass({
                         'Bridge: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.bridge) },
+                            this.props.shipStatus.health.bridge,
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Main shields: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.main_shields) },
+                            this.props.shipStatus.health.main_shields,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     )
@@ -484,7 +556,13 @@ var PlayerBridge = React.createClass({
                     },
                     React.createElement('span', {
                         className: 'glyphicon glyphicon-chevron-up'
-                    })
+                    }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    )
                 ),
                 React.createElement(
                     'button',
@@ -494,7 +572,13 @@ var PlayerBridge = React.createClass({
                         onClick: this.handleShipMove.bind(this, "down") },
                     React.createElement('span', {
                         className: 'glyphicon glyphicon-chevron-down'
-                    })
+                    }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    )
                 )
             )
         );
@@ -504,14 +588,48 @@ var PlayerBridge = React.createClass({
 var PlayerWeapons = React.createClass({
     displayName: 'PlayerWeapons',
 
+    getInitialState: function getInitialState() {
+        return {};
+    },
+
+    componentDidMount: function componentDidMount() {},
+
+    componentWillUnmount: function componentWillUnmount() {},
+
+    handleClickFire: function handleClickFire() {
+        this.props.onFire();
+    },
+
     render: function render() {
         return React.createElement(
             'div',
-            null,
+            { className: 'player-engine container' },
             React.createElement(
                 'h3',
                 null,
-                'Weapons'
+                'Weapons: ',
+                React.createElement(
+                    'span',
+                    { className: getValueColour(this.props.shipStatus.power.weapons) },
+                    this.props.shipStatus.power.weapons,
+                    React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'section arrows' },
+                React.createElement(
+                    'button',
+                    {
+                        className: 'metal linear text',
+                        type: 'button',
+                        onClick: this.handleClickFire },
+                    React.createElement(
+                        'span',
+                        null,
+                        'FIRE!'
+                    )
+                )
             )
         );
     }
@@ -536,15 +654,15 @@ var PlayerEngine = React.createClass({
     },
 
     handleShipRepair: function handleShipRepair(toRole) {
-        // this.props.onShipRepair(roRole);
-        this.props.onShipRepair("random");
+        this.props.onShipRepair(toRole);
+        // this.props.onShipRepair("random");
     },
 
     handleClickCell: function handleClickCell(i) {
         if (this.state.cellItems[i] == this.state.targetItem) {
             this.props.onGenerateBridgePower();
         } else {
-            this.props.onCauseEngineDamage();
+            this.props.onCauseEngineDamage("random");
             window.navigator.vibrate(200);
         }
 
@@ -585,7 +703,7 @@ var PlayerEngine = React.createClass({
                     'span',
                     { className: getValueColour(this.props.shipStatus.power.engineering) },
                     this.props.shipStatus.power.engineering,
-                    React.createElement('span', { className: 'glyphicon glyphicon-ice-lolly-tasted' })
+                    React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                 )
             ),
             React.createElement(
@@ -626,27 +744,63 @@ var PlayerEngine = React.createClass({
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "hull")
+                        onClick: this.handleShipRepair.bind(this, "hull")
                     },
-                    React.createElement('span', { className: 'icon-hull' })
+                    React.createElement('span', { className: 'icon-noun_79117_cc' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                    )
                 ),
                 React.createElement(
                     'button',
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "bridge")
+                        onClick: this.handleShipRepair.bind(this, "bridge")
                     },
-                    React.createElement('span', { className: 'icon-bridge' })
+                    React.createElement('span', { className: 'icon-bridge' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                    )
                 ),
                 React.createElement(
                     'button',
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "weapons")
+                        onClick: this.handleShipRepair.bind(this, "weapons")
                     },
-                    React.createElement('span', { className: 'icon-weapons' })
+                    React.createElement('span', { className: 'icon-weapons' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                    )
                 ),
                 React.createElement('div', { className: 'clr' })
             ),
@@ -658,18 +812,42 @@ var PlayerEngine = React.createClass({
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "engineering")
+                        onClick: this.handleShipRepair.bind(this, "engineering")
                     },
-                    React.createElement('span', { className: 'icon-engineering' })
+                    React.createElement('span', { className: 'icon-engineering' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                    )
                 ),
                 React.createElement(
                     'button',
                     {
                         className: 'metal linear',
                         type: 'button',
-                        onClick: this.handleShipPower.bind(this, "shields")
+                        onClick: this.handleShipRepair.bind(this, "shields")
                     },
-                    React.createElement('span', { className: 'icon-shields' })
+                    React.createElement('span', { className: 'icon-shields' }),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'br' },
+                        '+1',
+                        React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                    )
                 ),
                 React.createElement('div', { className: 'clr' })
             )
@@ -776,7 +954,7 @@ var PlayerShields = React.createClass({
                     'span',
                     { className: getValueColour(this.props.shipStatus.power.shields) },
                     this.props.shipStatus.power.shields,
-                    React.createElement('span', { className: 'glyphicon glyphicon-ice-lolly-tasted' })
+                    React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                 )
             ),
             React.createElement(
@@ -860,7 +1038,7 @@ var GameApp = React.createClass({
             _players: [],
             _shipStatus: {
                 health: {
-                    life: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0
+                    hull: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0, main_shields: 0
                 },
                 power: {
                     bridge: 0, shields: 0, engineering: 0, weapons: 0
@@ -943,7 +1121,7 @@ var GameApp = React.createClass({
     },
 
     _shipStatusUpdate: function _shipStatusUpdate(shipStatus) {
-        console.log(shipStatus);
+        // console.log(shipStatus);
         this.setState({ _shipStatus: shipStatus });
     },
 
@@ -965,9 +1143,15 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
-    handleShipPower: function handleShipPower(toRole) {
+    handleShipRepair: function handleShipRepair(toRole) {
         var command = 'ship:repair';
         socket.emit(command, toRole);
+        console.log(command);
+    },
+
+    handleFire: function handleFire() {
+        var command = 'ship:fire_closest';
+        socket.emit(command);
         console.log(command);
     },
 
@@ -1004,7 +1188,8 @@ var GameApp = React.createClass({
                         onMovePower: this.handleMovePower,
                         onCauseEngineDamage: this.handleCauseEngineDamage,
                         onGenerateBridgePower: this.handleGenerateBridgePower,
-                        onShipRepair: this.handleShipRepair
+                        onShipRepair: this.handleShipRepair,
+                        onFire: this.handleFire
                     });
                     break;
                 case 'lobby':
