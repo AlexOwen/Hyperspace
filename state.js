@@ -301,6 +301,21 @@ exports.init = () => {
         });
     });
 
+    bus_in.on('ship:fire_closest', () => {
+        let closest = '';
+
+        for (let i = 0; i < screen.width; i++) {
+            for (enemy in enemies) {
+                if (enemies[enemy].position.y === ship.position.y && enemies[enemy].position.x === i && enemy.type === 'basic') {
+                    closest = enemies[enemy].id;
+                    break;
+                }
+            }
+        }
+
+        bus_in.emit('ship:fire', closest);
+    });
+
     bus_in.on('ship:generate_power', () => {
         ship.power.bridge++;
         bus_out.emit('ship:status', ship);
