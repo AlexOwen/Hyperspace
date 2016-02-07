@@ -136,12 +136,12 @@ var ShipLive = React.createClass({
                 </div>
                 <div id="game_stats" style={{'position':'relative'}}>
                     <div id="gameid" style={{float:'left'}}></div>
-                    <div id="main_shields" style={{float:'left',marginLeft:'20px',fontSize:'30px','marginRight':'20px','width':'15%'}}>Main Shields <span id="main_shields_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Hull <span id="hull_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Bridge <span id="bridge_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Weapons <span id="weapons_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','marginRight':'20px','width':'15%'}}>Engineering <span id="engineering_value"></span></div>
-                    <div id="hull" style={{float:'left',fontSize:'30px','width':'15%'}}>Shields <span id="shields_value"></span></div>
+                    <div id="main_shields" style={{float:'left',marginLeft:'20px',fontSize:'18px','marginRight':'2%', 'width': '15%'}}>Main Shields <span id="main_shields_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'18px','marginRight':'2%', 'width': '13%'}}>Hull <span id="hull_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'18px','marginRight':'2%', 'width': '13%'}}>Bridge <span id="bridge_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'18px','marginRight':'2%', 'width': '13%'}}>Weapons <span id="weapons_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'18px','marginRight':'2%', 'width': '13%'}}>Engineering <span id="engineering_value"></span></div>
+                    <div id="hull" style={{float:'left',fontSize:'18px', 'width': '13%'}}>Shields <span id="shields_value"></span></div>
                 </div>
                 <div style={{'clear':'both'}}>
                     <span style={{'fontSize':'24px'}}>Game ID: </span><span id="current_game_id" style={{'fontSize':'24px'}}></span>
