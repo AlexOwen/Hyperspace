@@ -73,10 +73,10 @@ exports.init = () => {
             bridge: 10
         },
         power: {
-            bridge: 0,
-            weapons: 0,
-            shields: 0,
-            engineering: 0
+            bridge: 10,
+            weapons: 10,
+            shields: 10,
+            engineering: 10
         },
         damage: {
             weapons: 1
