@@ -336,42 +336,42 @@ var PlayerBridge = React.createClass({
                         <li>
                             Hull:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.hull)}>
-                                {this.props.shipStatus.health.hull}
+                                {this.props.shipStatus.health.hull} / 50
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Main shields:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.main_shields)}>
-                                {this.props.shipStatus.health.main_shields}
+                                {this.props.shipStatus.health.main_shields} / 50
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Weapons:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.weapons)}>
-                                {this.props.shipStatus.health.weapons}
+                                {this.props.shipStatus.health.weapons} / 10
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Engineering:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.engineering)}>
-                                {this.props.shipStatus.health.engineering}
+                                {this.props.shipStatus.health.engineering} / 10
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Shields:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.shields)}>
-                                {this.props.shipStatus.health.shields}
+                                {this.props.shipStatus.health.shields} / 10
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Bridge:&nbsp;
                             <span className={getValueColour(this.props.shipStatus.health.bridge)}>
-                                {this.props.shipStatus.health.bridge}
+                                {this.props.shipStatus.health.bridge} / 10
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
