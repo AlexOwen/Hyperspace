@@ -74,6 +74,14 @@ ul {
   color: red;
 }
 
+.blue {
+  color: hsl(210, 100%, 60%);
+}
+
+.non-vis {
+  visibility: hidden !important;
+}
+
 form {
   width: 100%;
   margin-top: 30px;
@@ -186,6 +194,11 @@ a { text-decoration: none; display: block; }
   background-color: grey;
   height: 60px;
   font-size: 42px;
+}
+
+.grid .cell span {
+  display: block;
+  margin-top: -15px;
 }
 
 .grid .cell.disabled {

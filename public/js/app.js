@@ -8,12 +8,10 @@ var socket = io.connect();
 var ROLES = ['bridge', 'weapons', 'engineering', 'shields'];
 
 var getValueColour = function getValueColour(value) {
-    if (value < 20) {
-        return "red";
-    } else if (value < 50) {
-        return "orange";
-    }
-    return "green";
+    // if (value < 20) { return "red"; } else
+    // if (value < 50) { return "orange"; }
+    // return "green";
+    return "blue";
 };
 
 var Home = React.createClass({
@@ -303,7 +301,9 @@ var PlayerContainer = React.createClass({
                 break;
             case 'shields':
                 rolePanel = React.createElement(PlayerShields, {
-                    shipStatus: this.props.shipStatus
+                    shipStatus: this.props.shipStatus,
+                    onShieldAdd: this.props.onShieldAdd,
+                    onShieldUsePower: this.props.onShieldUsePower
                 });
                 break;
             case 'engineering':
@@ -466,6 +466,17 @@ var PlayerBridge = React.createClass({
                     React.createElement(
                         'li',
                         null,
+                        'Main shields: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.main_shields) },
+                            this.props.shipStatus.health.main_shields,
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
                         'Weapons: ',
                         React.createElement(
                             'span',
@@ -504,17 +515,6 @@ var PlayerBridge = React.createClass({
                             'span',
                             { className: getValueColour(this.props.shipStatus.health.bridge) },
                             this.props.shipStatus.health.bridge,
-                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
-                        )
-                    ),
-                    React.createElement(
-                        'li',
-                        null,
-                        'Main shields: ',
-                        React.createElement(
-                            'span',
-                            { className: getValueColour(this.props.shipStatus.health.main_shields) },
-                            this.props.shipStatus.health.main_shields,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     )
@@ -851,13 +851,11 @@ var PlayerShields = React.createClass({
         window.clearTimeout(this.timeout);
     },
 
-    handleShipPower: function handleShipPower(toRole) {
-        // increasing power
-    },
-
     handleClickCell: function handleClickCell(i) {
         var shownCells = this.state.shownCells;
         var cellItems = this.state.cellItems;
+        var cost = this.state.cost;
+
         console.log(i);
         if (cellItems[i] === '' || this.state.isShowing && shownCells.length == 2 || shownCells.length == 1 && shownCells[0] == i) {
             console.log('nothing there');
@@ -870,14 +868,14 @@ var PlayerShields = React.createClass({
             shownCells.push(i);
             if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
                 console.log("+1");
-                // this.props.onGenerateBridgePower();
+                this.props.onShieldAdd(10);
                 this.timeout = window.setTimeout(this.removeTiles, 500);
             } else {
                 console.log("-1");
-                // this.props.onCauseEngineDamage();
                 window.navigator.vibrate(200);
                 this.timeout = window.setTimeout(this.resetShown, 500);
             }
+            this.props.onShieldUsePower(cost);
         }
         console.log(shownCells);
         console.log(cellItems);
@@ -940,8 +938,7 @@ var PlayerShields = React.createClass({
                     return React.createElement(
                         'div',
                         {
-                            className: 'cell noselect metal linear',
-                            disabled: x != '',
+                            className: x === '' ? "cell noselect metal linear non-vis" : "cell noselect metal linear",
                             key: i,
                             onClick: _this3.handleClickCell.bind(_this3, i)
                         },
@@ -961,8 +958,12 @@ var PlayerShields = React.createClass({
                     'h3',
                     null,
                     'Cost: ',
-                    this.state.cost,
-                    React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                    React.createElement(
+                        'span',
+                        { className: 'blue' },
+                        this.state.cost,
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
+                    )
                 )
             ),
             React.createElement(
@@ -1131,6 +1132,18 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+    handleShieldAdd: function handleShieldAdd(shield) {
+        var command = 'ship:repair';
+        socket.emit(command, "main_shields", shield);
+        console.log(command);
+    },
+
+    handleShieldUsePower: function handleShieldUsePower(power) {
+        var command = 'ship:use_power';
+        socket.emit(command, power, "shields");
+        console.log(command);
+    },
+
     render: function render() {
         var panel = React.createElement(Home, {
             onGameCreate: this.handleGameCreate,
@@ -1165,7 +1178,9 @@ var GameApp = React.createClass({
                         onCauseEngineDamage: this.handleCauseEngineDamage,
                         onGenerateBridgePower: this.handleGenerateBridgePower,
                         onShipRepair: this.handleShipRepair,
-                        onFire: this.handleFire
+                        onFire: this.handleFire,
+                        onShieldAdd: this.handleShieldAdd,
+                        onShieldUsePower: this.handleShieldUsePower
                     });
                     break;
                 case 'lobby':
