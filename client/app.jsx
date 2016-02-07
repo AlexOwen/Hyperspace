@@ -194,7 +194,7 @@ var PlayerLobby = React.createClass({
 var PlayerContainer = React.createClass({
     getInitialState() {
         return {
-            role: 'bridge'
+            role: _.sample(ROLES)
         };
     },
 
@@ -825,7 +825,7 @@ var GameApp = React.createClass({
     },
 
     _shipStatusUpdate(shipStatus) {
-        console.log(shipStatus);
+        // console.log(shipStatus);
         this.setState({ _shipStatus: shipStatus });
     },
 
