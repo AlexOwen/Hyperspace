@@ -125,12 +125,14 @@ form input {
   float: left;
   width: 25%;
   font-size: 60px;
+  margin-bottom: -20px;
 }
 
 button { border: none; display: block; }
 a { text-decoration: none; display: block; }
 
 .metal {
+  width: 100%;
   position: relative;
   margin: 0 auto;
   outline: none;
@@ -151,18 +153,10 @@ a { text-decoration: none; display: block; }
 }
 
 .metal.linear {
-  width: 100px;
   font-size: 4em;
   height: 80px;
   border-radius: .5em;
-  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
-    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
-    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
-    
-    linear-gradient(180deg, hsl(0,0%,78%)  0%, 
-    hsl(0,0%,90%) 47%, 
-    hsl(0,0%,78%) 53%,
-    hsl(0,0%,70%)100%);
+  
 }
 
 .metal:active {
@@ -175,10 +169,67 @@ a { text-decoration: none; display: block; }
     inset hsla(210,100%,100%,.7) 0  2px 1px 7px;
 }
 
-/* PLAYER BRIDGE */
-
-.player-bridge .arrows .glyphicon {
-  font-size: 60px;
-  display: block;
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
 }
 
+.grid .cell {
+  display: block;
+  float: left;
+  width: 33%;
+  background-color: green;
+  height: 60px;
+  font-size: 42px;
+}
+
+.section {
+  margin-top: 15px;
+}
+
+button .glyphicon {
+  display: block;
+  font-size: 60px;
+}
+
+.small button {
+  float: left;
+  width: 30%;
+  margin-right: 7px;
+}
+
+.small.left-shift {
+  margin-top: 7px;
+}
+
+.small.left-shift button:first-child {
+  margin-left: 20%;
+}
+
+.small button span {
+  display: block;
+  margin-top: -6px;
+  font-size: 40px;
+}
+
+/* PLAYER BRIDGE */
+
+.player-bridge .arrows button {
+  width: 100%;
+}
+
+.player-bridge .status span {
+  font-size: 20px;
+}
+
+/* PLAYER ENGINE */
+
+.player-engine .grid .cell.target {
+  background: none;
+  margin-left: 33%;
+}

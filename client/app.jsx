@@ -6,6 +6,12 @@ var socket = io.connect();
 
 var ROLES = ['bridge', 'weapons', 'engineering', 'shields']
 
+var getValueColour = function(value) {
+    if (value < 20) { return "red"; } else
+    if (value < 50) { return "orange"; }
+    return "green";
+}
+
 var Home = React.createClass({
     getInitialState() {
         return {gameId: ''};
@@ -23,6 +29,10 @@ var Home = React.createClass({
 
         if(gameId.match(alphanumericRegex) && gameId.length == 5) {
             this.props.onGameJoin(gameId);
+            // document.body.requestFullscreen();
+            // if(navigator.userAgent.match(/Android/i)){
+            //     window.scrollTo(0,1);
+            // }
         } else {
             this.setState({ gameId : '' });
         }
@@ -198,19 +208,32 @@ var PlayerContainer = React.createClass({
 
         switch(this.state.role) {
             case 'weapons':
-                rolePanel = <PlayerWeapons />;
+                rolePanel = 
+                    <PlayerWeapons
+                        shipStatus = {this.props.shipStatus}
+                    />;
                 break;
             case 'shields':
-                rolePanel = <PlayerShields />;
+                rolePanel = 
+                    <PlayerShields
+                        shipStatus = {this.props.shipStatus}
+                    />;
                 break;
             case 'engineering':
-                rolePanel = <PlayerEngine />;
+                rolePanel = 
+                    <PlayerEngine 
+                        shipStatus = {this.props.shipStatus}
+                        onGeneratePower = {this.props.onGeneratePower}
+                        onCauseEngineDamage = {this.props.onCauseEngineDamage}
+                    />;
                 break;
             default:
             case 'bridge':
                 rolePanel =
                     <PlayerBridge
                         onShipMove = {this.props.onShipMove}
+                        onMovePower = {this.props.onMovePower}
+                        shipStatus = {this.props.shipStatus}
                     />;
                 break;
 
@@ -244,22 +267,99 @@ var PlayerBridge = React.createClass({
         this.props.onShipMove(direction);
     },
 
+    handleMovePower(toRole) {
+        this.props.onMovePower(toRole);
+    },
+
     render() {
         return (
             <div className="player-bridge container">
-                <p>Bridge</p>
-                <div className="arrows">
-                    <button className="metal linear" type="button">
-                        <span
+                <h3>Bridge:&nbsp;
+                    <span className={getValueColour(this.props.shipStatus.power.bridge)}>
+                        {this.props.shipStatus.power.bridge}
+                        <span className="glyphicon glyphicon-ice-lolly-tasted"></span>
+                    </span>
+                </h3>
+                <div className="section power small">
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleMovePower.bind(this, "weapons")}
+                        >
+                        <span className="icon-weapons"></span>
+                    </button>
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleMovePower.bind(this, "engineering")}
+                        >
+                        <span className="icon-engineering"></span>
+                    </button>
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleMovePower.bind(this, "shields")}
+                        >
+                        <span className="icon-shields"></span>
+                    </button>
+                    <div className="clr"></div>
+                </div>
+                <div className="section status">
+                    <ul>
+                        <li>
+                            Hull:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Weapons:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Engineering:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Shields:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.shields)}>
+                                {this.props.shipStatus.health.shields}
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Bridge:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.life)}>
+                                {this.props.shipStatus.health.life}
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div className="section arrows">
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipMove.bind(this, "up")}
+                        >
+                        <span 
                             className="glyphicon glyphicon-chevron-up"
-                            onClick={this.handleShipMove.bind(this, "up")}
                             >
                         </span>
                     </button>
-                    <button className="metal linear" type="button">
-                        <span
+                    <button
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipMove.bind(this, "down")}>
+                        <span 
                             className="glyphicon glyphicon-chevron-down"
-                            onClick={this.handleShipMove.bind(this, "down")}
                             >
                         </span>
                     </button>
@@ -280,10 +380,120 @@ var PlayerWeapons = React.createClass({
 });
 
 var PlayerEngine = React.createClass({
+    getInitialState() {
+        return {
+            cellItems: Array.apply(null, {length: 12}).map(Number.call, Number),
+            targetItem: 0
+        };
+    },
+
+    componentDidMount: function() {
+        this.resetTarget();
+    },
+
+    componentWillUnmount: function() {
+        window.clearTimeout(this.timeout);
+    },
+
+    handleShipPower(toRole) {
+        // increasing power
+    },
+
+    handleClickCell(i) {
+        if (this.state.cellItems[i] == this.state.targetItem) {
+            this.props.onGeneratePower();
+        } else {
+            this.props.onCauseEngineDamage();
+            window.navigator.vibrate(200);
+        }
+
+        var cellItems = this.state.cellItems;
+        cellItems[i] = ''
+        this.setState({cellItems});
+    },
+
+    resetTarget() {
+        this.timeout = window.setTimeout(this.resetTarget, Math.random()*2000+1000);
+
+        var targetItem = Math.floor(Math.random()*4);
+        if (this.state.targetItem == targetItem){
+            targetItem = (targetItem+1)%4
+        }
+        console.log(targetItem)
+        this.setState({targetItem});
+
+        var cellItems = []
+        for (var i =0; i<12; i++){
+            cellItems.push(Math.floor(Math.random()*4));
+        }
+
+        this.setState({cellItems});
+    },
+
     render() {
         return (
-            <div>
-                <h3>Engineering</h3>
+            <div className="player-engine container">
+                <h3>Engineering:&nbsp;
+                    <span className={getValueColour(this.props.shipStatus.power.engineering)}>
+                        {this.props.shipStatus.power.engineering}
+                        <span className="glyphicon glyphicon-ice-lolly-tasted"></span>
+                    </span>
+                </h3>
+                <div className="section grid">
+                    {this.state.cellItems.map((x, i) =>
+                        <div
+                            className="cell noselect"
+                            key={i}
+                            onClick={this.handleClickCell.bind(this, i)}
+                        >
+                            <span>{x}</span>
+                        </div>
+                    )}
+                    <div className="clr"></div>
+                    <div className="cell target"><span>{this.state.targetItem}</span></div>
+                    <div className="clr"></div>
+                </div>
+                <div className="section power small">
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "hull")}
+                        >
+                        <span className="icon-hull"></span>
+                    </button>
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "bridge")}
+                        >
+                        <span className="icon-bridge"></span>
+                    </button>
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "weapons")}
+                        >
+                        <span className="icon-weapons"></span>
+                    </button>
+                    <div className="clr"></div>
+                </div>
+                <div className="section power small left-shift">
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "engineering")}
+                        >
+                        <span className="icon-engineering"></span>
+                    </button>
+                    <button 
+                        className="metal linear"
+                        type="button"
+                        onClick={this.handleShipPower.bind(this, "shields")}
+                        >
+                        <span className="icon-shields"></span>
+                    </button>
+                    <div className="clr"></div>
+                </div>
             </div>
         );
     }
@@ -328,10 +538,14 @@ var GameApp = React.createClass({
             _gameState: 'create',
             // _gameState: 'started',
             _players: [],
-            // _playerStates: [],
-            // role: 'bridge'
-            // messages:[],
-            // text: '',
+            _shipStatus: {
+                health: {
+                    life: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0
+                },
+                power: {
+                    bridge: 0, shields: 0, engineering: 0, weapons: 0
+                },
+            }
         };
     },
 
@@ -341,6 +555,8 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
+        
+        socket.on('ship:status', this._shipStatusUpdate);
 
         // socket.on('player:joined', this._playerJoined);
         // socket.on('player:left', this._playerLeft);
@@ -350,64 +566,7 @@ var GameApp = React.createClass({
         this.setState(this.getInitialState());
     },
 
-    // _initialize(data) {
-    //  var {users, name} = data;
-    //  this.setState({users, user: name});
-    // },
-
-    // _messageRecieve(message) {
-    //  var {messages} = this.state;
-    //  messages.push(message);
-    //  this.setState({messages});
-    // },
-
-    // _playerJoined(playerNumber) {
-    //  console.log("player:joined " + playerNumber)
-    //  var {_players} = this.state;
-    //  _players.push(playerNumber);
-    //  this.setState({_players});
-    // },
-
-    // _playerLeft(playerNumber) {
-    //  console.log("player:left " + playerNumber)
-    //  var {_players} = this.state;
-
-    //  var index = users.indexOf(playerNumber);
-    //  _players.splice(index, 1);
-    //  this.setState({_players});
-    // },
-
-    // _userChangedName(data) {
-    //  var {oldName, newName} = data;
-    //  var {users, messages} = this.state;
-    //  var index = users.indexOf(oldName);
-    //  users.splice(index, 1, newName);
-    //  messages.push({
-    //      user: 'APPLICATION BOT',
-    //      text : 'Change Name : ' + oldName + ' ==> '+ newName
-    //  });
-    //  this.setState({users, messages});
-    // },
-
-    // handleMessageSubmit(message) {
-    //  var {messages} = this.state;
-    //  messages.push(message);
-    //  this.setState({messages});
-    //  socket.emit('send:message', message);
-    // },
-
-    // handleChangeName(newName) {
-    //  var oldName = this.state.user;
-    //  socket.emit('change:name', { name : newName}, (result) => {
-    //      if(!result) {
-    //          return alert('There was an error changing your name');
-    //      }
-    //      var {users} = this.state;
-    //      var index = users.indexOf(oldName);
-    //      users.splice(index, 1, newName);
-    //      this.setState({users, user: newName});
-    //  });
-    // },
+    // GAME CREATE
 
     handleGameCreate() {
         socket.emit('game:create');
@@ -418,6 +577,8 @@ var GameApp = React.createClass({
         this.setState({ ship: true, _gameId: gameId, _gameState: 'lobby' });
     },
 
+    // GAME JOIN
+
     handleGameJoin(gameId) {
         socket.emit('game:join', gameId);
     },
@@ -426,6 +587,8 @@ var GameApp = React.createClass({
         //player location
         this.setState({ ship: false, _gameId: gameId, _gameState: 'lobby' });
     },
+
+    // PLAYER READY
 
     handlePlayerReady() {
         socket.emit('player:ready', true);
@@ -436,15 +599,42 @@ var GameApp = React.createClass({
         this.setState({ _players: players });
     },
 
+    // GAME START
+
     _gameStarted() {
         //player location
         console.log('game:started');
         this.setState({ _gameState: 'started' });
     },
 
+    // SHIP
+
     handleShipMove(direction) {
         var command = 'ship:move:' + direction
         socket.emit(command);
+        console.log(command);
+    },
+
+    _shipStatusUpdate(shipStatus) {
+        console.log(shipStatus);
+        this.setState({ _shipStatus: shipStatus });
+    },
+
+    handleMovePower(role) {
+        var command = 'ship:move_power'
+        socket.emit(command, role);
+        console.log(command);
+    },
+
+    handleGeneratePower() {
+        var command = 'ship:generate_power'
+        socket.emit(command);
+        console.log(command);
+    },
+
+    handleCauseEngineDamage() {
+        var command = 'ship:cause_damage'
+        socket.emit(command, "engine");
         console.log(command);
     },
 
@@ -488,7 +678,11 @@ var GameApp = React.createClass({
                     panel =
                         <PlayerContainer
                             gameId = {this.state._gameId}
+                            shipStatus = {this.state._shipStatus}
                             onShipMove = {this.handleShipMove}
+                            onMovePower = {this.handleMovePower}
+                            onCauseEngineDamage = {this.handleCauseEngineDamage}
+                            onGeneratePower = {this.handleGeneratePower}
                         />
                     break;
                 case 'lobby':
