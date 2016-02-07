@@ -190,24 +190,37 @@ var ShipLive = React.createClass({
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
+<<<<<<< HEAD
                     { id: 'main_shields', style: { float: 'left', marginLeft: '25px', fontSize: '30px' } },
+=======
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px' } },
+>>>>>>> Alex
                     'Main Shields ',
                     React.createElement('span', { id: 'main_shields_value' })
                 ),
                 React.createElement(
                     'div',
+<<<<<<< HEAD
                     { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+=======
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+>>>>>>> Alex
                     'Hull ',
                     React.createElement('span', { id: 'hull_value' })
                 ),
                 React.createElement(
                     'div',
+<<<<<<< HEAD
                     { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+=======
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+>>>>>>> Alex
                     'Bridge ',
                     React.createElement('span', { id: 'bridge_value' })
                 ),
                 React.createElement(
                     'div',
+<<<<<<< HEAD
                     { id: 'hull', style: { float: 'left', fontSize: '30px' } },
                     'Weapons ',
                     React.createElement('span', { id: 'weapons_value' })
@@ -220,6 +233,20 @@ var ShipLive = React.createClass({
                 ),
                 React.createElement(
                     'div',
+=======
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    'Weapons ',
+                    React.createElement('span', { id: 'weapons_value' })
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    'Engineering ',
+                    React.createElement('span', { id: 'engineering_value' })
+                ),
+                React.createElement(
+                    'div',
+>>>>>>> Alex
                     { id: 'hull', style: { float: 'left', fontSize: '30px' } },
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
@@ -484,6 +511,7 @@ var PlayerBridge = React.createClass({
                             'span',
                             { className: getValueColour(this.props.shipStatus.health.hull) },
                             this.props.shipStatus.health.hull,
+<<<<<<< HEAD
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -495,6 +523,8 @@ var PlayerBridge = React.createClass({
                             'span',
                             { className: getValueColour(this.props.shipStatus.health.main_shields) },
                             this.props.shipStatus.health.main_shields,
+=======
+>>>>>>> Alex
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -539,6 +569,20 @@ var PlayerBridge = React.createClass({
                             'span',
                             { className: getValueColour(this.props.shipStatus.health.bridge) },
                             this.props.shipStatus.health.bridge,
+<<<<<<< HEAD
+=======
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Main shields: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.main_shields) },
+                            this.props.shipStatus.health.main_shields,
+>>>>>>> Alex
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     )
@@ -1156,6 +1200,7 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+<<<<<<< HEAD
     handleShieldAdd: function handleShieldAdd(shield) {
         var command = 'ship:repair';
         socket.emit(command, "main_shields", shield);
@@ -1168,6 +1213,8 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
+=======
+>>>>>>> Alex
     render: function render() {
         var panel = React.createElement(Home, {
             onGameCreate: this.handleGameCreate,
@@ -1202,10 +1249,14 @@ var GameApp = React.createClass({
                         onCauseEngineDamage: this.handleCauseEngineDamage,
                         onGenerateBridgePower: this.handleGenerateBridgePower,
                         onShipRepair: this.handleShipRepair,
+<<<<<<< HEAD
                         onFire: this.handleFire,
                         onShieldAdd: this.handleShieldAdd,
                         onShieldUsePower: this.handleShieldUsePower
 
+=======
+                        onFire: this.handleFire
+>>>>>>> Alex
                     });
                     break;
                 case 'lobby':
