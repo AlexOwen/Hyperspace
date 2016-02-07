@@ -308,8 +308,9 @@ var PlayerContainer = React.createClass({
             case 'engineering':
                 rolePanel = React.createElement(PlayerEngine, {
                     shipStatus: this.props.shipStatus,
-                    onGeneratePower: this.props.onGeneratePower,
-                    onCauseEngineDamage: this.props.onCauseEngineDamage
+                    onGenerateBridgePower: this.props.onGenerateBridgePower,
+                    onCauseEngineDamage: this.props.onCauseEngineDamage,
+                    onShipRepair: this.props.onShipRepair
                 });
                 break;
             default:
@@ -534,13 +535,14 @@ var PlayerEngine = React.createClass({
         window.clearTimeout(this.timeout);
     },
 
-    handleShipPower: function handleShipPower(toRole) {
-        // increasing power
+    handleShipRepair: function handleShipRepair(toRole) {
+        // this.props.onShipRepair(roRole);
+        this.props.onShipRepair("random");
     },
 
     handleClickCell: function handleClickCell(i) {
         if (this.state.cellItems[i] == this.state.targetItem) {
-            this.props.onGeneratePower();
+            this.props.onGenerateBridgePower();
         } else {
             this.props.onCauseEngineDamage();
             window.navigator.vibrate(200);
@@ -714,7 +716,7 @@ var PlayerShields = React.createClass({
             shownCells.push(i);
             if (cellItems[shownCells[0]] == cellItems[shownCells[1]]) {
                 console.log("+1");
-                // this.props.onGeneratePower();
+                // this.props.onGenerateBridgePower();
                 this.timeout = window.setTimeout(this.removeTiles, 500);
             } else {
                 console.log("-1");
@@ -853,8 +855,8 @@ var GameApp = React.createClass({
         return {
             ship: false,
             _gameId: null,
-            // _gameState: 'create',
-            _gameState: 'started',
+            _gameState: 'create',
+            // _gameState: 'started',
             _players: [],
             _shipStatus: {
                 health: {
@@ -926,7 +928,7 @@ var GameApp = React.createClass({
         this.setState({ _gameState: 'started' });
     },
 
-    _gameStarted: function _gameStarted() {
+    _gameEnded: function _gameEnded() {
         //player location
         console.log('game:ended');
         this.setState({ _gameState: 'ended' });
@@ -951,15 +953,21 @@ var GameApp = React.createClass({
         console.log(command);
     },
 
-    handleGeneratePower: function handleGeneratePower() {
+    handleGenerateBridgePower: function handleGenerateBridgePower() {
         var command = 'ship:generate_power';
         socket.emit(command);
         console.log(command);
     },
 
-    handleCauseEngineDamage: function handleCauseEngineDamage() {
-        var command = 'ship:cause_damage';
-        socket.emit(command, "engine");
+    handleCauseEngineDamage: function handleCauseEngineDamage(toRole) {
+        var command = 'ship:damage';
+        socket.emit(command, 1, toRole);
+        console.log(command);
+    },
+
+    handleShipPower: function handleShipPower(toRole) {
+        var command = 'ship:repair';
+        socket.emit(command, toRole);
         console.log(command);
     },
 
@@ -995,7 +1003,8 @@ var GameApp = React.createClass({
                         onShipMove: this.handleShipMove,
                         onMovePower: this.handleMovePower,
                         onCauseEngineDamage: this.handleCauseEngineDamage,
-                        onGeneratePower: this.handleGeneratePower
+                        onGenerateBridgePower: this.handleGenerateBridgePower,
+                        onShipRepair: this.handleShipRepair
                     });
                     break;
                 case 'lobby':
