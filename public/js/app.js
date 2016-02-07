@@ -421,8 +421,8 @@ var PlayerBridge = React.createClass({
                         'Hull: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.hull) },
+                            this.props.shipStatus.health.hull,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -432,8 +432,8 @@ var PlayerBridge = React.createClass({
                         'Weapons: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.weapons) },
+                            this.props.shipStatus.health.weapons,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -443,8 +443,8 @@ var PlayerBridge = React.createClass({
                         'Engineering: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.engineering) },
+                            this.props.shipStatus.health.engineering,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     ),
@@ -465,8 +465,19 @@ var PlayerBridge = React.createClass({
                         'Bridge: ',
                         React.createElement(
                             'span',
-                            { className: getValueColour(this.props.shipStatus.health.life) },
-                            this.props.shipStatus.health.life,
+                            { className: getValueColour(this.props.shipStatus.health.bridge) },
+                            this.props.shipStatus.health.bridge,
+                            React.createElement('span', { className: 'glyphicon glyphicon-apple' })
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        'Main shields: ',
+                        React.createElement(
+                            'span',
+                            { className: getValueColour(this.props.shipStatus.health.main_shields) },
+                            this.props.shipStatus.health.main_shields,
                             React.createElement('span', { className: 'glyphicon glyphicon-apple' })
                         )
                     )
@@ -860,7 +871,7 @@ var GameApp = React.createClass({
             _players: [],
             _shipStatus: {
                 health: {
-                    life: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0
+                    hull: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0, main_shields: 0
                 },
                 power: {
                     bridge: 0, shields: 0, engineering: 0, weapons: 0

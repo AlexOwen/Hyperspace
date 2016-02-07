@@ -309,22 +309,22 @@ var PlayerBridge = React.createClass({
                     <ul>
                         <li>
                             Hull:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}
+                            <span className={getValueColour(this.props.shipStatus.health.hull)}>
+                                {this.props.shipStatus.health.hull}
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Weapons:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}
+                            <span className={getValueColour(this.props.shipStatus.health.weapons)}>
+                                {this.props.shipStatus.health.weapons}
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
                         <li>
                             Engineering:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}
+                            <span className={getValueColour(this.props.shipStatus.health.engineering)}>
+                                {this.props.shipStatus.health.engineering}
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
@@ -337,8 +337,15 @@ var PlayerBridge = React.createClass({
                         </li>
                         <li>
                             Bridge:&nbsp;
-                            <span className={getValueColour(this.props.shipStatus.health.life)}>
-                                {this.props.shipStatus.health.life}
+                            <span className={getValueColour(this.props.shipStatus.health.bridge)}>
+                                {this.props.shipStatus.health.bridge}
+                                <span className="glyphicon glyphicon-apple"></span>
+                            </span>
+                        </li>
+                        <li>
+                            Main shields:&nbsp;
+                            <span className={getValueColour(this.props.shipStatus.health.main_shields)}>
+                                {this.props.shipStatus.health.main_shields}
                                 <span className="glyphicon glyphicon-apple"></span>
                             </span>
                         </li>
@@ -648,7 +655,7 @@ var GameApp = React.createClass({
             _players: [],
             _shipStatus: {
                 health: {
-                    life: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0
+                    hull: 0, bridge: 0, shields: 0, engineering: 0, weapons: 0, main_shields: 0
                 },
                 power: {
                     bridge: 0, shields: 0, engineering: 0, weapons: 0
