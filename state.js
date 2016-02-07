@@ -59,18 +59,18 @@ exports.init = () => {
         health: {
             hull: 50,
             main_shields: 10,
-            shields: 10,
-            engineering: 10,
-            weapons: 10,
-            bridge: 10
+            shields: Math.floor(Math.random()*20)+5,
+            engineering: Math.floor(Math.random()*20)+5,
+            weapons: Math.floor(Math.random()*20)+5,
+            bridge: Math.floor(Math.random()*20)+5
         },
         max_health: {
             hull: 50,
             main_shields: 50,
-            shields: 10,
-            engineering: 10,
-            weapons: 10,
-            bridge: 10
+            shields: 25,
+            engineering: 25,
+            weapons: 25,
+            bridge: 25
         },
         power: {
             bridge: 10,

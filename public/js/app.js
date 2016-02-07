@@ -738,7 +738,7 @@ var PlayerEngine = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok" },
+                { className: this.props.shipStatus.health.engineering < 1 ? "shitfan" : "aok" },
                 React.createElement(
                     'div',
                     { className: 'section grid' },
@@ -991,7 +991,7 @@ var PlayerShields = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok" },
+                { className: this.props.shipStatus.health.shields < 1 ? "shitfan" : "aok" },
                 React.createElement(
                     'div',
                     { className: 'section grid' },

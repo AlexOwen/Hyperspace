@@ -522,7 +522,7 @@ var PlayerEngine = React.createClass({
                         <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
-                <div className={this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok"}>
+                <div className={this.props.shipStatus.health.engineering < 1 ? "shitfan" : "aok"}>
                     <div className="section grid">
                         {this.state.cellItems.map((x, i) =>
                             <div
@@ -706,7 +706,7 @@ var PlayerShields = React.createClass({
                         <span className="glyphicon glyphicon-flash"></span>
                     </span>
                 </h3>
-                <div className={this.props.shipStatus.health.bridge < 1 ? "shitfan" : "aok"}>
+                <div className={this.props.shipStatus.health.shields < 1 ? "shitfan" : "aok"}>
                     <div className="section grid">
                         {this.state.cellItems.map((x, i) =>
                             <div
