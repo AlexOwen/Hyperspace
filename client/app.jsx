@@ -443,6 +443,9 @@ var PlayerWeapons = React.createClass({
                         onClick={this.handleClickFire}>
                         <span>FIRE!
                         </span>
+                        <span className="tr">
+                            -2<span className="glyphicon glyphicon-flash"></span>
+                        </span>
                     </button>
                 </div>
             </div>
@@ -761,7 +764,7 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
-        socket.on('game:endeded', this._gameEnded);
+        socket.on('game:ended', this._gameEnded);
 
         socket.on('ship:status', this._shipStatusUpdate);
 

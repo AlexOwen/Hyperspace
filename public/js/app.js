@@ -186,41 +186,41 @@ var ShipLive = React.createClass({
             React.createElement('div', { id: 'grid' }),
             React.createElement(
                 'div',
-                { id: 'game_stats' },
+                { id: 'game_stats', style: { 'position': 'relative' } },
                 React.createElement('div', { id: 'gameid', style: { float: 'left' } }),
                 React.createElement(
                     'div',
-                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'main_shields', style: { float: 'left', marginLeft: '20px', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Main Shields ',
                     React.createElement('span', { id: 'main_shields_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Hull ',
                     React.createElement('span', { id: 'hull_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Bridge ',
                     React.createElement('span', { id: 'bridge_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Weapons ',
                     React.createElement('span', { id: 'weapons_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'marginRight': '20px', 'width': '15%' } },
                     'Engineering ',
                     React.createElement('span', { id: 'engineering_value' })
                 ),
                 React.createElement(
                     'div',
-                    { id: 'hull', style: { float: 'left', fontSize: '30px' } },
+                    { id: 'hull', style: { float: 'left', fontSize: '30px', 'width': '15%' } },
                     'Shields ',
                     React.createElement('span', { id: 'shields_value' })
                 )
@@ -634,6 +634,12 @@ var PlayerWeapons = React.createClass({
                         'span',
                         null,
                         'FIRE!'
+                    ),
+                    React.createElement(
+                        'span',
+                        { className: 'tr' },
+                        '-2',
+                        React.createElement('span', { className: 'glyphicon glyphicon-flash' })
                     )
                 )
             )
@@ -1060,7 +1066,7 @@ var GameApp = React.createClass({
         socket.on('game:joined', this._gameJoined);
         socket.on('game:ready_players', this._readyPlayers);
         socket.on('game:started', this._gameStarted);
-        socket.on('game:endeded', this._gameEnded);
+        socket.on('game:ended', this._gameEnded);
 
         socket.on('ship:status', this._shipStatusUpdate);
 
@@ -1165,13 +1171,13 @@ var GameApp = React.createClass({
     handleShieldAdd: function handleShieldAdd(shield) {
         var command = 'ship:repair';
         socket.emit(command, "main_shields", shield);
-        console.log(command);
+        console.log(command + ' ' + shield);
     },
 
     handleShieldUsePower: function handleShieldUsePower(power) {
         var command = 'ship:use_power';
         socket.emit(command, power, "shields");
-        console.log(command);
+        console.log(command + ' ' + power);
     },
 
     render: function render() {
