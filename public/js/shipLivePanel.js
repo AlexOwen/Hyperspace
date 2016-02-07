@@ -111,7 +111,7 @@ var initShipDisplay = function(socket) {
 
         if (enemies[enemy.id] === undefined) {
             enemies[enemy.id] = {};
-            $('#grid').append('<div class="enemy" id="enemy_' + enemy.id + '" style="position:absolute;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#C90606" data-id="' + enemy.id + '">' + symbol + '</div>');
+            $('#grid').append('<div class="enemy" id="enemy_' + enemy.id + '" style="position:absolute;width:' + hGridUnit + '%;height:' + vGridUnit + '%;font-size: 30px;color:#C90606;margin:auto;margin-top:20px" data-id="' + enemy.id + '">' + symbol + '</div>');
             $('#enemy_' + enemy.id).on('click', function() {
                 var enemyID = $(this).attr('data-id');
                 if (enemyID !== undefined) {
